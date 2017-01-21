@@ -3,7 +3,7 @@
 const ee = require('events');
 const htmlparser2 = require('htmlparser2');
 const http = require('http');
-/*  emits date (:param; date string), media (:parm: metadata js object with page link and media type), error (:param: error message), nextPage (:param: page link), end*/
+/*  emits date (:param; date string), post (:parm: metadata js object with page link and media type), error (:param: error message), nextPage (:param: page link), end*/
 class Archive extends ee {
   constructor() {
     super();
@@ -53,7 +53,7 @@ class Archive extends ee {
         }
         else if (name === 'a') {
           if (self.isMediaFound) {
-            self.emit('media',{'link':self.options.host+attribs.href,'type':self.currMediaType});
+            self.emit('post',{'link':self.options.host+attribs.href,'type':self.currMediaType});
             self.currMediaType = null;
             self.isMediaFound = !1;
           }

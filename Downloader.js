@@ -2,33 +2,56 @@ const ee = require('events');
 const http = require('http');
 const htmlparser2 = require('htmlparser2');
 
-var parser = new htmlparser2.Parser({
-  onopentag:function(name,attribs){
-
-  }
-
-},{decodeEntities: true})
-
+var
+/* emits error(:param: message)*/
 class downloader extends ee {
   constructor(){
-    this.req = null;
-    this.options = {
-      host:'',
-      path:'/archive',
+  }
+  getParser(type){
+    var onopentag = null;
+    var ontext = null;
+    // use code objects
+    switch(type){
+      case 'is_photo':
+        onopentag
+        break;
+      case 'is_video':
+        break;
+      case 'is_quote':
+        break;
+      case 'is_regular':
+        break;
+      case 'is_chat':
+        break;
+      case 'is_note':
+        break;
+      case 'is_audio':
+        break;
+      default:
+        this.emit('error','invalid media type');
+        break;
+    }
+  }
+  download(host,path,type){
+    const options = {
+      host:host,
+      path:path+'/mobile',
       timeout:5000,
       headers:{
         userAgent:'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chro_this/54.0.2840.98 Safari/537.36'
       }
     };
-  }
-
-  get(filename) {
-    var req = http.get(this.options,(res) =>{
+    const parser = this.getParser(type);
+    if (!parser){
+      this.emit('error','invalid type');
+      return;
+    }
+    var req = http.get(options,(res)=>{
       if (res.statusCode !== 200){
-        this.emit('error',`${filename} unavailable.`);
+        emit('error',`cannot reach ${options.host}${options.path}`)
+        return;
       }
-      res.on('data',(chunk) => parser.write(chunk))
-      res.on('')
+      res.on('data',(chunk)=>parser.write(chunk));
     });
   }
 }
