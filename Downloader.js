@@ -13,7 +13,9 @@ class downloader extends ee {
     // use code objects
     switch(type){
       case 'is_photo':
-        onopentag
+        onopentag = function(name,attribs){
+          
+        }
         break;
       case 'is_video':
         break;

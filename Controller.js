@@ -6,10 +6,15 @@ var downloader = null;
 
 // on start
 // preform initial checks
+
 archive = new Archive();
 downloader = new Downloader();
+// set directory and check persmissions on the directory
+directory.setdir(/*name of dir*//)
+// set downloader callbacks
+downloader.on('error',)
+downloader.on('downloadComplete',())
 
-downloader.on('',)
 
 archive.on('date',() => /* use react to update date */)
 archive.on('media',(data) =>{
