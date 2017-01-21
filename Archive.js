@@ -3,10 +3,11 @@
 const ee = require('events');
 const htmlparser2 = require('htmlparser2');
 const http = require('http');
-/*  emits dateChange, media :parm:link to page, error :param: error message, link */
+/*  emits date (:param; date string), media (:parm: metadata js object with page link and media type), error (:param: error message), nextPage (:param: page link), end*/
 class Archive extends ee {
   constructor() {
     super();
+    this.initParser();
     var self = this;
     this.date = '';
     /* holds either 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(question) 'is_audio'*/
