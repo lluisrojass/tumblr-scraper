@@ -3,26 +3,28 @@
 const ee = require('events');
 const htmlparser2 = require('htmlparser2');
 const http = require('http');
-/*  emits date (:param; date string), post (:parm: metadata js object with page link and media type), error (:param: error message), nextPage (:param: page link), end*/
+// emits date (:param; date string), post (:parm: metadata js object with page link and media type),
+// error (:param: error message), nextPage (:param: page link), end
 class Archive extends ee {
   constructor() {
     super();
     this.initParser();
     var self = this;
-    this.date = '';
+    this._date = '';
     /* holds either 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(question) 'is_audio'*/
-    this.mediaTypes = [];
-    this.currMediaType = null;
-    this.options = {
+    this._mediaTypes = [];
+    this._currMediaType = null;
+    this._options = {
       host:'',
       path:'/archive',
       timeout:5000,
       headers:{
-        userAgent:'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chro_this/54.0.2840.98 Safari/537.36'
+        'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chro_this/54.0.2840.98 Safari/537.36'
       }
     };
-    this.req = null;
-    this.isLastPage = function(){return self.options.path === ''};
+    this._req = null;
+    // flags
+    this.isLastPage = function(){return self._options.path === ''};
     this.isMediaFound = !1;
     this.isDateFound = !1;
 
@@ -39,8 +41,8 @@ class Archive extends ee {
             this.parser.end();
             this.emit('end');
           } else {
-            this.req = http.get(this.options,this.callback);
-            Object.keys(this.requestHandlers).forEach((elem) => this.req.on(elem,reqHandlers[elem].bind(this)));
+            this._req = http.get(this._options,this.callback);
+            Object.keys(this.requestHandlers).forEach((elem) => this._req.on(elem,reqHandlers[elem].bind(this)));
           }
       });
   };
@@ -53,22 +55,22 @@ class Archive extends ee {
         }
         else if (name === 'a') {
           if (self.isMediaFound) {
-            self.emit('post',{'link':self.options.host+attribs.href,'type':self.currMediaType});
-            self.currMediaType = null;
+            self.emit('post',{'link':self._options.host+attribs.href,'type':self._currMediaType});
+            self._currMediaType = null;
             self.isMediaFound = !1;
           }
           else if (attribs.id && attribs.id === 'next_page_link') {
-            self.emit('nextPage',self.options.host+self.options.path)
-            self.options.path = attribs.href;
+            self.emit('nextPage',self._options.host+self._options.path)
+            self._options.path = attribs.href;
           }
         }
         else if (name === 'h2' && attribs.class && attribs.class === 'date'){
-            self.state.isDateFound = !0;
+            self.isDateFound = !0;
         }
       },
       ontext:function(text){
-        if (self.isDateFound && text !== self.date) {
-          self.date = text;
+        if (self.isDateFound && text !== self._date) {
+          self._date = text;
           self.isDateFound = !1;
           self.emit('date',text);
         }
@@ -77,9 +79,9 @@ class Archive extends ee {
     // utility to filter original posts
     this.parser.__proto__.validate = function(c){
       if (c.includes('is_original')){
-        self.mediaTypes.forEach((e)=>{
-          if (c.includes(self.mediaTypes[e])){
-            self.currMediaType = self.mediaTypes[e];
+        self._mediaTypes.forEach((e)=>{
+          if (c.includes(self._mediaTypes[e])){
+            self._currMediaType = self._mediaTypes[e];
             return !0;
           }
         });
@@ -88,17 +90,16 @@ class Archive extends ee {
     };
   }
   get(blogname,type){
-    type.forEach((elem) => mediaTypes.push(type[elem]));
-    this.options.host=`${blogname}.tumblr.com`;
-    this.req = http.get(this.options,this.callback);
-    Object.keys(this.requestHandlers).forEach((elem) => this.req.on(elem,reqHandlers[elem].bind(this)));
+    type.forEach((elem) => this._mediaTypes.push(type[elem]));
+    this._options.host=`${blogname}.tumblr.com`;
+    this._req = http.get(this._options,this.callback);
+    Object.keys(this.requestHandlers).forEach((elem) => this._req.on(elem,reqHandlers[elem].bind(this)));
   }
-
 };
 Archive.prototype.requestHandlers = {
   // need to be binded to Archive instance for use
   error: function(e){this.emit('error','error with request')},
-  response: function(res){this.options.path = ''}
+  response: function(res){this._options.path = ''}
 };
 
 module.exports = Archive;

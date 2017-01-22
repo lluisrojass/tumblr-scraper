@@ -5,8 +5,38 @@ const htmlparser2 = require('htmlparser2');
 var
 /* emits error(:param: message)*/
 class downloader extends ee {
-  constructor(){
+
+  /*returns JSON object with data from post*/
+  download(host,path,type){
+
+    var data = {
+      type:'',
+      items:[]
+    };
+
+    const options = {
+      host:host,
+      path:path+'/mobile',
+      timeout:5000,
+      headers:{
+        'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+      }
+    };
+
+    const parser = this.getParser(type);
+    if (!parser){
+      this.emit('error','invalid type');
+      return;
+    }
+    var req = http.get(options,(res)=>{
+      if (res.statusCode !== 200){
+        emit('error',`cannot reach ${options.host}${options.path}`)
+        return;
+      }
+      res.on('data',(chunk)=>parser.write(chunk));
+    });
   }
+
   getParser(type){
     var onopentag = null;
     var ontext = null;
@@ -14,7 +44,9 @@ class downloader extends ee {
     switch(type){
       case 'is_photo':
         onopentag = function(name,attribs){
-          
+          if (name === 'meta' && attribs.property && attribs.property === 'og:image'){
+            // work into adding to a stack and flushing
+          }
         }
         break;
       case 'is_video':
@@ -30,30 +62,8 @@ class downloader extends ee {
       case 'is_audio':
         break;
       default:
-        this.emit('error','invalid media type');
+        return void this.emit('error','invalid media type');
         break;
     }
-  }
-  download(host,path,type){
-    const options = {
-      host:host,
-      path:path+'/mobile',
-      timeout:5000,
-      headers:{
-        userAgent:'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chro_this/54.0.2840.98 Safari/537.36'
-      }
-    };
-    const parser = this.getParser(type);
-    if (!parser){
-      this.emit('error','invalid type');
-      return;
-    }
-    var req = http.get(options,(res)=>{
-      if (res.statusCode !== 200){
-        emit('error',`cannot reach ${options.host}${options.path}`)
-        return;
-      }
-      res.on('data',(chunk)=>parser.write(chunk));
-    });
   }
 }
