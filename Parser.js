@@ -16,20 +16,23 @@ class ArchiveParser extends ee {
     this._isDateFound = !1;
     this._date = '';
     this._loop = null;
+    this._initParser();
   }
   _validate(c) {
-      if (c.includes("is_original")){
-        this._types.forEach((e) => {
-          if (c.includes(e)){
-            this._currMediaType = e;
-            return !0;
-          }
-        });
-      }
-    return !1;
+    var b = !1;
+    if (c.includes("is_original")){
+      this._types.forEach((e) => {
+        if (c.includes(e)){
+          b = !0;
+          this._currMediaType = e;
+          console.log(e);
+        }
+      });
+    }
+    return b;
   };
   end(){ this._parser.end() }
-  addLoopRef(L){ this.loop = L; }
+  /*addLoopRef(L){ this.loop = L; }*/
   write(chunk){ this._parser.write(chunk); }
   _initParser(){
     const self = this;
@@ -40,15 +43,15 @@ class ArchiveParser extends ee {
         }
         else if (name === "a") {
           if (self._isMediaFound) {
-            self.emit('post',{'host':self._options.host,'path':attribs.href,'type':self._currMediaType});
+            self.emit('post',{'host':self._loop._options.host,'path':attribs.href,'type':self._currMediaType});
             // clear variables, maybe make method
             self._currMediaType = null;
             self._isMediaFound = !1;
           }
           else if (attribs.id && attribs.id === "next_page_link") {
             //TODO: loose couple
-            self.loop._options.path = attribs.href;
-            self.emit("nextPage",{"path":self._options.path});
+            /*self.loop._options.path = attribs.href;*/
+            self.emit("nextPage",/*self.loop._options.path*/ attribs.href);
           }
         }
         else if (name === "h2" && attribs.class && attribs.class === "date") {
@@ -56,14 +59,19 @@ class ArchiveParser extends ee {
         }
       },
       ontext:function(t){
-        if (self._isDateFound && self.date !== t){
-          self.date = t;
+        if (self._isDateFound && self._date !== t){
+          self._date = t;
+          self.emit('date',self._date);
+          self._isDateFound = !1;
         }
       }
     },{decodeEntities: true});
   }
 }
 
-class contentParser extends ee{
-  
+class ContentParser extends ee{
+
 }
+
+module.exports.ArchiveParser = ArchiveParser;
+module.exports.ContentParser = ContentParser;

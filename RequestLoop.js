@@ -15,6 +15,7 @@ class RequestLoop extends ee {
       }
     };
     this._callback = function(res){
+      res.setEncoding('utf8');
       if (res.statusCode !== 200){
         self.emit('error','blog could not be resolved');
         return;
