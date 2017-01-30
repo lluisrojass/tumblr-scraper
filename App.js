@@ -1,9 +1,7 @@
 'use strict';
-const electron = require('electron');
-
-const app = electron.app;
-
-require('electron-debug')();
+const {app, BrowserWindow} = require('electron');
+const path = require('path');
+const url = require('url');
 
 // prevent window being garbage collected
 let mainWindow;
@@ -15,22 +13,22 @@ function onClosed() {
 }
 
 function createMainWindow() {
-	const win = new electron.BrowserWindow({
+	const win = new BrowserWindow({
 		width: 600,
 		height: 400
 	});
 
-	win.loadURL(`file://${__dirname}/index.html`);
+	win.loadURL(url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
 	win.on('closed', onClosed);
 
 	return win;
 }
 
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
-});
+app.on('window-all-closed', () => app.quit() );
 
 app.on('activate', () => {
 	if (!mainWindow) {

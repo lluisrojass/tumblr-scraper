@@ -1,16 +1,17 @@
+'use strict';
+
 const ee = require('events');
 const http = require('http');
-const htmlparser2 = require('htmlparser2');
+const pipeEvents = require('pipe-event');
+const ContentParser = require('./Parser').ContentParser;
 
-/* emits error(:param: message,:param: attempted URL path)*/
-module.exports = class postData extends ee {
+class PostData extends ee {
   /*returns JSON object with data from post*/
   get(host,path,type){
+
     const self = this;
-    const returnData = {
-      href:host+path,
-      type:type
-    };
+    let found = !1;
+
     const options = {
       host:host,
       path:path+'/mobile',
@@ -19,29 +20,37 @@ module.exports = class postData extends ee {
         'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
       }
     };
-    var isFound = !1;
-    const parser = new htmlparser2.Parser({
-      onopentag:function(name,attribs){
-        if (name === 'script' && attribs.type && attribs.type === 'application/ld+json'){ isFound = !0 }
-      },
-      ontext:function(text){
-        if (isFound) {
-          returnData.data = JSON.parse(text);
-          self.emit('postData',returnData);
-          isFound = !1;
-        }
-      }
-    },{decodeEntities: true});
 
-    http.get(options,(res)=>{
-      if (res.statusCode !== 200){
-        this.emit('error',`response code: ${statusCode}`,path)
-        return;
+    const returnData = {
+      meta:{
+        href:options.host+options.path,
+        type:type
       }
-      res.on('data',(chunk)=>parser.write(chunk));
-    }).on('error',()=>{
-      this.emit('error','unknown error with request',path)
-      return;
+    };
+
+    self._parser.on('data',(data) =>{
+      const d = JSON.parse(JSON.stringify(returnData));
+
+      d.pageData = data;
+      found = !0;
+      console.log('new d!' + options.host+options.path);
+      //self.emit('data',d)
     });
+
+    http.get(options,(res) => {
+      if (res.statusCode !== 200)
+        this.emit('responseError',options.host+options.path);
+      res.on('data',(chunk)=> {
+        if (!found){
+          this._parser.write(chunk);
+        }
+      });
+    }).on('error',()=>this.emit('requestError',options.host + options.path));
+
   }
 }
+
+PostData.prototype._parser = new ContentParser();
+
+
+module.exports = PostData;
