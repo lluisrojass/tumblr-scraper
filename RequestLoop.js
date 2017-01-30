@@ -21,7 +21,11 @@ class RequestLoop extends ee {
     this._callback = function(res){
       res.setEncoding('utf8');
       if (res.statusCode !== 200){
+<<<<<<< HEAD
         self.emit('responseError',self._options.host+self._options.path);
+=======
+        self.emit('requestError','blog could not be resolved');
+>>>>>>> 9647a7d1bb26110239ccdccb361f22afd61a8081
         return;
       }
       res.on('data',(chunk) => parser.write(chunk));
@@ -35,9 +39,15 @@ class RequestLoop extends ee {
         }
       });
     }
+<<<<<<< HEAD
 
     this._requestHandlers = {
       error: function(){ self.emit('requestError',self._options.host+self._options.path)},
+=======
+    // TODO: find ways to pipe events instead of re-emitting a similar one
+    this._requestHandlers = {
+      error: function(){ self.emit('requestError','request attempt failed, error with request') },
+>>>>>>> 9647a7d1bb26110239ccdccb361f22afd61a8081
       response: function(){ self._options.path = '' },
       abort: function(){ self.emit('abort') }
     };

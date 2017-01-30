@@ -5,12 +5,9 @@ const http = require('http');
 const pipeEvents = require('pipe-event');
 const ContentParser = require('./Parser').ContentParser;
 
-class PostData extends ee {
-  /*returns JSON object with data from post*/
-  get(host,path,type){
+class postData extends ee {
 
-    const self = this;
-    let found = !1;
+  get(host,path,type){
 
     const options = {
       host:host,
@@ -30,11 +27,10 @@ class PostData extends ee {
 
     self._parser.on('data',(data) =>{
       const d = JSON.parse(JSON.stringify(returnData));
-
       d.pageData = data;
       found = !0;
       console.log('new d!' + options.host+options.path);
-      //self.emit('data',d)
+      //self.emit('data',d) not working
     });
 
     http.get(options,(res) => {
@@ -46,11 +42,9 @@ class PostData extends ee {
         }
       });
     }).on('error',()=>this.emit('requestError',options.host + options.path));
-
   }
 }
 
 PostData.prototype._parser = new ContentParser();
-
 
 module.exports = PostData;

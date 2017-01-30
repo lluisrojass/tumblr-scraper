@@ -66,14 +66,13 @@ class ArchiveParser extends ee {
 // For Parsing data from post pages
 class ContentParser extends ee{
   constructor(){
-    super();
     const self = this;
     let found = !1;
     this._parser = new htmlparser2.Parser({
       onopentag:function(name,attribs){
         if (name === 'script' && attribs.type && attribs.type === 'application/ld+json'){
           found = !0;
-        } else{
+        } else {
           return;
         }
       },
