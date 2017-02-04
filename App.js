@@ -1,7 +1,10 @@
 'use strict';
+
 const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const url = require('url');
+
+const reload = require('electron-reload')(__dirname);
 
 // prevent window being garbage collected
 let mainWindow;
@@ -14,8 +17,9 @@ function onClosed() {
 
 function createMainWindow() {
 	const win = new BrowserWindow({
-		width: 600,
-		height: 400
+		width: 1000,
+		height: 500,
+		resizable:false
 	});
 
 	win.loadURL(url.format({
