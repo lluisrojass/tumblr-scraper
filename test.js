@@ -1,20 +1,7 @@
-const Archive = require('./Archive');
-const PostData = require('./PostData');
+const Archive = require('./archive');
+const getPostData = require('./post').get;
 
 var archive = new Archive();
-var postData = new PostData();
-
-postData.on('requestError',(link)=>{
-  console.log('\x1b[30m%s',`Request Error getting ${link}`,'\x1b[0m');
-});
-
-postData.on('responseError',(link)=>{
-  console.log('\x1b[31m%s',`Response Error getting ${link}`,'\x1b[0m');
-});
-
-postData.on('data',(data)=>{
-  console.log('\x1b[30m%s',`${JSON.stringify(data)}`,'\x1b[0m');
-});
 
 archive.on('date',(date) => {
   console.log('\x1b[33m%s','New Date: ' + date,'\x1b[0m');
@@ -24,7 +11,14 @@ archive.on('nextPage',(path) =>{
 });
 archive.on('post',(data) =>{
   console.log('\x1b[32m%s',`Post Found (${data['type']}): ${data['host']}${data['path']}`,'\x1b[0m');
-  postData.get(data['host'],data['path'],data['type']);
+  getPostData(data['host'],data['path'],data['type'],(err,data) => {
+      if (err){
+        console.log(data);
+        console.log('\x1b[33m%s',`${data.error.type} getting ${data.href}`,'\x1b[0m');
+        return;
+      }
+      console.log('\x1b[30m%s',JSON.stringify(data),'\x1b[0m');
+  });
 });
 
 archive.on('responseError',(link) =>{
@@ -37,4 +31,4 @@ archive.on('end',() =>{
   console.log('\x1b[30m%s',`OVER`,'\x1b[0m');
 });
 
-archive.go('xxx',['is_photo','is_note'])
+archive.go('lewew',['is_photo','is_note'])

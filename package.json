@@ -1,18 +1,31 @@
 {
   "name": "tumblr-scraper",
+  "productName": "Tumblr User Scraper",
   "version": "1.0.0",
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lluisrojass/Tumblr-Scraper"
+  },
+  "description": "A tool to scrape personal posts from a Tumblr profile",
   "main": "App.js",
   "scripts": {
+    "start": "electron App.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Luis Rojas",
+  "license": "MIT",
   "dependencies": {
     "htmlparser2": "^3.9.2",
-    "pipe-event": "^0.1.0"
+    "pipe-event": "^0.1.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   },
   "devDependencies": {
-    "electron": "^1.4.15"
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babelify": "^7.3.0",
+    "browserify": "^14.0.0",
+    "electron": "^1.4.15",
+    "electron-reload": "^1.1.0"
   }
 }
