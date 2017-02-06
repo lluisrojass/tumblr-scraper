@@ -1,7 +1,7 @@
 'use strict';
 
 const htmlparser2 = require('htmlparser2');
-const ee = require('events');
+var ee = require('events');
 
 // for archive parsing
 class ArchiveParser extends ee {
@@ -10,7 +10,7 @@ class ArchiveParser extends ee {
     const self = this;
     this._currMediaType = null;
     /* holds either 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(question) 'is_audio'*/
-    this._types =[];
+    this._types = [];
     postTypes.forEach((elem) => this._types.push(elem));
     this._parser = null;
     this._isMediaFound = !1;

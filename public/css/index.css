@@ -3,9 +3,8 @@
    License: none (public domain)
 */
 *{
-	font-family: 'Helvetica-Neue';
-	color: #556072;
-	//text-shadow: 2px 2px #000000;
+	font-family: 'Helvetica Neue',;
+	color: black;
 }
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -50,34 +49,185 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+/* --------- */
+/* reset end */
+/* --------- */
+
 body,html {
 	width: 100%;
 	height: 100%;
-	margin: 0px;
+	margin: 0;
+	padding: 0;
 	font-family: Helvetica;
 	background-color: #29354A;
 }
-.left-panel{
+/* CATEGORIES */
+#wrapper{
 	height: 100%;
-	width:33.3%;
-	border-right: 2px solid #3F4B5F;
-	border-width: medium;
+	width: 100%;
+	display: flex;
 }
-#terminal{
-	background-color: black;
-	height: 60px;
-	font-family: 'Helvetica Neue',Arial;
+#config{
+	background-color: green;
+	height: 100%;
+	width: 25%;
 }
-#wrapper .left-panel form input {
-	font-family: sans-serif;
+/* POST SETUP */
+#posts{
+	height: 100%;
+	width: 75%;
+	display: flex;
+}
+.scroll-box{
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+/*  INDIVIDUAL POST CSS */
+.post {
+	background-color: #F9F9F9;
+	height: 100px;
+	width: 100%;
+	border-bottom: 1.5px solid #E0E2E6;
+	display: flex;
+}
+.image-wrapper{
+	width: 30%;
+	text-align: center;
+	vertical-align: middle;
+}
+.post-image{
+	border-radius: 5px;
+	position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+	height: 80px;
+	width: 80px;
+	border: 1px solid #898989;
+}
+.post-content{
+	margin: 10px 5px;
+	width: 70%;
+	height: 100%;
+}
+.post-headline{
+	width: 100%;
+}
+.post-title{
+	font-weight: 900;
+	display: inline;
+}
+.post-date{
+	float: right;
+	margin-right: 5px;
+	font-size: 13px;
+	color: #298cda;
+	display: inline;
+}
+.post-body{
+	padding-top: 3px;
 	font-size: 12px;
 }
-.mid-panel{
+/* DATE CSS */
+.date-wrapper{
+	font-weight: 600;
+	background-color: #F9F9F9;
+	text-align: center;
+	border-bottom: 1.5px solid #E0E2E6;
+	height: 25px;
+}
+.date-wrapper h1{
+	position: relative;
+  top: 50%;
+	font-size: 13px;
+  transform: translateY(-50%);
+}
+/*CONFIG CSS*/
+
+
+#config-data{
+	padding: 30px 20px;
+	border-bottom: 1px solid grey;
+	height: 65%;
+}
+#config-data h1{
+	text-align: center;
+	font-size: 30px;
+	font-weight: 700;
+}
+.form-wrapper{
+	margin: 20px 5px;
+	height: 90%;
+}
+form {
+	flex-wrap: wrap;
+	display: flex;
+}
+.input-column{
+	width:50%;
+	height:50%;
+	display: flex;
+	flex-direction: column;
+}
+.blog-input-wrapper{
+	height:15%;
+}
+.button-wrapper{
+	width:100%;
+	height:20%;
+	text-align: center;
+}
+button{
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+.blog-input-wrapper div{
+		font-weight: 600;
+		position: relative;
+	  top: 50%;
+	  transform: translateY(-50%);
+}
+.blog-input-wrapper div input{
+	width: 110px;
+	font-size: 15px;
+}
+.input-row{
+	width: 100%;
+	height:33.3%;
+	vertical-align: middle;
+}
+.input-row div{
+	position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#all-checkbox{
+	height: 15%;
+	border-bottom: 1px solid #7E7F7E;
+}
+
+/* Terminal CSS */
+
+.terminal{
+	background-color:black;
+	height:20px;
+}
+
+.left-panel{
 	height: 100%;
-	width:33.3%;
-	background-color:yellow;
+	border-right: 1px solid #CFCFCF;
+	background-color: #E6E6E6;
+}
+.mid-panel {
+	height: 100%;
+	width: 50%;
+	background-color: #F9F9F9;
 }
 .right-panel{
 	height: 100%;
-	width: 33.3%;
-	background-color:blue;
+	width: 50%;
+	border-left: 1px solid #CFCFCF;
+	background-color: #F9F9F9;
+}

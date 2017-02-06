@@ -1,5 +1,5 @@
-const Archive = require('./archive');
-const getPostData = require('./post').get;
+const Archive = require('./components/archive');
+const getPostData = require('./components/post').get;
 
 var archive = new Archive();
 

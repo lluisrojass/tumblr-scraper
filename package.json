@@ -10,7 +10,7 @@
   "main": "App.js",
   "scripts": {
     "start": "electron App.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "author": "Luis Rojas",
   "license": "MIT",

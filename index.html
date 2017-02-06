@@ -5,29 +5,63 @@
 	</head>
 	<body>
 		<div id='wrapper'>
-			<div class='left-panel'>
-				<h1>Settings</h1>
-				<form>
-					All<input type='checkbox' name='all' checked value=''>
-					Photo<input type='checkbox' name='is_photo' value=''><br/>
+			<div id='config'>
+				<div class='left-panel'>
+					<div id='config-data'>
+						<h1>Config</h1>
+						<div class='form-wrapper'>
+							<form>
 
-					Video<input type='checkbox' name='is_video' value=''>
-					Text<input type='checkbox' name='is_regular' value=''><br/>
+								<div class='input-row' id='all-checkbox'>
+									<div><input type='checkbox' name='all' checked value=''>All</div>
+								</div>
 
-					Chat<input type='checkbox' name='is_chat' value=''>
-					Note<input type='checkbox' name='is_note' value=''><br/>
+								<div class='input-column'>
+									<div class='input-row'><div><input type='checkbox' name='is_photo' value=''>Photo</br></div></div>
+									<div class='input-row'><div><input type='checkbox' name='is_video' value=''>Video</br></div></div>
+									<div class='input-row'><div><input type='checkbox' name='is_regular' value=''>Text</br></div></div>
+								</div>
 
-					Audio<input type='checkbox' name='is_audio' value=''><br/>
-
-					Blogname<br><input type='text' name='all' checked value=''>
-					<button>Go</button>
-					<div id='terminal'>
-						hello motto
+								<div class='input-column'>
+									<div class='input-row'><div><input type='checkbox' name='is_chat' value=''>Chat</br></div></div>
+									<div class='input-row'><div><input type='checkbox' name='is_note' value=''>Note</br></div></div>
+									<div class='input-row'><div><input type='checkbox' name='is_audio' value=''>Audio</br></div></div>
+								</div>
+								<div class='blog-input-wrapper'>
+									<div>Blogname <input name='blogname'></div>
+								</div>
+								<div class='button-wrapper'>
+										<button>GO</button>
+								</div>
+							</form>
+						</div>
 					</div>
-				</form>
+					<div class='terminal'>
+					</div>
+				</div>
 			</div>
-			<div class='mid-panel'>ff</div>
-			<div class='right-panel'>ff</div>
+
+			<div id='posts'>
+				<div class='mid-panel'>
+					<div class='scroll-box'>
+						<div class='date-wrapper'><h1>December 2016</h1></div>
+
+						<div class='post'>
+							<div class='image-wrapper'>
+								<img src='public/img/quote_default.png' class='post-image'>
+							</div>
+							<div class='post-content'>
+								<div class='post-headline'><h1 class='post-title'>Hello Arigato Mr R...</h1><h1 class='post-date'>2016-12-29</h1></div>
+								<p class='post-body'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever Lorem Ipsum has been the industry's standard dummy text ever  </p>
+							</div
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+				<div class='right-panel'></div>
+			</div>
 		</div>
 	</body>
 </html>
