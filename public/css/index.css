@@ -3,8 +3,9 @@
    License: none (public domain)
 */
 *{
-	font-family: 'Helvetica Neue',;
-	color: black;
+	font-family: 'Helvetica Neue';
+	//color: black;
+	box-sizing: border-box;
 }
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -68,8 +69,7 @@ body,html {
 	width: 100%;
 	display: flex;
 }
-#config{
-	background-color: green;
+#config-section{
 	height: 100%;
 	width: 25%;
 }
@@ -82,6 +82,12 @@ body,html {
 .scroll-box{
 	width: 100%;
 	height: 100%;
+	overflow: auto;
+}
+.terminal-scroll-box{
+	width: 100%;
+	height: 100%;
+	border: 2px solid red;
 	overflow: auto;
 }
 /*  INDIVIDUAL POST CSS */
@@ -146,18 +152,28 @@ body,html {
 /*CONFIG CSS*/
 
 
-#config-data{
-	padding: 30px 20px;
-	border-bottom: 1px solid grey;
-	height: 65%;
+#config-wrapper{
+	padding: 25px 20px;
+	height: 75%;
+	box-sizing: border-box;
 }
-#config-data h1{
+.settings-wrapper{
+	width: 100%;
+	height: 10%;
+}
+.settings-wrapper h1{
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 	text-align: center;
 	font-size: 30px;
 	font-weight: 700;
 }
+
 .form-wrapper{
-	margin: 20px 5px;
+	margin: 35px 5px;
+	padding: 5px 15px;
+	box-sizing: border-box;
 	height: 90%;
 }
 form {
@@ -166,7 +182,7 @@ form {
 }
 .input-column{
 	width:50%;
-	height:50%;
+	height:55%;
 	display: flex;
 	flex-direction: column;
 }
@@ -175,7 +191,7 @@ form {
 }
 .button-wrapper{
 	width:100%;
-	height:20%;
+	height:10%;
 	text-align: center;
 }
 button{
@@ -195,25 +211,14 @@ button{
 }
 .input-row{
 	width: 100%;
-	height:33.3%;
-	vertical-align: middle;
+	height: 31px;
 }
 .input-row div{
 	position: relative;
   top: 50%;
   transform: translateY(-50%);
 }
-#all-checkbox{
-	height: 15%;
-	border-bottom: 1px solid #7E7F7E;
-}
-
 /* Terminal CSS */
-
-.terminal{
-	background-color:black;
-	height:20px;
-}
 
 .left-panel{
 	height: 100%;
@@ -230,4 +235,124 @@ button{
 	width: 50%;
 	border-left: 1px solid #CFCFCF;
 	background-color: #F9F9F9;
+}
+
+
+
+
+
+
+
+
+/*CSS All Switch*/
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+	float: right;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* slider from http://www.w3schools.com/howto/howto_css_switch.asp*/
+.slider {
+	height: 100%;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  transform: translateX(13px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+/*button css generated at http://livetools.uiparade.com/button-builder.html# */
+
+.button {
+	margin-top: 12px;
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    background-color: #538fbe;
+    padding: 5px 17.5px;
+    font-size: 11px;
+		font-weight: 200;
+    border: 1px solid #2d6898;
+		background-image: linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
+    background-image: -o-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
+    background-image: -moz-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
+    background-image: -ms-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(73,132,180)),
+        color-stop(1, rgb(97,155,203))
+    );
+
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;
+		text-shadow: x-offset y-offset blur color;
+		-webkit-box-shadow: 0px 6px 0px #2b638f;
+		-moz-box-shadow: 0px 6px 0px #2b638f;
+		box-shadow: 0px 4px 0px #2b638f;
+}
+.button:hover {
+    background-image: linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
+    background-image: -o-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
+    background-image: -moz-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
+    background-image: -ms-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(79,142,191)),
+        color-stop(1, rgb(102,166,214))
+    );
 }
