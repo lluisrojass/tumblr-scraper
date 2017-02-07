@@ -5,7 +5,7 @@
 *{
 	font-family: 'Helvetica Neue';
 	//color: black;
-	box-sizing: border-box;
+	-webkit-app-region: drag;
 }
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -121,7 +121,7 @@ body,html {
 	width: 100%;
 }
 .post-title{
-	font-weight: 900;
+	font-weight: 300;
 	display: inline;
 }
 .post-date{
@@ -133,6 +133,7 @@ body,html {
 }
 .post-body{
 	padding-top: 3px;
+	font-weight: 400;
 	font-size: 12px;
 }
 /* DATE CSS */
@@ -151,15 +152,14 @@ body,html {
 }
 /*CONFIG CSS*/
 
-
 #config-wrapper{
-	padding: 25px 20px;
-	height: 75%;
+	padding: 0px 22px;
+	height: 70%;
 	box-sizing: border-box;
 }
 .settings-wrapper{
 	width: 100%;
-	height: 10%;
+	height: 15%;
 }
 .settings-wrapper h1{
 	position: relative;
@@ -167,14 +167,14 @@ body,html {
 	transform: translateY(-50%);
 	text-align: center;
 	font-size: 30px;
-	font-weight: 700;
+	font-weight: 100;
 }
-
 .form-wrapper{
-	margin: 35px 5px;
-	padding: 5px 15px;
+	margin: 0px 5px;
+	padding: 0px 15px;
 	box-sizing: border-box;
 	height: 90%;
+	width: 100%;
 }
 form {
 	flex-wrap: wrap;
@@ -188,6 +188,7 @@ form {
 }
 .blog-input-wrapper{
 	height:15%;
+	width:100%;
 }
 .button-wrapper{
 	width:100%;
@@ -200,14 +201,15 @@ button{
 	transform: translateY(-50%);
 }
 .blog-input-wrapper div{
-		font-weight: 600;
 		position: relative;
 	  top: 50%;
 	  transform: translateY(-50%);
+		width: 100%;
 }
 .blog-input-wrapper div input{
-	width: 110px;
-	font-size: 15px;
+	width: 55%;
+	font-size: 13px;
+	float: right;
 }
 .input-row{
 	width: 100%;
@@ -236,13 +238,6 @@ button{
 	border-left: 1px solid #CFCFCF;
 	background-color: #F9F9F9;
 }
-
-
-
-
-
-
-
 
 /*CSS All Switch*/
 
@@ -286,11 +281,9 @@ button{
 input:checked + .slider {
   background-color: #2196F3;
 }
-
 input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
 }
-
 input:checked + .slider:before {
   -webkit-transform: translateX(15px);
   -ms-transform: translateX(15px);
@@ -355,4 +348,23 @@ input:checked + .slider:before {
         color-stop(0, rgb(79,142,191)),
         color-stop(1, rgb(102,166,214))
     );
+
+}
+
+.button:active {
+    background-image: linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
+    background-image: -o-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
+    background-image: -moz-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
+    background-image: -webkit-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
+    background-image: -ms-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0, rgb(88,154,204)),
+        color-stop(1, rgb(90,150,199))
+    );
+		box-shadow: 0px 2px 0px #2b638f, 0px 1px 6px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.5);
+		transform: translate(0, 2px);
 }

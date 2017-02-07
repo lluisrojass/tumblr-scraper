@@ -2,6 +2,18 @@
 	<head>
 		<title>Tumblr user scraper made by @lluisrojass</title>
 		<link rel="stylesheet" type="text/css" href="public/css/index.css">
+		<!-- Place this tag in your head or just before your close body tag. -->
+		<script src='components/behavior.js'></script>
+
+		<script>
+			document.addEventListener("keydown", function (e) {
+				if (e.which === 123) {
+					require('remote').getCurrentWindow().toggleDevTools();
+				} else if (e.which === 116) {
+					location.reload();
+				}
+			});
+	</script>
 	</head>
 	<body>
 		<div id='wrapper'>
@@ -14,7 +26,7 @@
 
 					<div id='config-wrapper'>
 						<div class='form-wrapper'>
-							<form>
+							<form action='' id='f' name='post-settings' >
 								<div class='input-row' id='all-checkbox'>
 									<div>
 										All Posts
@@ -29,7 +41,7 @@
 										<div>
 											Photo
 											<label class="switch">
-	  										<input type='checkbox' name='all' value=''>
+	  										<input type='checkbox' name='photo' value=''>
 												<div class="slider round">
 												</div>
 											</label>
@@ -40,7 +52,7 @@
 											<div>
 												Chat
 												<label class="switch">
-		  										<input type='checkbox' name='all' value=''>
+		  										<input type='checkbox' name='chat' value=''>
 													<div class="slider round">
 													</div>
 												</label>
@@ -51,7 +63,7 @@
 												<div>
 													Note
 													<label class="switch">
-			  										<input type='checkbox' name='all' value=''>
+			  										<input type='checkbox' name='note' value=''>
 														<div class="slider round">
 														</div>
 													</label>
@@ -61,7 +73,7 @@
 												<div>
 													Video
 													<label class="switch">
-			  										<input type='checkbox' name='all' value=''>
+			  										<input type='checkbox' name='video' value=''>
 														<div class="slider round">
 														</div>
 													</label>
@@ -71,44 +83,30 @@
 												<div>
 													Text
 													<label class="switch">
-			  										<input type='checkbox' name='all' value=''>
+			  										<input type='checkbox' name='regular' value=''>
 														<div class="slider round">
 														</div>
 													</label>
 												</div>
 											</div>
-										<!--
-								<div class='input-column'>
-									<div class='input-row'><div><input type='checkbox' name='is_photo' value=''>Photo</br></div></div>
-									<div class='input-row'><div><input type='checkbox' name='is_video' value=''>Video</br></div></div>
-									<div class='input-row'><div><input type='checkbox' name='is_regular' value=''>Text</br></div></div>
-								</div>
-
-								<div class='input-column'>
-									<div class='input-row'><div><input type='checkbox' name='is_chat' value=''>Chat</br></div></div>
-									<div class='input-row'><div><input type='checkbox' name='is_note' value=''>Note</br></div></div>
-									<div class='input-row'><div><input type='checkbox' name='is_audio' value=''>Audio</br></div></div>
-								</div>
 
 								<div class='blog-input-wrapper'>
-									<div>Blogname <input name='blogname'></div>
+									<div>Blogname<input name='blogname' type='text'></div>
 								</div>
-
-								-->
 								<div class='button-wrapper'>
-									<a href='#' class='button'>Go</a>
+									<a href='#'  type='submit'class='button'>Go</a>
 								</div>
+								<!-- Place this tag where you want the button to render. -->
 							</form>
 						</div>
 					</div>
-
-
 				</div>
 			</div>
 
 			<div id='posts'>
 				<div class='mid-panel'>
 					<div class='scroll-box'>
+
 						<div class='date-wrapper'><h1>December 2016</h1></div>
 
 						<div class='post'>
@@ -123,7 +121,8 @@
 						</div>
 					</div>
 				</div>
-				<div class='right-panel'></div>
+				<div class='right-panel'>
+				</div>
 			</div>
 		</div>
 	</body>

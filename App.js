@@ -19,7 +19,12 @@ function createMainWindow() {
 	const win = new BrowserWindow({
 		width: 1000,
 		height: 500,
-		resizable:false
+		minWidth: 1000,
+		minHeight: 500,
+		backgroundColor: '#F9F9F9',
+		titleBarStyle:'hidden',
+		scrollBounce:true,
+		movable:true,
 	});
 
 	win.loadURL(url.format({
@@ -42,4 +47,5 @@ app.on('activate', () => {
 
 app.on('ready', () => {
 	mainWindow = createMainWindow();
+	mainWindow.webContents.openDevTools();
 });
