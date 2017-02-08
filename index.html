@@ -2,18 +2,7 @@
 	<head>
 		<title>Tumblr user scraper made by @lluisrojass</title>
 		<link rel="stylesheet" type="text/css" href="public/css/index.css">
-		<!-- Place this tag in your head or just before your close body tag. -->
 		<script src='components/behavior.js'></script>
-
-		<script>
-			document.addEventListener("keydown", function (e) {
-				if (e.which === 123) {
-					require('remote').getCurrentWindow().toggleDevTools();
-				} else if (e.which === 116) {
-					location.reload();
-				}
-			});
-	</script>
 	</head>
 	<body>
 		<div id='wrapper'>
@@ -29,7 +18,7 @@
 							<form action='' id='f' name='post-settings' >
 								<div class='input-row' id='all-checkbox'>
 									<div>
-										All Posts
+										<p class='typename'>All Posts</p>
 										<label class="switch">
   										<input type='checkbox' name='all' checked value=''>
 											<div class="slider round">
@@ -39,7 +28,7 @@
 								</div>
 									<div class='input-row'>
 										<div>
-											Photo
+											<p class='typename grey indiv-type'>Photo</p>
 											<label class="switch">
 	  										<input type='checkbox' name='photo' value=''>
 												<div class="slider round">
@@ -50,7 +39,7 @@
 
 										<div class='input-row'>
 											<div>
-												Chat
+												<p class='typename grey indiv-type'>Chat</p>
 												<label class="switch">
 		  										<input type='checkbox' name='chat' value=''>
 													<div class="slider round">
@@ -61,7 +50,7 @@
 
 											<div class='input-row'>
 												<div>
-													Note
+													<p class='typename grey indiv-type'>Note</p>
 													<label class="switch">
 			  										<input type='checkbox' name='note' value=''>
 														<div class="slider round">
@@ -71,7 +60,7 @@
 											</div>
 											<div class='input-row'>
 												<div>
-													Video
+													<p class='typename grey indiv-type'>Video</p>
 													<label class="switch">
 			  										<input type='checkbox' name='video' value=''>
 														<div class="slider round">
@@ -81,7 +70,7 @@
 											</div>
 											<div class='input-row'>
 												<div>
-													Text
+													<p class='typename grey indiv-type'>Text</p>
 													<label class="switch">
 			  										<input type='checkbox' name='regular' value=''>
 														<div class="slider round">
@@ -99,6 +88,11 @@
 								<!-- Place this tag where you want the button to render. -->
 							</form>
 						</div>
+						</div>
+
+						<div class='terminal'>
+							<div class='terminal-scroll'>
+							</div>
 					</div>
 				</div>
 			</div>

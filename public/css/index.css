@@ -87,8 +87,14 @@ body,html {
 .terminal-scroll-box{
 	width: 100%;
 	height: 100%;
-	border: 2px solid red;
 	overflow: auto;
+}
+.terminal{
+	border: 2px solid green;
+	border-radius: 7px;
+	height: 30%;
+	margin: 20px;background-color: black;
+	box-sizing: border-box;
 }
 /*  INDIVIDUAL POST CSS */
 .post {
@@ -173,7 +179,7 @@ body,html {
 	margin: 0px 5px;
 	padding: 0px 15px;
 	box-sizing: border-box;
-	height: 90%;
+	height: 60%;
 	width: 100%;
 }
 form {
@@ -187,7 +193,7 @@ form {
 	flex-direction: column;
 }
 .blog-input-wrapper{
-	height:15%;
+	height:20%;
 	width:100%;
 }
 .button-wrapper{
@@ -226,6 +232,8 @@ button{
 	height: 100%;
 	border-right: 1px solid #CFCFCF;
 	background-color: #E6E6E6;
+	display: flex;
+	flex-direction: column;
 }
 .mid-panel {
 	height: 100%;
@@ -350,7 +358,10 @@ input:checked + .slider:before {
     );
 
 }
-
+@keyframes fadeIn { from { opacity:0; } to { opacity:0; } }
+.typename{
+	display: inline;
+}
 .button:active {
     background-image: linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
     background-image: -o-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
@@ -367,4 +378,21 @@ input:checked + .slider:before {
     );
 		box-shadow: 0px 2px 0px #2b638f, 0px 1px 6px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.5);
 		transform: translate(0, 2px);
+}
+
+
+
+.grey{
+	color: rgba(10,10,10,.2);
+}
+
+
+
+
+@keyframes fadeIn { from { } to { color: red } }
+.warn-choice{
+	-webkit-animation: fadeIn ease-in 30;
+}
+.warn-textbox{
+	border: 2px solid red;
 }
