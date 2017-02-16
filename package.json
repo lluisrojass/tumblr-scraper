@@ -10,13 +10,14 @@
   "main": "App.js",
   "scripts": {
     "start": "electron App.js",
-    "test": "node test.js"
+    "test": "node test.js",
+    "watch": "watchify components/main.js -t babelify -o public/js/bundle.js --debug --verbose"
   },
   "author": "Luis Rojas",
   "license": "MIT",
   "dependencies": {
     "htmlparser2": "^3.9.2",
-    "jQuery": "^1.7.4",
+    "jquery": "^3.1.1",
     "pipe-event": "^0.1.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"

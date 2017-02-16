@@ -5,7 +5,6 @@
 *{
 	font-family: 'Helvetica Neue';
 	//color: black;
-	-webkit-app-region: drag;
 }
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -84,16 +83,18 @@ body,html {
 	height: 100%;
 	overflow: auto;
 }
-.terminal-scroll-box{
+.terminal-scroll{
 	width: 100%;
 	height: 100%;
-	overflow: auto;
+	overflow-y: auto;
+	margin: 5 5;
 }
 .terminal{
-	border: 2px solid green;
+	border: 2px solid white;
 	border-radius: 7px;
-	height: 30%;
-	margin: 20px;background-color: black;
+	height: 20%;
+	margin: 20px;
+	background-color: black;
 	box-sizing: border-box;
 }
 /*  INDIVIDUAL POST CSS */
@@ -159,13 +160,13 @@ body,html {
 /*CONFIG CSS*/
 
 #config-wrapper{
-	padding: 0px 22px;
-	height: 70%;
+	padding: 0px 13px;
+	height: 60%;
 	box-sizing: border-box;
 }
 .settings-wrapper{
 	width: 100%;
-	height: 15%;
+	height: 20%;
 }
 .settings-wrapper h1{
 	position: relative;
@@ -185,12 +186,7 @@ body,html {
 form {
 	flex-wrap: wrap;
 	display: flex;
-}
-.input-column{
-	width:50%;
-	height:55%;
-	display: flex;
-	flex-direction: column;
+
 }
 .blog-input-wrapper{
 	height:20%;
@@ -198,13 +194,8 @@ form {
 }
 .button-wrapper{
 	width:100%;
-	height:10%;
+	height: 30%;
 	text-align: center;
-}
-button{
-	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
 }
 .blog-input-wrapper div{
 		position: relative;
@@ -226,7 +217,6 @@ button{
   top: 50%;
   transform: translateY(-50%);
 }
-/* Terminal CSS */
 
 .left-panel{
 	height: 100%;
@@ -234,6 +224,7 @@ button{
 	background-color: #E6E6E6;
 	display: flex;
 	flex-direction: column;
+	-webkit-app-region: drag;
 }
 .mid-panel {
 	height: 100%;
@@ -311,6 +302,7 @@ input:checked + .slider:before {
 /*button css generated at http://livetools.uiparade.com/button-builder.html# */
 
 .button {
+
 	margin-top: 12px;
     display: inline-block;
     text-decoration: none;
@@ -384,6 +376,11 @@ input:checked + .slider:before {
 
 .grey{
 	color: rgba(10,10,10,.2);
+}
+.terminal-entry{
+	color: white;
+	font-size: 15px;
+	font-weight: 100;
 }
 
 
