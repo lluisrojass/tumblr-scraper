@@ -382,7 +382,9 @@ input:checked + .slider:before {
 	font-size: 15px;
 	font-weight: 100;
 }
-
+.white{
+	color: white;
+}
 
 
 
