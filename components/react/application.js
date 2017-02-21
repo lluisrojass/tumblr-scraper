@@ -101,7 +101,7 @@ class Application extends React.Component {
 
   render(){
     return(
-      <div>
+      <div id='wrapper'>
         <Config />
         <Posts />
       </div>
@@ -217,4 +217,4 @@ function Posts(props){
   );
 }
 
-ReactDOM.render(<Application />,document.getElementById('wrapper'));
+ReactDOM.render(<Application />,document.getElementById('app-container'));
