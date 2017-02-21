@@ -17,7 +17,7 @@ archive.on('post',(data) =>{
         console.log('\x1b[33m%s',`${data.error.type} getting ${data.href}`,'\x1b[0m');
         return;
       }
-      console.log('\x1b[30m%s',JSON.stringify(data),'\x1b[0m');
+      console.log('\x1b[31m%s',JSON.stringify(data),'\x1b[0m');
   });
 });
 
@@ -31,4 +31,4 @@ archive.on('end',() =>{
   console.log('\x1b[30m%s',`OVER`,'\x1b[0m');
 });
 
-archive.go('lewew',['is_photo','is_note'])
+archive.go('',['is_photo','is_chat','is_note','is_video','is_regular'])

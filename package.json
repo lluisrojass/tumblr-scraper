@@ -11,7 +11,7 @@
   "scripts": {
     "start": "electron App.js",
     "test": "node test.js",
-    "watch": "watchify components/main.js -t babelify -o public/js/bundle.js --debug --verbose"
+    "watch": "watchify components/react/application.js -t babelify -o public/js/bundle.js --debug --verbose"
   },
   "author": "Luis Rojas",
   "license": "MIT",
@@ -23,6 +23,7 @@
     "react-dom": "^15.4.2"
   },
   "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.22.0",
     "babelify": "^7.3.0",
