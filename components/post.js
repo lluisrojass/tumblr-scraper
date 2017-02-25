@@ -1,17 +1,17 @@
 'use strict';
 
 const http = require('http');
-const ContentParser = require('./parser').ContentParser;
+const { ContentParser } = require('./parser');
 
-function typeTranslate(tumblrTypeString){
-  return tumblrTypeString.contains('regular') ? 'text' : tumblrTypeString.replace('is_','');
+function typeTranslate(tumblrTypeString) {
+  return tumblrTypeString.includes('regular') ? 'text' : tumblrTypeString.replace('is_','');
 }
 
 module.exports = function(postData,callback){
 
   var error = null
+  var request = null;
 
-  const parser = new ContentParser();
   const options = {
     host:postData.host,
     path:postData.path+'/mobile',
@@ -22,17 +22,18 @@ module.exports = function(postData,callback){
   };
   const returnData = {
     link:postData.host+postData.path,
-    type:typeTranslate(type),
+    type:typeTranslate(postData.type),
     postData:null
   };
+  const parser = new ContentParser();
 
   parser.on('data',(data) =>{
     returnData.postData = data;
-    isDataFound = !0;
+    request.abort();
     callback(error,returnData); // data found, all good to continue.
   });
 
-  http.get(options,(res) => {
+  request = http.get(options,(res) => {
     if (res.statusCode !== 200) {
       this.abort();
       error = {

@@ -4,7 +4,7 @@ const http = require('http');
 const ee = require('events');
 
 class RequestLoop extends ee {
-  constructor(parser) {
+  constructor() {
 
     super();
 
@@ -26,10 +26,9 @@ class RequestLoop extends ee {
         self.emit('responseError',self._options.host+self._options.path);
         return;
       }
-      res.on('data',(chunk) => parser.write(chunk));
+      res.on('data',(chunk) => self.emit('data',chunk));
       res.on('end',() => {
-        parser.end();
-        if(self.isLastPage()){
+        if (self.isLastPage()) {
           self.emit('end');
         } else {
           self.request = http.get(self._options,self._callback);
@@ -56,7 +55,7 @@ class RequestLoop extends ee {
     return '' === this._options.path;
   }
   addPath(p){
-    return this._options.path = p, void(0);
+    this._options.path = p;
   }
 }
 

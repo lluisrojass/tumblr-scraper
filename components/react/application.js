@@ -1,5 +1,10 @@
+'use strict';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { CustomForm } from './customForm';
+import { Analytics } from './analytics';
+
 const archive = require('../archive');
 const post = require('../post');
 
@@ -24,7 +29,6 @@ class Application extends React.Component {
       //TODO: implement analytics
     }
   }
-
 
   onSubmit = (event) => {
     const tumblrTypes = ['is_photo','is_chat','is_note','is_video','is_regular'];
@@ -68,15 +72,17 @@ class Application extends React.Component {
           // TODO: handle error
           return;
         }
-        // TODO: destructuring assignment, it's a mess down there
+
+        let {datePublished, articleBody, headline, image} = data.postData;
+
         this.state.scrapedData.push({
           type:'post',
           // post content
-          date: data.postData.datePublished ? data.postData.datePublished : 'No Date',
-          body: data.postData.articleBody ? data.postData.articleBody : 'N/A' ,
-          headline: data.postData.headline ? data.postData.headline : `${data.type} Post`,
-          images: data.postData.image ? typeof data.postData.image === 'object' ?  data.postData.image : [data.postData.image] : [],
-          url: data.postData.url ? data.postData.url : ''
+          date: datePublished ? datePublished : 'No Date',
+          body: articleBody ? articleBody : 'N/A' ,
+          headline: headline ? headline : `${data.type} Post`,
+          images: image ? typeof image === 'object' ? image : [image] : [],
+          url: url ? url : ''
         });
 
         this.setState(this.state);
@@ -102,119 +108,93 @@ class Application extends React.Component {
   render(){
     return(
       <div id='wrapper'>
-        <Config />
-        <Posts />
+
+
+
+        <div id='left-panel-wrapper'>
+         <div id='left-panel'>
+           <div id='title-wrapper'>
+             <h1 className='vertical-center-contents'>Config</h1>
+           </div>
+           <div id='config-wrapper'>
+             <CustomForm />
+           </div>
+           <Analytics />
+         </div>
+       </div>
+
+
+
+
+       <div id='mid-panel-wrapper'>
+         <div id='middle-panel' className='scroll-box'>
+
+          {
+            this.state.scrapedData.map((value) => {
+              return value.type === 'date' ?
+                <Date dateString={value.date}>
+                :
+                <Post images={value.images} headline={value.headline}
+                body={value.body} publishDate={value.date} url={value.url} onPostClick={this.postClick}/>
+              ;
+            });
+          }
+
+        </div>
       </div>
+
+      <div id='right-panel-wrapper'>
+
+      </div>
+
+    </div>
     )
   }
 }
 
-function Config(props){
+String.prototype.headlineShorten = function(){
+
+}
+String.prototype.bodyShorten = function(){
+
+}
+String.prototype.headlineShorten = function(){
+
+}
+String.prototype.dateShorten = function(){
+  return this.replace(/(\w|-|:)*/,function(txt) {
+      return txt.substr(0,txt.indexOf('T'));
+  });
+}
+
+
+function Post(props){
   return(
-    <div id='config-section'>
-     <div className='left-panel'>
-
-       <div className='title-wrapper'>
-         <h1>Config</h1>
+    <div className='post'>
+     <div className='image-wrapper'>
+       <img src='public/img/quote_default.png' className='post-image' />
+     </div>
+     <div className='post-content'>
+       <div className='post-headline'>
+         <h1 className='post-title'>Hello Arigato Mr R...</h1>
+         <h1 className='post-date'>2016-12-29</h1>
        </div>
-
-       <div id='config-wrapper'>
-         <CustomForm />
-       </div>
-
-       <Analytics />
-
+       <p className='post-body'>Lorem Ipsum is simply dummy text of the printing and
+       typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+       ever Lorem Ipsum has been the industry's standard dummy text ever
+       </p>
      </div>
    </div>
   )
 }
 
-class CustomForm extends React.Component {
-  render(){
-    return(
-      <div className='form-wrapper'>
-        <form>
-          <FormCheckbox name='All Posts' />
-          <FormCheckbox name='Photo' />
-          <FormCheckbox name='Chat' />
-          <FormCheckbox name='Note' />
-          <FormCheckbox name='Video' />
-          <FormCheckbox name='Text' />
-          <FormTextbox name='Blogname' />
-          <FormButton />
-        </form>
-      </div>
-    );
-  }
-}
-
-function FormCheckbox(props){
+function Date(props){
   return(
-    <div className='input-row'>
-      <div>
-        <p className='typename grey indiv-type'>{props.name}</p>
-        <label className="switch">
-          <input type='checkbox' name={props.name} />
-          <div className="slider round"></div>
-        </label>
-      </div>
+    <div className='date-wrapper'>
+      <h1>props.dateString</h1>
     </div>
   );
 }
 
-function FormTextbox(props){
-  return(
-    <div className='blog-input-wrapper'>
-      <div>{props.name}<input name={props.name} type='text' /></div>
-    </div>
-  );
-}
-
-function FormButton(props){
-  return(
-    <div className='button-wrapper'>
-      <a href='#' type='submit' className='button'>Go</a>
-    </div>
-  )
-}
-
-function Analytics(props){
-  return(
-    <div className='analytics'>
-
-    </div>
-  )
-}
-
-function Posts(props){
-  return(
-    <div id='posts'>
-    <div className='mid-panel scroll-box'>
-      <div className='date-wrapper'>
-        <h1>December 2016</h1>
-      </div>
-
-      <div className='post'>
-        <div className='image-wrapper'><img src='public/img/quote_default.png' className=
-        'post-image'/></div>
-
-        <div className='post-content'>
-          <div className='post-headline'>
-            <h1 className='post-title'>Hello Arigato Mr R...</h1>
-
-            <h1 className='post-date'>2016-12-29</h1>
-          </div>
-
-          <p className='post-body'>Lorem Ipsum is simply dummy text of the printing and
-          typesetting industry. Lorem Ipsum has been the industry's standard dummy text
-          ever Lorem Ipsum has been the industry's standard dummy text ever</p>
-        </div>
-      </div>
-    </div>
-
-    <div className='right-panel'></div>
-  </div>
-  );
-}
 
 ReactDOM.render(<Application />,document.getElementById('app-container'));
