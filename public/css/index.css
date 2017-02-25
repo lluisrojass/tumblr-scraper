@@ -175,6 +175,7 @@ form {
 #mid-panel-wrapper{
 	height: 100%;
 	width: 37.5%;
+	border-right: 1px solid #CFCFCF;
 }
 
 #middle-panel {
@@ -199,20 +200,6 @@ form {
 	width: 37.5%;
 	background-color: #F9F9F9;
 }
-
-
-/* left panel */
-
-
-
-
-
-
-/* mid-panel setup */
-
-
-
-
 
 /*  INDIVIDUAL POST CSS */
 .post {

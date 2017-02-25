@@ -5,9 +5,7 @@ const ee = require('events');
 
 class RequestLoop extends ee {
   constructor() {
-
     super();
-
     const self = this;
 
     this._options = {

@@ -7,6 +7,19 @@ import { Analytics } from './analytics';
 
 const archive = require('../archive');
 const post = require('../post');
+const behaviour = require('../behavior');
+
+String.prototype.dateShorten = function(){
+  return this.replace(/(\w|-|:)*/,function(txt) {
+      return txt.substr(0,txt.indexOf('T'));
+  });
+}
+String.prototype.bodyFormat = function(){
+    return (this.length > 196) ? this.substr(0,193) + '...' : this.toString() ;
+  }
+String.prototype.headlineShorten = function(){
+  return (this.length >= 20) ? this.substr(0,18) + '..' : this.toString() ;
+}
 
 function exactMatch(r,str){
   const match = str.match(r);
@@ -18,6 +31,12 @@ class Application extends React.Component {
   constructor(props){
     super(props);
     this.archive = new archive();
+    var postCount = 0;
+    this.getandIncrementPostCount = function(){
+      const c = postCount;
+      postCount += 1;
+      return c;
+    };
     this.state = {
       scrapedData:[],
       currentPost:{
@@ -31,6 +50,7 @@ class Application extends React.Component {
   }
 
   onSubmit = (event) => {
+    event.preventDefault();
     const tumblrTypes = ['is_photo','is_chat','is_note','is_video','is_regular'];
     const blogname = event.target[6].value;
     if(!event.target[0].checked){
@@ -45,11 +65,13 @@ class Application extends React.Component {
       }
     }
     // validate blogname
-    if(exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/,blogname)){
+    if (exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/,blogname)){
       this.archive.go(blogname,tumblrTypes);
+    } else {
+      //TODO: warn invalid blogname
     }
     // submit and start the loop.
-    event.preventDefault();
+
   }
 
   onPostClick = (data) => {
@@ -78,6 +100,7 @@ class Application extends React.Component {
         this.state.scrapedData.push({
           type:'post',
           // post content
+          id:this.getandIncrementPostCount(),
           date: datePublished ? datePublished : 'No Date',
           body: articleBody ? articleBody : 'N/A' ,
           headline: headline ? headline : `${data.type} Post`,
@@ -109,8 +132,6 @@ class Application extends React.Component {
     return(
       <div id='wrapper'>
 
-
-
         <div id='left-panel-wrapper'>
          <div id='left-panel'>
            <div id='title-wrapper'>
@@ -123,23 +144,15 @@ class Application extends React.Component {
          </div>
        </div>
 
-
-
-
        <div id='mid-panel-wrapper'>
          <div id='middle-panel' className='scroll-box'>
-
-          {
-            this.state.scrapedData.map((value) => {
-              return value.type === 'date' ?
-                <Date dateString={value.date}>
+          {this.state.scrapedData.map((scrapedItem) => {
+              return scrapedItem.type === 'date' ?
+                <Date key = {scrapedItem.id} dateString={scrapedItem.date} />
                 :
-                <Post images={value.images} headline={value.headline}
-                body={value.body} publishDate={value.date} url={value.url} onPostClick={this.postClick}/>
-              ;
-            });
+                <Post key = {scrapedItem.id} images={scrapedItem.images} headline={scrapedItem.headline} body={scrapedItem.body} publishDate={scrapedItem.date} url={scrapedItem.url} />
+            })
           }
-
         </div>
       </div>
 
@@ -152,37 +165,23 @@ class Application extends React.Component {
   }
 }
 
-String.prototype.headlineShorten = function(){
-
-}
-String.prototype.bodyShorten = function(){
-
-}
-String.prototype.headlineShorten = function(){
-
-}
-String.prototype.dateShorten = function(){
-  return this.replace(/(\w|-|:)*/,function(txt) {
-      return txt.substr(0,txt.indexOf('T'));
-  });
-}
-
-
 function Post(props){
   return(
     <div className='post'>
      <div className='image-wrapper'>
-       <img src='public/img/quote_default.png' className='post-image' />
+       {
+         props.images ?
+          <img src={props.images[0]} className='post-image' />
+         :
+          <img src={`public/img/${props.type}_default.jpg`} className='post-image' />
+       }
      </div>
      <div className='post-content'>
        <div className='post-headline'>
-         <h1 className='post-title'>Hello Arigato Mr R...</h1>
-         <h1 className='post-date'>2016-12-29</h1>
+         <h1 className='post-title'>{props.headline.headlineShorten()}</h1>
+         <h1 className='post-date'>{props.date.dateFormat()}</h1>
        </div>
-       <p className='post-body'>Lorem Ipsum is simply dummy text of the printing and
-       typesetting industry. Lorem Ipsum has been the industry's standard dummy text
-       ever Lorem Ipsum has been the industry's standard dummy text ever
-       </p>
+       <p className='post-body'>{props.body.bodyShorten()}</p>
      </div>
    </div>
   )
@@ -191,7 +190,7 @@ function Post(props){
 function Date(props){
   return(
     <div className='date-wrapper'>
-      <h1>props.dateString</h1>
+      <h1>{props.dateString}</h1>
     </div>
   );
 }
