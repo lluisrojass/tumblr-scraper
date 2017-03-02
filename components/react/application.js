@@ -7,7 +7,30 @@ import { Analytics } from './analytics';
 
 const archive = require('../archive');
 const post = require('../post');
-const behaviour = require('../behavior');
+const $ = require('jquery');
+
+$(document).on('change','input[type="checkbox"][name="All"]',function(e){
+  console.log('GOOGLE');
+  if(this.checked) {
+    $('p.indiv-type').each(function(e){
+      $(this).addClass('grey');
+    });
+    $('input[name!="All"]').each(function(e){
+      $(this).prop('checked',false);
+    });
+  } else {
+    $('p.indiv-type').each(function(e){
+      $(this).removeClass('grey');
+    });
+  }
+});
+
+
+$(document).on('click','input[type="checkbox"][name!="All"]',function(e){
+  if ($('input[name="All"]').prop('checked')){
+    e.preventDefault();
+  }
+});
 
 String.prototype.dateShorten = function(){
   return this.replace(/(\w|-|:)*/,function(txt) {
@@ -50,7 +73,7 @@ class Application extends React.Component {
   }
 
   onSubmit = (event) => {
-    event.preventDefault();
+    console.log('fuck!');
     const tumblrTypes = ['is_photo','is_chat','is_note','is_video','is_regular'];
     const blogname = event.target[6].value;
     if(!event.target[0].checked){
@@ -72,8 +95,14 @@ class Application extends React.Component {
     }
     // submit and start the loop.
 
+    event.preventDefault();
+
   }
 
+  submitForm = () => {
+    //alert('shit!');
+    document.getElementById("customform").submit();
+  }
   onPostClick = (data) => {
     this.state.currentPost = {
       /*TODO: implement current post viewer*/
@@ -138,7 +167,7 @@ class Application extends React.Component {
              <h1 className='vertical-center-contents'>Config</h1>
            </div>
            <div id='config-wrapper'>
-             <CustomForm />
+             <CustomForm onButtonClick={this.submitForm} onSubmit={this.onSubmit}/>
            </div>
            <Analytics />
          </div>

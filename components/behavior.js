@@ -1,5 +1,4 @@
 const $ = require('jquery');
-const Archive = require('./archive');
 
 $(document).on('click','.button',(e) =>{
   $('form').submit();

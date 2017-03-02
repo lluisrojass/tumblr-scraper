@@ -10,7 +10,7 @@
   "main": "App.js",
   "scripts": {
     "start": "electron App.js",
-    "test": "node test.js",
+    "test": "watchify test3.js -t babelify -o public/js/bundle.js --debug --verbose",
     "watch": "watchify components/react/application.js -t babelify -o public/js/bundle.js --debug --verbose"
   },
   "author": "Luis Rojas",
