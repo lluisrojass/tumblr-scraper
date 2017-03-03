@@ -3,98 +3,106 @@
 const htmlparser2 = require('htmlparser2');
 var ee = require('events');
 
-// for archive parsing
+
 class ArchiveParser extends ee {
   constructor(postTypes){
     super();
     const self = this;
-    this._currMediaType = null;
-    /* holds either 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(question) 'is_audio'*/
-    this._types = [];
-    postTypes.forEach((elem) => this._types.push(elem));
-    this._parser = null;
-    this._isMediaFound = !1;
-    this._isDateFound = !1;
-    this._date = '';
-    // main parser
-    this._parser = new htmlparser2.Parser({
+    this.currMediaType = null;
+    this.types = []; /* 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(question) 'is_audio'*/
+    postTypes.forEach(elem => this.types.push(elem));
+    this.parser = null;
+    this.isMediaFound = !1;
+    this.isDateFound = !1;
+    this.date = '';
+    this.parser = new htmlparser2.Parser({
       onopentag: function(name,attribs) {
-        if (name === "div" && attribs.class && self._validate(attribs.class)){
-          self._isMediaFound = !0;
+        if (name === "div" && attribs.class && self.validate(attribs.class)){
+          self.isMediaFound = !0;
         }
         else if (name === "a") {
-          if (self._isMediaFound && attribs['data-peepr'] ) {
+          if (self.isMediaFound && attribs['data-peepr'] ) {
             const d = JSON.parse(attribs['data-peepr'])
-            self.emit('post',{'host':`${d.tumblelog}.tumblr.com`,'path':`/post/${d.postId}`,'type':self._currMediaType});
+            self.emit('post',{'host':`${d.tumblelog}.tumblr.com`,'path':`/post/${d.postId}`,'type':self.currMediaType});
             // clear variables
-            self._currMediaType = null;
-            self._isMediaFound = !1;
+            self.currMediaType = null;
+            self.isMediaFound = !1;
           }
           else if (attribs.id && attribs.id === "next_page_link") {
             self.emit("nextPage",attribs.href); // subscribe to the change in the request loop
           }
         }
         else if (name === "h2" && attribs.class && attribs.class === "date") {
-            self._isDateFound = !0;
+            self.isDateFound = !0;
         }
       },
       ontext:function(t){
-        if (self._isDateFound){
-            if (t !== self._date){
-              self._date = t;
-              self.emit('date',self._date);
+        if (self.isDateFound){
+            if (t !== self.date){
+              self.date = t;
+              self.emit('date',self.date);
             }
-            self._isDateFound = !1;
+            self.isDateFound = !1;
         }
       }
     },{decodeEntities: true});
+
+    this.parser.__proto__.validate = function(c){
+      var valid = !1;
+      if (c.includes("is_original")){
+        this.types.forEach((e) => {
+          if (c.includes(e)){
+            valid = !0;
+            this.currMediaType = e;
+          }
+        });
+      }
+      return valid;
+    }
   }
-  _validate(c) {
-    var b = !1;
+
+  validate(c) {
+    var valid = !1;
     if (c.includes("is_original")){
-      this._types.forEach((e) => {
+      this.types.forEach((e) => {
         if (c.includes(e)){
-          b = !0;
-          this._currMediaType = e;
+          valid = !0;
+          this.currMediaType = e;
         }
       });
     }
-    return b;
+    return valid;
   };
-  end(){ this._parser.end() }
-  write(chunk){ this._parser.write(chunk); }
+  end(){ this.parser.parseComplete() }
+  write(chunk){ this.parser.write(chunk); }
 }
 
-// For Parsing data from post pages
+
 class ContentParser extends ee{
   constructor(){
     super();
+
     const self = this;
-    let found = !1;
-    this._parser = new htmlparser2.Parser({
-      onopentag:function(name,attribs){
+    var found = !1;
+
+    this.parser = new htmlparser2.Parser({
+      onopentag:function(name,attribs) {
         if (name === 'script' && attribs.type && attribs.type === 'application/ld+json'){
           found = !0;
-        } else {
-          return;
         }
+        return;
       },
-      ontext:function(t){
-        if(found){
-          self.emit('data',JSON.parse(t)); // de-reference
+      ontext:function(text){
+        if( found ){
+          self.emit('postData', JSON.parse(text));
           found = !1;
-        } else {
-          return;
         }
+        return;
       }
     },{decodeEntities: true});
   }
-  write(chunk){
-    this._parser.write(chunk)
-  }
-  end(){
-    this._parser.end();
-  }
+  write(chunk){ this.parser.write(chunk) }
+  end(){ this.parser.end(); }
 }
 
 module.exports.ArchiveParser = ArchiveParser;

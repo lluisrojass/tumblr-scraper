@@ -3,12 +3,12 @@
 const http = require('http');
 const ee = require('events');
 
-class RequestLoop extends ee {
+module.exports = class RequestLoop extends ee {
   constructor() {
     super();
     const self = this;
-
-    this._options = {
+    this.request = null;
+    this.options = {
       protocol:"http:",
       host:"",
       path:"/archive",
@@ -17,44 +17,39 @@ class RequestLoop extends ee {
         "user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36"
       }
     };
-
-    this._callback = function(res){
+    this.callback = function(res){
       res.setEncoding('utf8');
       if (res.statusCode !== 200){
-        self.emit('responseError',self._options.host+self._options.path);
+        self.emit('responseError',{'host':self.options.host,'path':self.options.path});
         return;
       }
-      res.on('data',(chunk) => self.emit('data',chunk));
+      res.on( 'data', chunk => self.emit('data',chunk) );
       res.on('end',() => {
-        if (self.isLastPage()) {
+        if ( self.isLastPage() ){
           self.emit('end');
         } else {
-          self.request = http.get(self._options,self._callback);
-          self._addHandlers();
+          self.request = http.get(self.options,self.callback);
+          self.addHandlers();
         }
       });
     }
-    this._requestHandlers = {
-      error: function(){ self.emit('requestError',self._options.host+self._options.path)},
-      response: function(){ self._options.path = '' },
-      abort: function(){ self.emit('abort') }
-    };
+    this.requestHandlers = {
+      error: function(){ self.emit('requestError',{'host':self.options.host,'path':self.options.path})},
+      response: function(){ self.options.path = '' },
+      abort: function(){  self.emit('abort'); }
+    }
   }
-  _addHandlers(){
+  addHandlers(){
     const self = this;
-    Object.keys(this._requestHandlers).forEach((elem) => self.request.on(elem,self._requestHandlers[elem]));
+    Object.keys(this.requestHandlers).forEach((elem) => self.request.on(elem,self.requestHandlers[elem]));
   }
-  go(blogName){
-    this._options.host = `${blogName}.tumblr.com`
-    this.request = http.get(this._options,this._callback);
-    this._addHandlers();
+  go(blogname){
+    this.options.host = `${blogname}.tumblr.com`
+    this.request = http.get(this.options,this.callback);
+    this.addHandlers();
   }
-  isLastPage(){
-    return '' === this._options.path;
-  }
-  addPath(p){
-    this._options.path = p;
-  }
+  // utilities
+  isLastPage(){ return '' === this.options.path; }
+  addPath(p){ this.options.path = p; }
+  abort(){ this.request.abort(); }
 }
-
-module.exports = RequestLoop;

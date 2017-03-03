@@ -9,39 +9,16 @@ const archive = require('../archive');
 const post = require('../post');
 const $ = require('jquery');
 
-$(document).on('change','input[type="checkbox"][name="All"]',function(e){
-  console.log('GOOGLE');
-  if(this.checked) {
-    $('p.indiv-type').each(function(e){
-      $(this).addClass('grey');
-    });
-    $('input[name!="All"]').each(function(e){
-      $(this).prop('checked',false);
-    });
-  } else {
-    $('p.indiv-type').each(function(e){
-      $(this).removeClass('grey');
-    });
-  }
-});
-
-
-$(document).on('click','input[type="checkbox"][name!="All"]',function(e){
-  if ($('input[name="All"]').prop('checked')){
-    e.preventDefault();
-  }
-});
-
 String.prototype.dateShorten = function(){
   return this.replace(/(\w|-|:)*/,function(txt) {
       return txt.substr(0,txt.indexOf('T'));
   });
 }
-String.prototype.bodyFormat = function(){
-    return (this.length > 196) ? this.substr(0,193) + '...' : this.toString() ;
-  }
+String.prototype.bodyShorten = function(){
+  return (this.length > 196) ? this.substr(0,193) + '...' : this.toString();
+}
 String.prototype.headlineShorten = function(){
-  return (this.length >= 20) ? this.substr(0,18) + '..' : this.toString() ;
+  return (this.length >= 20) ? this.substr(0,18) + '...' : this.toString();
 }
 
 function exactMatch(r,str){
@@ -54,12 +31,6 @@ class Application extends React.Component {
   constructor(props){
     super(props);
     this.archive = new archive();
-    var postCount = 0;
-    this.getandIncrementPostCount = function(){
-      const c = postCount;
-      postCount += 1;
-      return c;
-    };
     this.state = {
       scrapedData:[],
       currentPost:{
@@ -72,49 +43,34 @@ class Application extends React.Component {
     }
   }
 
-  onSubmit = (event) => {
-    console.log('fuck!');
-    const tumblrTypes = ['is_photo','is_chat','is_note','is_video','is_regular'];
-    const blogname = event.target[6].value;
-    if(!event.target[0].checked){
-      for(var i = 1 ; i <= 5 ;i++){
-        if(!event.target[i].checked){
-          tumblrTypes.splice(i-1,1);
-        }
-      }
-      // if none checked
-      if(translations.length === 5){
-        alert('please choose at least one post type');
-      }
+  start = (blogname,types) => {
+    console.log(types);
+    if (types.length == 0){
+      console.log('Terminal: ','no types selected');
+      return;
     }
-    // validate blogname
     if (exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/,blogname)){
-      this.archive.go(blogname,tumblrTypes);
+      this.archive.go(blogname,types);
     } else {
-      //TODO: warn invalid blogname
+      console.log('Terminal',blogname+' is invalid Blogname');
     }
-    // submit and start the loop.
-
-    event.preventDefault();
-
   }
 
-  submitForm = () => {
-    //alert('shit!');
-    document.getElementById("customform").submit();
-  }
   onPostClick = (data) => {
+    console.log('Terminal','Post Clicked');
     this.state.currentPost = {
       /*TODO: implement current post viewer*/
     };
     this.setState(this.state);
   }
 
+  stopRunning = () => { this.archive.end() }
+
   componentDidMount(){
     // adding all event handlers
     this.archive.on('nextPage',(path) => {
-      this.state.analytics.lastRequest = path;
-      this.setState(this.state);
+      //this.state.analytics.lastRequest = path;
+      //this.setState(this.state);
     });
 
     this.archive.on('post',(postData) => {
@@ -124,15 +80,15 @@ class Application extends React.Component {
           return;
         }
 
-        let {datePublished, articleBody, headline, image} = data.postData;
+        let {datePublished, articleBody, headline, image, url} = data.postData;
 
         this.state.scrapedData.push({
           type:'post',
           // post content
-          id:this.getandIncrementPostCount(),
-          date: datePublished ? datePublished : 'No Date',
+          mediaType: data.type,
+          datePublished: datePublished ? datePublished : 'No Date',
           body: articleBody ? articleBody : 'N/A' ,
-          headline: headline ? headline : `${data.type} Post`,
+          headline: headline ? headline : `${data.type} post`.capitalizeEach(),
           images: image ? typeof image === 'object' ? image : [image] : [],
           url: url ? url : ''
         });
@@ -167,7 +123,7 @@ class Application extends React.Component {
              <h1 className='vertical-center-contents'>Config</h1>
            </div>
            <div id='config-wrapper'>
-             <CustomForm onButtonClick={this.submitForm} onSubmit={this.onSubmit}/>
+             <CustomForm onSubmit={this.start} />
            </div>
            <Analytics />
          </div>
@@ -175,18 +131,18 @@ class Application extends React.Component {
 
        <div id='mid-panel-wrapper'>
          <div id='middle-panel' className='scroll-box'>
-          {this.state.scrapedData.map((scrapedItem) => {
+          {this.state.scrapedData.map((scrapedItem,index) => {
               return scrapedItem.type === 'date' ?
-                <Date key = {scrapedItem.id} dateString={scrapedItem.date} />
+                <Date key={index} date={scrapedItem.date} />
                 :
-                <Post key = {scrapedItem.id} images={scrapedItem.images} headline={scrapedItem.headline} body={scrapedItem.body} publishDate={scrapedItem.date} url={scrapedItem.url} />
+                <Post key={index} {...scrapedItem} />
             })
           }
         </div>
       </div>
 
       <div id='right-panel-wrapper'>
-
+          <a onClick={this.stopRunning}>stopRunning</a>
       </div>
 
     </div>
@@ -199,16 +155,16 @@ function Post(props){
     <div className='post'>
      <div className='image-wrapper'>
        {
-         props.images ?
+         props.images.length > 0 ?
           <img src={props.images[0]} className='post-image' />
          :
-          <img src={`public/img/${props.type}_default.jpg`} className='post-image' />
+          <img src={`public/img/${props.mediaType}_default.png`} className='post-image' />
        }
      </div>
      <div className='post-content'>
        <div className='post-headline'>
          <h1 className='post-title'>{props.headline.headlineShorten()}</h1>
-         <h1 className='post-date'>{props.date.dateFormat()}</h1>
+         <h1 className='post-date'>{props.datePublished.dateShorten()}</h1>
        </div>
        <p className='post-body'>{props.body.bodyShorten()}</p>
      </div>
@@ -219,7 +175,7 @@ function Post(props){
 function Date(props){
   return(
     <div className='date-wrapper'>
-      <h1>{props.dateString}</h1>
+      <h1>{props.date}</h1>
     </div>
   );
 }

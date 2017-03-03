@@ -7,6 +7,7 @@ String.prototype.capitalizeEach = function() {
 }
 
 class CustomForm extends React.Component {
+
   constructor(props){
     super(props);
     this.defaultTypes = ['is_photo','is_chat','is_note','is_video','is_regular'];
@@ -51,7 +52,9 @@ class CustomForm extends React.Component {
 
   submitForm = e => {
     e.preventDefault();
-    console.log('submit triggered, passing upstream',this.state.returnTypes);
+    const {returnTypes, blogname} = this.state;
+    console.log(blogname, returnTypes);
+    this.props.onSubmit(blogname,returnTypes);
   }
 
   handleCheckboxChange = (name, event) => {
@@ -75,7 +78,6 @@ class CustomForm extends React.Component {
               }
             }
           }
-          //this.setState(this.state);
         } else { /* none */
           this.state.returnTypes = [];
           for (var s in this.state.sliders){
@@ -84,7 +86,6 @@ class CustomForm extends React.Component {
               foreground: true
             }
           }
-          //this.setState(this.state);
         }
         break;
 
@@ -99,11 +100,15 @@ class CustomForm extends React.Component {
           //this.setState(this.state);
         } else {
           this.state.sliders[name].isChecked = !1;
-          this.state.returnTypes.splice(this.state.returnTypes.indexOf(name),1);
+          this.state.returnTypes.splice(this.state.returnTypes.indexOf(this.typeMap[name]),1);
           //this.setState(this.state);
         }
     }
     this.setState(this.state);
+  }
+
+  addChar = (event) => {
+    this.setState({blogname:event.target.value});
   }
 
   render(){
@@ -112,15 +117,16 @@ class CustomForm extends React.Component {
         <form id='customform' action='' onSubmit={this.submitForm}>
           {Object.keys(this.state.sliders).map((s,i) => {
               return (
-                <Slider key={i} name={s} data={this.state.sliders[s]} onChange={this.handleCheckboxChange} />
+                <Slider key={i} name={s} {...this.state.sliders[s]} onChange={this.handleCheckboxChange} />
               )
             })}
-          <FormTextbox name='blogname' />
+          <Textbox name='blogname' addChar={this.addChar} />
           <button>go!</button>
         </form>
       </div>
     );
   }
+
 }
 
 
@@ -128,9 +134,9 @@ function Slider(props){
   return(
     <div className='input-row'>
       <div className='vertical-center-contents'>
-        <p className={`typename ${props.data.foreground ? '': 'grey' }`}>{props.name.capitalizeEach()}</p>
+        <p className={`typename ${props.foreground ? '': 'grey' }`}>{props.name.capitalizeEach()}</p>
         <label className='switch'>
-          <input type='checkbox' onChange={function(e){ props.onChange(props.name,e) }.bind(this)} checked={props.data.isChecked} name={props.name} />
+          <input type='checkbox' onChange={function(e){ props.onChange(props.name,e) }.bind(this)} checked={props.isChecked} name={props.name} />
           <div className='slider round'></div>
         </label>
       </div>
@@ -138,13 +144,10 @@ function Slider(props){
   )
 }
 
-
-
-
-function FormTextbox(props){
+function Textbox(props){
   return(
     <div className='blog-input-wrapper'>
-      <div>{props.name}<input name={props.name} type='text'/></div>
+      <div>{props.name}<input type='text' name={props.name} value={props.blogname} onChange={props.addChar} /></div>
     </div>
   );
 }

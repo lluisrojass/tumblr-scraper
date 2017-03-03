@@ -79,6 +79,8 @@ body, html, #app-container {
 #left-panel-wrapper{
 	height: 100%;
 	width: 25%;
+
+	-webkit-app-region: drag;
 }
 
 #left-panel {
@@ -87,7 +89,6 @@ body, html, #app-container {
 	background-color: #E6E6E6;
 	display: flex;
 	flex-direction: column;
-	-webkit-app-region: drag;
 }
 /*
 		Left Panel
@@ -150,7 +151,9 @@ form {
 	font-size: 13px;
 	float: right;
 }
-
+.typename {
+	font-weight: 300;
+}
 
 
 
@@ -213,13 +216,13 @@ form {
 	width: 30%;
 	text-align: center;
 	vertical-align: middle;
+	overflow-y: scroll;
 }
 .post-image{
 	border-radius: 5px;
 	position: relative;
   top: 50%;
   transform: translateY(-50%);
-	height: 80px;
 	width: 80px;
 	border: 1px solid #898989;
 }
@@ -435,10 +438,6 @@ input:checked + .slider:before {
 	font-size: 15px;
 	font-weight: 100;
 }
-.white{
-	color: white;
-}
-
 
 
 @keyframes fadeIn { from { } to { color: red } }

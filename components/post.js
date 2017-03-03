@@ -20,6 +20,7 @@ module.exports = function(postData,callback){
       'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
     }
   };
+  
   const returnData = {
     link:postData.host+postData.path,
     type:typeTranslate(postData.type),
@@ -27,7 +28,7 @@ module.exports = function(postData,callback){
   };
   const parser = new ContentParser();
 
-  parser.on('data',(data) =>{
+  parser.on('postData',(data) =>{
     returnData.postData = data;
     request.abort();
     callback(error,returnData); // data found, all good to continue.
