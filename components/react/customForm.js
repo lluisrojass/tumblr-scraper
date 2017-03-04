@@ -1,13 +1,6 @@
 import React from 'react';
 
-String.prototype.capitalizeEach = function() {
-    return this.replace(/\w\S*/g, function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
-
 class CustomForm extends React.Component {
-
   constructor(props){
     super(props);
     this.defaultTypes = ['is_photo','is_chat','is_note','is_video','is_regular'];
@@ -97,38 +90,32 @@ class CustomForm extends React.Component {
         if (isChecked) { /* add */
           this.state.sliders[name].isChecked = !0;
           this.state.returnTypes.push(this.typeMap[name]);
-          //this.setState(this.state);
         } else {
           this.state.sliders[name].isChecked = !1;
           this.state.returnTypes.splice(this.state.returnTypes.indexOf(this.typeMap[name]),1);
-          //this.setState(this.state);
         }
     }
     this.setState(this.state);
   }
 
-  addChar = (event) => {
-    this.setState({blogname:event.target.value});
-  }
+  addChar = event => { this.setState({blogname:event.target.value}) }
 
   render(){
     return(
       <div id='form-wrapper'>
         <form id='customform' action='' onSubmit={this.submitForm}>
           {Object.keys(this.state.sliders).map((s,i) => {
-              return (
-                <Slider key={i} name={s} {...this.state.sliders[s]} onChange={this.handleCheckboxChange} />
-              )
-            })}
+              return (<Slider key={i} name={s} {...this.state.sliders[s]}
+                onChange={this.handleCheckboxChange} />)
+              })
+          }
           <Textbox name='blogname' addChar={this.addChar} />
           <button>go!</button>
         </form>
       </div>
     );
   }
-
 }
-
 
 function Slider(props){
   return(

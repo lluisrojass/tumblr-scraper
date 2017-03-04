@@ -36,20 +36,24 @@ module.exports = class RequestLoop extends ee {
     this.requestHandlers = {
       error: function(){ self.emit('requestError',{'host':self.options.host,'path':self.options.path})},
       response: function(){ self.options.path = '' },
-      abort: function(){  self.emit('abort'); }
+      abort: function(){  console.log('abortin from inside request'); self.emit('abort'); }
     }
   }
   addHandlers(){
     const self = this;
-    Object.keys(this.requestHandlers).forEach((elem) => self.request.on(elem,self.requestHandlers[elem]));
+    Object.keys(this.requestHandlers).forEach(elem => self.request.on(elem,self.requestHandlers[elem]));
   }
   go(blogname){
     this.options.host = `${blogname}.tumblr.com`
     this.request = http.get(this.options,this.callback);
     this.addHandlers();
   }
-  // utilities
   isLastPage(){ return '' === this.options.path; }
-  addPath(p){ this.options.path = p; }
-  abort(){ this.request.abort(); }
+  addPath(p){ this.options.path = p }
+  // not working
+  stop(){
+    this.request.abort();
+    setInterval(() => console.log(this.request.aborted),1000);
+    this.options.path = '/archive';
+  }
 }
