@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { CustomForm } from './customForm';
 import { Analytics } from './analytics';
+import { Post, Date } from './scrapedPostTypes';
 
 const archive = require('../archive');
 const post = require('../post');
@@ -29,6 +30,14 @@ function exactMatch(r,str){
   const match = str.match(r);
   return match != null && str == match[0];
 }
+function isBottom(){
+  var s;
+  return s = document.getElementById('middle-panel'), s.scrollTop+1 >= s.scrollHeight - s.clientHeight;
+}
+function remainBottom(){
+  var s;
+  return s = document.getElementById('middle-panel'), s.scrollTop = s.scrollHeight - s.clientHeight;
+}
 
 class Application extends React.Component {
 
@@ -48,7 +57,6 @@ class Application extends React.Component {
   }
 
   start = (blogname, types) => {
-    console.log(types);
     if (types.length == 0){
       console.warn('Terminal:','No types selected');
       return;
@@ -61,7 +69,7 @@ class Application extends React.Component {
     }
   }
 
-  onPostClick = (data) => {
+  onPostClick = data => {
     console.warn('Terminal','Post Clicked');
     this.state.currentPost = {
       /*TODO: implement current post viewer*/
@@ -69,12 +77,14 @@ class Application extends React.Component {
     this.setState(this.state);
   }
 
-  stopRunning = () => { this.archive.stop() }
+  stopRunning = () => {
+    this.archive.stop();
+  }
 
   componentDidMount(){
     this.archive.on('nextPage',(path) => {    });
 
-    this.archive.on('post',(postData) => {
+    this.archive.on('post',postData => {
       post(postData,(err,data) => {
         if (err !== null){
           console.warn('Terminal','Error fetching Post Data');
@@ -85,47 +95,40 @@ class Application extends React.Component {
         let {datePublished='No Date', articleBody='', headline=`${data.type} post`.capitalizeEach(),
         image=[], url=''} = data.postData;
 
-        const s = document.getElementById('middle-panel');
-        const isBottom = s.scrollTop+1 >= s.scrollHeight - s.clientHeight;
-
         this.state.scrapedData.push({
           type:'post',
           mediaType: data.type,
           datePublished: datePublished,
-          body: articleBody,
+          articleBody: articleBody,
           headline: headline,
           images: typeof image === 'object' ? image : [image],
           url: url
         });
-        this.setState(this.state);
 
-        if (isBottom){
-          s.scrollTop = s.scrollHeight - s.clientHeight;
-        }
+        let isAtBottom = isBottom();
+        this.setState(this.state);
+        if (isAtBottom) remainBottom();
+
       });
 
     });
 
     this.archive.on('date',(dateString) => {
 
-      const s = document.getElementById('middle-panel');
-      const isBottom = s.scrollTop+1 >= s.scrollHeight - s.clientHeight;
-
       this.state.scrapedData.push({
         type:'date',
         date:dateString
       });
-      this.setState(this.state);
 
-      if (isBottom){
-        s.scrollTop = s.scrollHeight - s.clientHeight;
-      }
+      let isAtBottom = isBottom();
+      this.setState(this.state);
+      if (isAtBottom) remainBottom();
     });
 
     //TODO: implement errors and end
 
     this.archive.on('abort',() => {
-      console.log('Terminal','Aborted Requests and Parser');
+      console.log('Abort event caught inside application.js');
     });
     this.archive.on('requestError',(urlInfo) => { console.log('Terminal','Request Error') });
     this.archive.on('responseError',(urlInfo) => { console.log('Terminal','Response Error') });
@@ -166,38 +169,6 @@ class Application extends React.Component {
     </div>
     )
   }
-}
-
-function Post(props){
-  return(
-    <div className='post'>
-     <div className='image-wrapper'>
-       {
-         props.images.length > 0 ?
-          <img src={props.images[0]} className='post-image' />
-         :
-          <img src={`public/img/${props.mediaType}_default.png`} className='post-image' />
-       }
-     </div>
-     <div className='post-content'>
-       <div className='post-headline'>
-         <h1 className='post-title'>{props.headline.headlineShorten()}</h1>
-         <h1 className='post-date'>{props.datePublished.dateShorten()}</h1>
-       </div>
-       <p className='post-body'>{props.body.bodyShorten()}</p>
-     </div>
-   </div>
-  )
-}
-
-
-
-function Date(props){
-  return(
-    <div className='date-wrapper'>
-      <h1>{props.date}</h1>
-    </div>
-  );
 }
 
 

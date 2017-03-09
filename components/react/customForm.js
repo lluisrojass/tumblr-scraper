@@ -51,9 +51,7 @@ class CustomForm extends React.Component {
   }
 
   handleCheckboxChange = (name, event) => {
-
     const isChecked = event.target.checked;
-
     switch(name){
       case 'all':
         if (isChecked) { /* all */
@@ -87,7 +85,7 @@ class CustomForm extends React.Component {
           event.preventDefault();
           return;
         }
-        if (isChecked) { /* add */
+        if (isChecked) { /* add type */
           this.state.sliders[name].isChecked = !0;
           this.state.returnTypes.push(this.typeMap[name]);
         } else {

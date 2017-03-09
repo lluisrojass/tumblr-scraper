@@ -1,4 +1,4 @@
-'use strict';
+
 
 const http = require('http');
 const ee = require('events');
@@ -9,21 +9,21 @@ module.exports = class RequestLoop extends ee {
     const self = this;
     this.request = null;
     this.options = {
-      protocol:"http:",
-      host:"",
-      path:"/archive",
+      protocol:'http:',
+      host:'',
+      path:'/archive',
       timeout:5000,
       headers:{
-        "user-agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36"
+        'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36'
       }
     };
     this.callback = function(res){
-      res.setEncoding('utf8');
+      res.setEncoding();
       if (res.statusCode !== 200){
         self.emit('responseError',{'host':self.options.host,'path':self.options.path});
         return;
       }
-      res.on( 'data', chunk => self.emit('data',chunk) );
+      res.on('data', chunk => self.emit('data',chunk));
       res.on('end',() => {
         if ( self.isLastPage() ){
           self.emit('end');
@@ -34,14 +34,16 @@ module.exports = class RequestLoop extends ee {
       });
     }
     this.requestHandlers = {
-      error: function(){ self.emit('requestError',{'host':self.options.host,'path':self.options.path})},
+      error: function(){ self.emit('requestError',{'host':self.options.host,'path':self.options.path}) },
       response: function(){ self.options.path = '' },
-      abort: function(){  console.log('abortin from inside request'); self.emit('abort'); }
+      abort: function(){ console.log('inside loop.js request aborted, now aborting loop.js'), self.emit('abort') }
     }
   }
   addHandlers(){
     const self = this;
-    Object.keys(this.requestHandlers).forEach(elem => self.request.on(elem,self.requestHandlers[elem]));
+    Object.keys(this.requestHandlers).forEach(elem => {
+      self.request.on(elem,self.requestHandlers[elem]);
+    });
   }
   go(blogname){
     this.options.host = `${blogname}.tumblr.com`
@@ -53,7 +55,7 @@ module.exports = class RequestLoop extends ee {
   // not working
   stop(){
     this.request.abort();
-    setInterval(() => console.log(this.request.aborted),1000);
     this.options.path = '/archive';
+    console.log(this.request.aborted);
   }
 }

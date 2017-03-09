@@ -1,3 +1,5 @@
+import React from 'react';
+
 function Post(props){
   return(
     <div className='post'>
@@ -14,8 +16,17 @@ function Post(props){
          <h1 className='post-title'>{props.headline.headlineShorten()}</h1>
          <h1 className='post-date'>{props.datePublished.dateShorten()}</h1>
        </div>
-       <p className='post-body'>{props.body.bodyShorten()}</p>
+       <p className='post-body'>{props.articleBody.bodyShorten()}</p>
      </div>
    </div>
   )
 }
+
+function Date(props){
+  return(
+    <div className='date-wrapper'>
+      <h1>{props.date}</h1>
+    </div>
+  );
+}
+export {Date, Post};

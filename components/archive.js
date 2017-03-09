@@ -16,17 +16,12 @@ module.exports = class Archive extends ee {
     this.parser.on('nextPage', path => this.loop.addPath(path));
     this.loop.on('data', chunk => this.parser.write(chunk));
     this.loop.on('end',() => this.parser.end());
-    this.loop.on('abort', () => {
-      this.parser.end();
-      console.warn('Terminal','Requests Aborted');
-    });
+    this.loop.on('abort',() =>  console.log('inside archive.js abort emitted'))
     pipeEvents(['nextPage','post','date'],this.parser,this);
     pipeEvents(['abort','requestError','responseError','end'],this.loop,this);
     this.loop.go(blogName);
   }
   stop(){
-    console.log('endin');
-    if (this.loop !== null)
-      this.loop.stop(); /*triggers parser end*/
+    this.loop.stop(); /*triggers parser end*/
   }
 }
