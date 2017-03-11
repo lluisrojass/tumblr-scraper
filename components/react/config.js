@@ -1,6 +1,6 @@
 import React from 'react';
 
-class CustomForm extends React.Component {
+class Config extends React.Component {
   constructor(props){
     super(props);
     this.defaultTypes = ['is_photo','is_chat','is_note','is_video','is_regular'];
@@ -12,42 +12,45 @@ class CustomForm extends React.Component {
       text:'is_regular'
     };
     this.state = {
+      buttonText:'GO',
       blogname:'',
       returnTypes:this.defaultTypes,
       sliders:{
         all:{
-          isChecked:!0,
-          foreground:true,
+          isChecked:true,
+          foreground:true
         },
         photo:{
-          isChecked:!1,
+          isChecked:false,
           foreground:false,
         },
         chat:{
-          isChecked:!1,
+          isChecked:false,
           foreground:false,
         },
         note:{
-          isChecked:!1,
+          isChecked:false,
           foreground:false,
         },
         video:{
-          isChecked:!1,
+          isChecked:false,
           foreground:false,
         },
         text:{
-          isChecked:!1,
+          isChecked:false,
           foreground:false,
         }
       }
     };
   }
 
-  submitForm = e => {
+  handleFormSubmit = e => {
     e.preventDefault();
-    const {returnTypes, blogname} = this.state;
-    console.log(blogname, returnTypes);
-    this.props.onSubmit(blogname,returnTypes);
+    if (this.props.isRunning){
+      this.props.stopRunning();
+    } else {
+      this.props.startRunning(this.state.blogname,this.state.returnTypes);
+    }
   }
 
   handleCheckboxChange = (name, event) => {
@@ -101,14 +104,14 @@ class CustomForm extends React.Component {
   render(){
     return(
       <div id='form-wrapper'>
-        <form id='customform' action='' onSubmit={this.submitForm}>
+        <form id='customform' action='' onSubmit={this.handleFormSubmit}>
           {Object.keys(this.state.sliders).map((s,i) => {
-              return (<Slider key={i} name={s} {...this.state.sliders[s]}
-                onChange={this.handleCheckboxChange} />)
-              })
+              return <Slider key={i} name={s} {...this.state.sliders[s]}
+              handleChange={this.handleCheckboxChange} />
+            })
           }
-          <Textbox name='blogname' addChar={this.addChar} />
-          <button>go!</button>
+          <Textbox name='blogname' addChar={this.addChar} blogname={this.state.blogname}/>
+          <button>{this.props.isRunning ? 'STOP':'GO'}</button>
         </form>
       </div>
     );
@@ -121,7 +124,7 @@ function Slider(props){
       <div className='vertical-center-contents'>
         <p className={`typename ${props.foreground ? '': 'grey' }`}>{props.name.capitalizeEach()}</p>
         <label className='switch'>
-          <input type='checkbox' onChange={function(e){ props.onChange(props.name,e) }.bind(this)} checked={props.isChecked} name={props.name} />
+          <input type='checkbox' onChange={function(e){ props.handleChange(props.name,e) }.bind(this)} checked={props.isChecked} name={props.name} />
           <div className='slider round'></div>
         </label>
       </div>
@@ -132,7 +135,7 @@ function Slider(props){
 function Textbox(props){
   return(
     <div className='blog-input-wrapper'>
-      <div>{props.name}<input type='text' name={props.name} value={props.blogname} onChange={props.addChar} /></div>
+      <div className='vertical-center-contents'>{props.name}<input type='text' name={props.name} value={props.blogname} onChange={props.addChar} /></div>
     </div>
   );
 }
@@ -145,4 +148,4 @@ function FormButton(props){
   )
 }
 
-export { CustomForm };
+export { Config };

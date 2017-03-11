@@ -2,12 +2,20 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { CustomForm } from './customForm';
+import { Config } from './config';
 import { Analytics } from './analytics';
-import { Post, Date } from './scrapedPostTypes';
+import { Post }  from './post';
 
 const archive = require('../archive');
-const post = require('../post');
+const getPostData = require('../userPost');
+
+//TODO: implement analytics
+//TODO: implement current post viewer
+//TODO: handle post error
+//TODO: implement errors and end
+//TODO: request not aborting on abort call
+//TODO: implement queue for bad dates, possibly nest date header above posts.
+//TODO: remove [[MORE]] on text (possibly others) posts.
 
 String.prototype.dateShorten = function(){
   return this.replace(/(\w|-|:)*/,function(txt) {
@@ -15,29 +23,25 @@ String.prototype.dateShorten = function(){
   });
 }
 String.prototype.bodyShorten = function(){
-  return (this.length > 196) ? this.substr(0,193) + '...' : this.toString();
+  var CharIndex = this[19] === ' ' ? 18: 19;
+  return (this.length > 196) ? this.substr(0,this.charAt(193) === ' ' ? 192 : 193) + '...' : this.toString();
 }
 String.prototype.headlineShorten = function(){
-  return (this.length >= 26) ? this.substr(0,23) + '...' : this.toString();
+  return (this.length >= 26) ? this.substr(0,this.charAt(23) === ' ' ? 22: 23) + '...' : this.toString();
 }
 String.prototype.capitalizeEach = function(){
     return this.replace(/\w\S*/g, function(txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
-
 function exactMatch(r,str){
   const match = str.match(r);
   return match != null && str == match[0];
 }
-function isBottom(){
-  var s;
-  return s = document.getElementById('middle-panel'), s.scrollTop+1 >= s.scrollHeight - s.clientHeight;
-}
-function remainBottom(){
-  var s;
-  return s = document.getElementById('middle-panel'), s.scrollTop = s.scrollHeight - s.clientHeight;
-}
+
+
+
+
 
 class Application extends React.Component {
 
@@ -45,96 +49,94 @@ class Application extends React.Component {
     super(props);
     this.archive = new archive();
     this.state = {
-      scrapedData:[],
+      removeClickedPost:null,
+      running:false,
+      scrapedPosts:[],
+      isViewing:false,
       currentPost:{
-        date:'',
-        media:[],
-        headline:'',
-        articleBody:'',
+        type: null,
+        datePublished: '',
+        articleBody: '',
+        headline: '',
+        images: [],
+        url: ''
       }
-      //TODO: implement analytics
     }
-  }
-
-  start = (blogname, types) => {
-    if (types.length == 0){
-      console.warn('Terminal:','No types selected');
-      return;
-    }
-    if (exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/,blogname)){
-      this.setState({scrapedData: []});
-      this.archive.go(blogname,types);
-    } else {
-      console.warn('Terminal',blogname+' is invalid Blogname');
-    }
-  }
-
-  onPostClick = data => {
-    console.warn('Terminal','Post Clicked');
-    this.state.currentPost = {
-      /*TODO: implement current post viewer*/
-    };
-    this.setState(this.state);
-  }
-
-  stopRunning = () => {
-    this.archive.stop();
-  }
-
-  componentDidMount(){
     this.archive.on('nextPage',(path) => {    });
-
-    this.archive.on('post',postData => {
-      post(postData,(err,data) => {
+    this.archive.on('post', postInfo => {
+      getPostData(postInfo, (err, data) => {
         if (err !== null){
           console.warn('Terminal','Error fetching Post Data');
-          // TODO: handle error
+
           return;
         }
 
-        let {datePublished='No Date', articleBody='', headline=`${data.type} post`.capitalizeEach(),
-        image=[], url=''} = data.postData;
+        let {datePublished=null, articleBody=null, headline=null,
+        image, url=''} = data.postData;
 
-        this.state.scrapedData.push({
-          type:'post',
-          mediaType: data.type,
+        this.state.scrapedPosts.push({
+          type: data.type,
           datePublished: datePublished,
           articleBody: articleBody,
           headline: headline,
-          images: typeof image === 'object' ? image : [image],
+          images: image ? image['@list'] || [image] : [],
           url: url
         });
-
-        let isAtBottom = isBottom();
-        this.setState(this.state);
-        if (isAtBottom) remainBottom();
-
+        this.setStateKeepScroll();
       });
-
     });
 
-    this.archive.on('date',(dateString) => {
+    this.archive.on('date',dateString => { });
 
-      this.state.scrapedData.push({
-        type:'date',
-        date:dateString
-      });
 
-      let isAtBottom = isBottom();
-      this.setState(this.state);
-      if (isAtBottom) remainBottom();
+    this.archive.on('abort',() => console.log('Abort event caught inside application.js'));
+    this.archive.on('requestError',(urlInfo) => {
+      console.log('Terminal','Request Error');
     });
-
-    //TODO: implement errors and end
-
-    this.archive.on('abort',() => {
-      console.log('Abort event caught inside application.js');
+    this.archive.on('responseError',(urlInfo) => {
+      this.stopRunning();
+      console.log('Terminal','Response Error')
     });
-    this.archive.on('requestError',(urlInfo) => { console.log('Terminal','Request Error') });
-    this.archive.on('responseError',(urlInfo) => { console.log('Terminal','Response Error') });
-    this.archive.on('end',() => { });
+    this.archive.on('end',() =>{    });
   }
 
+  startRunning = (blogname, types) => {
+    if (!types.length){
+      console.warn('Terminal:', 'No types selected');
+      return;
+    }
+    if (!(exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/, blogname))){
+      console.warn('Terminal', blogname+' is invalid Blogname');
+      return;
+    }
+    this.archive.stop();
+    this.setState( { scrapedPosts : [], running:true } );
+    this.archive.go(blogname, types);
+  }
+
+  handlePostClicked = (unClickCB, data) => {
+    delete data['onClick'];
+    if (this.state.removeClickedPost) this.state.removeClickedPost();
+    this.setState({
+      removeClickedPost:unClickCB,
+      currentPost:data,
+      isViewing:true
+    });
+    return true;
+  }
+
+  stopRunning = () => {
+    if (!this.archive.stop()){
+      console.log('error stopping, check loop.js');
+    }
+    this.setState({running: false});
+  }
+  setStateKeepScroll = () => {
+    const m = document.getElementById('scroll-box'),
+    keepBottom = m.scrollTop+1 >= m.scrollHeight - m.clientHeight;
+    this.setState(this.state);
+    if (keepBottom) m.scrollTop = m.scrollHeight - m.clientHeight;
+  }
   render(){
     return(
       <div id='wrapper'>
@@ -145,25 +147,38 @@ class Application extends React.Component {
              <h1 className='vertical-center-contents'>Config</h1>
            </div>
            <div id='config-wrapper'>
-             <CustomForm onSubmit={this.start} />
+              <Config startRunning={this.startRunning} isRunning={this.state.running}
+              stopRunning={this.stopRunning} />
            </div>
            <Analytics />
          </div>
        </div>
 
        <div id='mid-panel-wrapper'>
-         <div id='middle-panel' className='scroll-box'>
-          {this.state.scrapedData.map((scrapedItem,index) => {
-              return scrapedItem.type === 'date' ?
-                <Date key={index} date={scrapedItem.date} />
-                :
-                <Post key={index} {...scrapedItem} />
-          })}
+         <div id='middle-panel'>
+         <div className='scroll-box' id='scroll-box' >
+           {this.state.scrapedPosts.map((scrapedPost, index) =>
+             <Post onClick={this.handlePostClicked} key={index} {...scrapedPost} />
+           )}
+         </div>
         </div>
       </div>
 
       <div id='right-panel-wrapper'>
-          <a onClick={this.stopRunning}>stopRunning</a>
+        <div id='right-panel'>
+          <h1 className='viewer-header'>Title:</h1>
+          <h1 className='viewer-text'>{this.state.currentPost.headline ? this.state.currentPost.headline.headlineShorten() : 'None'}</h1>
+          <br/>
+          <h1 className='viewer-header'>Date:</h1>
+          <h1 className='viewer-text'>{this.state.currentPost.datePublished ? this.state.currentPost.datePublished :'No Date'}</h1>
+          <br/>
+          <h1 className='viewer-header'>Body:</h1>
+          <p className='viewer-text'>{this.state.currentPost.articleBody ? this.state.currentPost.articleBody :'None'}</p>
+          <br/>
+          <h1 className='viewer-header'>Media:</h1><br/>
+          {this.state.currentPost.images.map((imageUrl) => <img className='viewer-image' src={imageUrl} />)}
+          <a href={this.state.currentPost.url}>open in browser</a>
+        </div>
       </div>
 
     </div>

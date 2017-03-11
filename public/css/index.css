@@ -142,9 +142,7 @@ form {
 }
 .blog-input-wrapper div{
 		position: relative;
-	  top: 50%;
-	  transform: translateY(-50%);
-		width: 100%;
+
 }
 .blog-input-wrapper div input{
 	width: 55%;
@@ -179,11 +177,13 @@ form {
 	height: 100%;
 	width: 37.5%;
 	border-right: 1px solid #CFCFCF;
+	box-sizing: border-box;
 }
 
 #middle-panel {
 	height: 100%;
 	background-color: #F9F9F9;
+	box-sizing: border-box;
 }
 
 .scroll-box {
@@ -192,47 +192,85 @@ form {
 	overflow: auto;
 }
 
-
-
-
-
-
+/* right panel */
 
 #right-panel-wrapper{
 	height: 100%;
 	width: 37.5%;
 	background-color: #F9F9F9;
 }
+#right-panel{
+	box-sizing: border-box;
+	height: 100%;
+	padding: 20px;
+	width: 100%;
+}
+.no-post-selected{
+	background: url('../img/notselected.png') center center no-repeat;
+	background-size: 300px 300px;
+}
+
+.viewer-text{
+	display: inline;
+}
+.viewer-header{
+	display: inline;
+	font-size: 20px;
+	font-weight: 100;
+}
+.viewer-image{
+	width: 80%;
+	text-align: center;
+}
+
 
 /*  INDIVIDUAL POST CSS */
 .post {
 	background-color: #F9F9F9;
 	height: 100px;
 	width: 100%;
-	border-bottom: 1.5px solid #E0E2E6;
+	border-bottom: 1.5px solid #c9cbcf;
 	display: flex;
 }
 .image-wrapper{
-	width: 30%;
+	width: 27%;
 	text-align: center;
 	vertical-align: middle;
-	overflow-y: scroll;
 }
 .post-image{
-	border-radius: 5px;
-	position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-	width: 80px;
+	width: 100%;
+}
+.hide-overflow{
+	margin-left: auto;
+  margin-right: auto;
+	overflow-y:hidden;
+	width: 87px;
+	height: 87px;
 	border: 1px solid #898989;
+	border-radius: 4px;
+	background-color: black;
 }
 .post-content{
-	margin: 10px 5px;
-	width: 70%;
+	margin: 7px 5px 10px 0px;
+	width: 73%;
 	height: 100%;
 }
 .post-headline{
 	width: 100%;
+}
+.photoset-stamp{
+	height:100%;
+	line-height: 10px;
+  display: inline-block;
+	background-color: #2cbd45;
+	border-radius: 20px;
+	text-align:center;
+	padding: 3px 5px;
+	margin-right: 2px;
+	position: relative;
+	top: -2px;
+	font-size: 10px;
+	color:white;
 }
 .post-title{
 	font-weight: 300;
@@ -255,7 +293,7 @@ form {
 	font-weight: 600;
 	background-color: #F9F9F9;
 	text-align: center;
-	border-bottom: 1.5px solid #E0E2E6;
+	border-bottom: 1.5px solid #c9cbcf;
 	height: 25px;
 }
 .date-wrapper h1{
@@ -430,13 +468,19 @@ input:checked + .slider:before {
 
 
 
-.grey{
-	color: rgba(10,10,10,.2);
+.clicked-background{
+	background-color: #DFDFDF;
+	box-shadow:
+        inset 0px 3px 8px -10px #CDCDCD,
+        inset 0px -3px 8px -10px #CDCDCD
 }
 .terminal-entry{
 	color: white;
 	font-size: 15px;
 	font-weight: 100;
+}
+.grey{
+	color: #a6a6a6;
 }
 
 
