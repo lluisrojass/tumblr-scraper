@@ -5,16 +5,15 @@ import ReactDOM from 'react-dom';
 import { Config } from './config';
 import { Analytics } from './analytics';
 import { Post }  from './post';
+import Viewer from './viewer';
 
 const archive = require('../archive');
 const getPostData = require('../userPost');
 
 //TODO: implement analytics
-//TODO: implement current post viewer
 //TODO: handle post error
 //TODO: implement errors and end
 //TODO: request not aborting on abort call
-//TODO: implement queue for bad dates, possibly nest date header above posts.
 //TODO: remove [[MORE]] on text (possibly others) posts.
 
 String.prototype.dateShorten = function(){
@@ -53,14 +52,7 @@ class Application extends React.Component {
       running:false,
       scrapedPosts:[],
       isViewing:false,
-      currentPost:{
-        type: null,
-        datePublished: '',
-        articleBody: '',
-        headline: '',
-        images: [],
-        url: ''
-      }
+      currentPost:null
     }
     this.archive.on('nextPage',(path) => {    });
     this.archive.on('post', postInfo => {
@@ -110,19 +102,27 @@ class Application extends React.Component {
       return;
     }
     this.archive.stop();
-    this.setState( { scrapedPosts : [], running:true } );
+    this.setState({ scrapedPosts : [],
+                    running: true,
+                    currentPost: null,
+                    isViewing: false
+                  });
     this.archive.go(blogname, types);
   }
 
   handlePostClicked = (unClickCB, data) => {
     delete data['onClick'];
+    Object.keys(data).forEach((elem) => {
+      if (!data[elem]){
+        delete data[elem];
+      }
+    });
     if (this.state.removeClickedPost) this.state.removeClickedPost();
     this.setState({
       removeClickedPost:unClickCB,
       currentPost:data,
       isViewing:true
     });
-    return true;
   }
 
   stopRunning = () => {
@@ -132,14 +132,14 @@ class Application extends React.Component {
     this.setState({running: false});
   }
   setStateKeepScroll = () => {
-    const m = document.getElementById('scroll-box'),
+    const m = document.getElementById('keep-bottom'),
     keepBottom = m.scrollTop+1 >= m.scrollHeight - m.clientHeight;
     this.setState(this.state);
     if (keepBottom) m.scrollTop = m.scrollHeight - m.clientHeight;
   }
   render(){
     return(
-      <div id='wrapper'>
+      <div className='height100width100' id='wrapper'>
 
         <div id='left-panel-wrapper'>
          <div id='left-panel'>
@@ -147,8 +147,11 @@ class Application extends React.Component {
              <h1 className='vertical-center-contents'>Config</h1>
            </div>
            <div id='config-wrapper'>
-              <Config startRunning={this.startRunning} isRunning={this.state.running}
-              stopRunning={this.stopRunning} />
+              <Config
+                    startRunning={this.startRunning}
+                    isRunning={this.state.running}
+                    stopRunning={this.stopRunning}
+              />
            </div>
            <Analytics />
          </div>
@@ -156,31 +159,21 @@ class Application extends React.Component {
 
        <div id='mid-panel-wrapper'>
          <div id='middle-panel'>
-         <div className='scroll-box' id='scroll-box' >
-           {this.state.scrapedPosts.map((scrapedPost, index) =>
+         <div className='height100width100 scroll-box' id='keep-bottom'>
+           { this.state.scrapedPosts.length > 1 ? this.state.scrapedPosts.map((scrapedPost, index) =>
              <Post onClick={this.handlePostClicked} key={index} {...scrapedPost} />
-           )}
+           ) : <div className='height100width100 notfound'></div>}
          </div>
         </div>
       </div>
 
       <div id='right-panel-wrapper'>
-        <div id='right-panel'>
-          <h1 className='viewer-header'>Title:</h1>
-          <h1 className='viewer-text'>{this.state.currentPost.headline ? this.state.currentPost.headline.headlineShorten() : 'None'}</h1>
-          <br/>
-          <h1 className='viewer-header'>Date:</h1>
-          <h1 className='viewer-text'>{this.state.currentPost.datePublished ? this.state.currentPost.datePublished :'No Date'}</h1>
-          <br/>
-          <h1 className='viewer-header'>Body:</h1>
-          <p className='viewer-text'>{this.state.currentPost.articleBody ? this.state.currentPost.articleBody :'None'}</p>
-          <br/>
-          <h1 className='viewer-header'>Media:</h1><br/>
-          {this.state.currentPost.images.map((imageUrl) => <img className='viewer-image' src={imageUrl} />)}
-          <a href={this.state.currentPost.url}>open in browser</a>
-        </div>
+        {this.state.isViewing ?
+            <Viewer post={this.state.currentPost}/>
+          :
+            <div className='height100width100 notselected'></div>
+        }
       </div>
-
     </div>
     )
   }

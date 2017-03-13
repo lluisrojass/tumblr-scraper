@@ -60,29 +60,63 @@ body, html, #app-container {
 	background-color: #CFCFCF;
 	font-family: Helvetica;
 }
-
+.notselected{
+	background: url('../img/notselected.png') center center no-repeat;
+	background-size: 300px 300px;
+}
+.notfound{
+	background: url('../img/notfound.png') center center no-repeat;
+	background-size: 300px 300px;
+}
+.scroll-box {
+	overflow: auto;
+}
 .vertical-center-contents{
 	position: relative;
 	top: 50%;
 	transform: translateY(-50%);
 }
+.height100width100{
+	height:100%;
+	width:100%;
+}
+.clicked{
+	background-color: #dfdfdf;
+	box-shadow:
+        inset 0px 3px 8px -10px #CDCDCD,
+        inset 0px -3px 8px -10px #CDCDCD
+}
+.grey{
+	color: #a6a6a6;
+}
+/* wrapper */
 
 #wrapper {
-	height: 100%;
-	width: 100%;
 	display: flex;
 }
 
+/*
+		Left Panel
+			-> title-wrapper 20%
+			-> config-wrapper 50%
+			  -> form-wrapper 100%
+					-> form 100%
+						-> input-row 10%
+						-> input-row 10%
+						-> input-row 10%
+						-> input-row 10%
+						-> input-row 10%
+						-> blog-input-wrapper 20%
+						-> button-wrapper 30%
+			-> terminal-wrapper 30%
 
-
+*/
 
 #left-panel-wrapper{
+	-webkit-app-region: drag;
 	height: 100%;
 	width: 25%;
-
-	-webkit-app-region: drag;
 }
-
 #left-panel {
 	height: 100%;
 	border-right: 1px solid #CFCFCF;
@@ -90,21 +124,6 @@ body, html, #app-container {
 	display: flex;
 	flex-direction: column;
 }
-/*
-		Left Panel
-			-> title-wrapper 20%
-			-> config-wrapper 50%
-			  -> form-wrapper 100%
-					-> form 100%
-						-> input-row 31px
-						-> input-row 31px
-						-> input-row 31px
-						-> input-row 31px
-						-> input-row 31px
-			-> missing 30%
-*/
-
-
 #config-wrapper{
 	padding: 0px 13px;
 	height: 50%;
@@ -122,56 +141,61 @@ body, html, #app-container {
 #form-wrapper{
 	padding: 0px 12px;
 	box-sizing: border-box;
-	height: 100%;
-	width: 100%;
 }
 form {
 	height: 100%;
 	flex-wrap: wrap;
 	display: flex;
 }
-
 .input-row{
 	width: 100%;
 	height: 10%;
 }
-
+.typename {
+	font-weight: 300;
+	display: inline;
+}
 .blog-input-wrapper{
 	height:20%;
 	width:100%;
 }
 .blog-input-wrapper div{
 		position: relative;
-
 }
 .blog-input-wrapper div input{
 	width: 55%;
 	font-size: 13px;
 	float: right;
 }
-.typename {
-	font-weight: 300;
-}
-
-
-
-
-
-.button-wrapper{
+#terminal-wrapper{
+	height:30%;
 	width:100%;
-	height: 30%;
-	text-align: center;
+	padding: 8%;
+	box-sizing: border-box;
+}
+#terminal{
+	border: 2px solid black;
+	background-color: black;
+	border-radius: 7px;
+	height: 100%;
+	width:100%;
+}
+.terminal-entry{
+		font-weight: 300;
+		font-size: 14px;
+		color: white;
+		text-align: left;
 }
 
 
-
-
-
-
-
-
-
-
+/*
+		Middle Panel
+			-> wrapper 100%
+				-> mid-panel 100% (scroll-box)
+					-> post1 100px
+					-> ...
+					-> postn 100px
+*/
 
 #mid-panel-wrapper{
 	height: 100%;
@@ -186,47 +210,8 @@ form {
 	box-sizing: border-box;
 }
 
-.scroll-box {
-	width: 100%;
-	height: 100%;
-	overflow: auto;
-}
-
-/* right panel */
-
-#right-panel-wrapper{
-	height: 100%;
-	width: 37.5%;
-	background-color: #F9F9F9;
-}
-#right-panel{
-	box-sizing: border-box;
-	height: 100%;
-	padding: 20px;
-	width: 100%;
-}
-.no-post-selected{
-	background: url('../img/notselected.png') center center no-repeat;
-	background-size: 300px 300px;
-}
-
-.viewer-text{
-	display: inline;
-}
-.viewer-header{
-	display: inline;
-	font-size: 20px;
-	font-weight: 100;
-}
-.viewer-image{
-	width: 80%;
-	text-align: center;
-}
-
-
-/*  INDIVIDUAL POST CSS */
+/* indiv post css */
 .post {
-	background-color: #F9F9F9;
 	height: 100px;
 	width: 100%;
 	border-bottom: 1.5px solid #c9cbcf;
@@ -236,9 +221,6 @@ form {
 	width: 27%;
 	text-align: center;
 	vertical-align: middle;
-}
-.post-image{
-	width: 100%;
 }
 .hide-overflow{
 	margin-left: auto;
@@ -250,9 +232,13 @@ form {
 	border-radius: 4px;
 	background-color: black;
 }
+.post-image{
+	width: 100%;
+}
 .post-content{
-	margin: 7px 5px 10px 0px;
+	padding: 7px 5px 10px 0px;
 	width: 73%;
+	box-sizing: border-box;
 	height: 100%;
 }
 .post-headline{
@@ -260,7 +246,7 @@ form {
 }
 .photoset-stamp{
 	height:100%;
-	line-height: 10px;
+	line-height: 7px;
   display: inline-block;
 	background-color: #2cbd45;
 	border-radius: 20px;
@@ -288,51 +274,66 @@ form {
 	font-weight: 400;
 	font-size: 12px;
 }
-/* DATE CSS */
-.date-wrapper{
-	font-weight: 600;
+
+/*
+		Right Panel
+			-> wrapper 100%
+				-> right-panel 100% (scroll-box)
+					-> Title ?%
+					-> body ?%
+					-> media ?%
+					-> a ?%
+*/
+
+#right-panel-wrapper{
+	height: 100%;
+	width: 37.5%;
 	background-color: #F9F9F9;
+}
+#right-panel{
+	overflow: auto;
+	box-sizing: border-box;
+	padding: 15px;
+
+}
+.viewer-title{
+	font-weight: 600;
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+.viewer-date{
+	color: #298cda;
+	margin: 0px 0px 10px 0px;
+}
+#viewer-image-wrapper{
+	width: 100%;
 	text-align: center;
-	border-bottom: 1.5px solid #c9cbcf;
-	height: 25px;
 }
-.date-wrapper h1{
-	position: relative;
-  top: 50%;
-	font-size: 13px;
-  transform: translateY(-50%);
+.viewer-image{
+	width: 80%;
 }
-/*CONFIG CSS*/
-
-
-
-
-.customstart-input-wrapper{
-	height:20%;
-	width:100%;
+.viewer-body{
+	color: #052427;
+	font-size: 15px;
+	font-weight: 100;
+	margin-bottom: 12px;
 }
-.customstart-input-wrapper div{
-		position: relative;
-	  top: 50%;
-		font-size: 14px;
-	  transform: translateY(-50%);
-		width: 100%;
+#viewer-url-wrapper{
+	text-align: right;
+	width: 100%;
 }
-.customstart-input-wrapper div input{
-	width: 25%;
-	font-size: 13px;
-	float: right;
+.viewer-url{
+	font-weight: 350;
+	font-size: 12px;
+	color: #B7B7B7;
+	text-decoration: none;
+}
+.viewer-url:hover{
+	color: green;
 }
 
 
-
-
-
-
-
-
-
-/*CSS All Switch*/
+/*CSS Switch*/
 
 .switch {
   position: relative;
@@ -395,9 +396,13 @@ input:checked + .slider:before {
 
 /*button css generated at http://livetools.uiparade.com/button-builder.html# */
 
-.button {
+.button-wrapper{
+	width:100%;
+	text-align: center;
+}
 
-	margin-top: 12px;
+.button {
+		margin: 5px;
     display: inline-block;
     text-decoration: none;
     color: #fff;
@@ -408,20 +413,7 @@ input:checked + .slider:before {
 		font-weight: 200;
     border: 1px solid #2d6898;
 		background-image: linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -o-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -moz-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -ms-linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-    background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0, rgb(73,132,180)),
-        color-stop(1, rgb(97,155,203))
-    );
 
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
 		border-radius: 5px;
 		text-shadow: x-offset y-offset blur color;
 		-webkit-box-shadow: 0px 6px 0px #2b638f;
@@ -444,10 +436,6 @@ input:checked + .slider:before {
     );
 
 }
-@keyframes fadeIn { from { opacity:0; } to { opacity:0; } }
-.typename{
-	display: inline;
-}
 .button:active {
     background-image: linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
     background-image: -o-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
@@ -464,30 +452,4 @@ input:checked + .slider:before {
     );
 		box-shadow: 0px 2px 0px #2b638f, 0px 1px 6px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.5);
 		transform: translate(0, 2px);
-}
-
-
-
-.clicked-background{
-	background-color: #DFDFDF;
-	box-shadow:
-        inset 0px 3px 8px -10px #CDCDCD,
-        inset 0px -3px 8px -10px #CDCDCD
-}
-.terminal-entry{
-	color: white;
-	font-size: 15px;
-	font-weight: 100;
-}
-.grey{
-	color: #a6a6a6;
-}
-
-
-@keyframes fadeIn { from { } to { color: red } }
-.warn-choice{
-	-webkit-animation: fadeIn ease-in 30;
-}
-.warn-textbox{
-	border: 2px solid red;
 }

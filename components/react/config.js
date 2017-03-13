@@ -91,7 +91,7 @@ class Config extends React.Component {
         if (isChecked) { /* add type */
           this.state.sliders[name].isChecked = !0;
           this.state.returnTypes.push(this.typeMap[name]);
-        } else {
+        } else { /* delete type */
           this.state.sliders[name].isChecked = !1;
           this.state.returnTypes.splice(this.state.returnTypes.indexOf(this.typeMap[name]),1);
         }
@@ -103,14 +103,22 @@ class Config extends React.Component {
 
   render(){
     return(
-      <div id='form-wrapper'>
+      <div className='height100width100' id='form-wrapper'>
         <form id='customform' action='' onSubmit={this.handleFormSubmit}>
           {Object.keys(this.state.sliders).map((s,i) => {
-              return <Slider key={i} name={s} {...this.state.sliders[s]}
-              handleChange={this.handleCheckboxChange} />
+              return (<Slider
+                            key={i}
+                            name={s}
+                            {...this.state.sliders[s]}
+                            handleChange={this.handleCheckboxChange}
+                     />)
             })
           }
-          <Textbox name='blogname' addChar={this.addChar} blogname={this.state.blogname}/>
+          <Textbox
+                  name='blogname'
+                  addChar={this.addChar}
+                  blogname={this.state.blogname}
+          />
           <button>{this.props.isRunning ? 'STOP':'GO'}</button>
         </form>
       </div>
@@ -124,7 +132,12 @@ function Slider(props){
       <div className='vertical-center-contents'>
         <p className={`typename ${props.foreground ? '': 'grey' }`}>{props.name.capitalizeEach()}</p>
         <label className='switch'>
-          <input type='checkbox' onChange={function(e){ props.handleChange(props.name,e) }.bind(this)} checked={props.isChecked} name={props.name} />
+          <input
+                type='checkbox'
+                onChange={function(e){props.handleChange(props.name,e)}}
+                checked={props.isChecked}
+                name={props.name}
+          />
           <div className='slider round'></div>
         </label>
       </div>
@@ -135,7 +148,9 @@ function Slider(props){
 function Textbox(props){
   return(
     <div className='blog-input-wrapper'>
-      <div className='vertical-center-contents'>{props.name}<input type='text' name={props.name} value={props.blogname} onChange={props.addChar} /></div>
+      <div className='vertical-center-contents'>{props.name}
+        <input type='text' name={props.name} value={props.blogname} onChange={props.addChar} />
+      </div>
     </div>
   );
 }
