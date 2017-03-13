@@ -14,7 +14,7 @@ class Config extends React.Component {
     this.state = {
       buttonText:'GO',
       blogname:'',
-      returnTypes:this.defaultTypes,
+      returnTypes:JSON.parse(JSON.stringify(this.defaultTypes)),
       sliders:{
         all:{
           isChecked:true,
@@ -58,7 +58,7 @@ class Config extends React.Component {
     switch(name){
       case 'all':
         if (isChecked) { /* all */
-          this.state.returnTypes = this.defaultTypes;
+          this.state.returnTypes = JSON.parse(JSON.stringify(this.defaultTypes));
           for (var e in this.state.sliders) {
             if (e === 'all') {
               this.state.sliders[e] = {

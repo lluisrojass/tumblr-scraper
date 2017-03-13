@@ -93,11 +93,40 @@ body, html, #app-container {
 
 #wrapper {
 	display: flex;
+	flex-direction: column;
 }
+#content{
+	height:97%;
+	display: flex;
+}
+#footer{
+	display: flex;
+	font-size: 11px;
+	font-weight: 100;
+	width:100%;
+	height: 3%;
+	text-align: center;
+}
+.footer-normal{
+	border-top:  1.5px solid #c9cbcf;
+	background-color: #F9F9F9;
+}
+.footer-red{
+	background-color: #ff3f3f;
+}
+.footer-blue{
+	background-color: #559DF8;
+	color: white;
+}
+.footer-section{
+	width:25%;
+	padding-left: 20px;
+}
+.footer-section p{ display: inline-block; }
 
 /*
 		Left Panel
-			-> title-wrapper 20%
+			-> title-wrapper 15%
 			-> config-wrapper 50%
 			  -> form-wrapper 100%
 					-> form 100%
@@ -108,7 +137,7 @@ body, html, #app-container {
 						-> input-row 10%
 						-> blog-input-wrapper 20%
 						-> button-wrapper 30%
-			-> terminal-wrapper 30%
+			-> terminal-wrapper 35%
 
 */
 
@@ -174,8 +203,7 @@ form {
 	box-sizing: border-box;
 }
 #terminal{
-	border: 2px solid black;
-	background-color: black;
+	border: 1px solid black;
 	border-radius: 7px;
 	height: 100%;
 	width:100%;
@@ -373,7 +401,7 @@ form {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #559DF8;
 }
 input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;

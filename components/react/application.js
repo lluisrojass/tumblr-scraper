@@ -47,14 +47,25 @@ class Application extends React.Component {
   constructor(props){
     super(props);
     this.archive = new archive();
+    this.defaultFooter = {
+      dateDepth:'Depth',
+      requestDepth:'Requesting',
+      postCount:0,
+      errorString:'No Error'
+    };
     this.state = {
       removeClickedPost:null,
-      running:false,
+      isRunning:false,
       scrapedPosts:[],
       isViewing:false,
-      currentPost:null
+      currentPost:null,
+      errorFound:false,
+      footer:JSON.parse(JSON.stringify(this.defaultFooter))
     }
-    this.archive.on('nextPage',(path) => {    });
+    this.archive.on('nextPage',(path) => {
+      this.state.footer.requestDepth = path;
+      this.setState(this.state);
+    });
     this.archive.on('post', postInfo => {
       getPostData(postInfo, (err, data) => {
         if (err !== null){
@@ -78,18 +89,25 @@ class Application extends React.Component {
       });
     });
 
-    this.archive.on('date',dateString => { });
+    this.archive.on('date',dateString => {
+      this.state.footer.dateDepth = dateString;
+      this.setState(this.state);
+    });
 
 
     this.archive.on('abort',() => console.log('Abort event caught inside application.js'));
     this.archive.on('requestError',(urlInfo) => {
-      console.log('Terminal','Request Error');
+      this.state.footer.errorString = 'Request Error '+urlInfo.path;
+      this.setState(this.state);
     });
     this.archive.on('responseError',(urlInfo) => {
       this.stopRunning();
-      console.log('Terminal','Response Error')
+      this.state.footer.errorString = 'Response Error '+urlInfo.path;
+      this.setState(this.state);
     });
-    this.archive.on('end',() =>{    });
+    this.archive.on('end',() =>{
+
+    });
   }
 
   startRunning = (blogname, types) => {
@@ -103,7 +121,7 @@ class Application extends React.Component {
     }
     this.archive.stop();
     this.setState({ scrapedPosts : [],
-                    running: true,
+                    isRunning: true,
                     currentPost: null,
                     isViewing: false
                   });
@@ -129,53 +147,73 @@ class Application extends React.Component {
     if (!this.archive.stop()){
       console.log('error stopping, check loop.js');
     }
-    this.setState({running: false});
+    this.setState({
+      isRunning:false,
+      footer:JSON.parse(JSON.stringify(this.defaultFooter))
+    });
   }
   setStateKeepScroll = () => {
     const m = document.getElementById('keep-bottom'),
     keepBottom = m.scrollTop+1 >= m.scrollHeight - m.clientHeight;
+    this.state.footer.postCount += 1;
     this.setState(this.state);
     if (keepBottom) m.scrollTop = m.scrollHeight - m.clientHeight;
   }
   render(){
     return(
       <div className='height100width100' id='wrapper'>
-
-        <div id='left-panel-wrapper'>
-         <div id='left-panel'>
-           <div id='title-wrapper'>
-             <h1 className='vertical-center-contents'>Config</h1>
+        <div id='content'>
+          <div id='left-panel-wrapper'>
+           <div id='left-panel'>
+             <div id='title-wrapper'>
+               <h1 className='vertical-center-contents'>Config</h1>
+             </div>
+             <div id='config-wrapper'>
+                <Config
+                      startRunning={this.startRunning}
+                      isRunning={this.state.isRunning}
+                      stopRunning={this.stopRunning}
+                />
+             </div>
+             <Analytics />
            </div>
-           <div id='config-wrapper'>
-              <Config
-                    startRunning={this.startRunning}
-                    isRunning={this.state.running}
-                    stopRunning={this.stopRunning}
-              />
-           </div>
-           <Analytics />
          </div>
-       </div>
 
-       <div id='mid-panel-wrapper'>
-         <div id='middle-panel'>
-         <div className='height100width100 scroll-box' id='keep-bottom'>
-           { this.state.scrapedPosts.length > 1 ? this.state.scrapedPosts.map((scrapedPost, index) =>
-             <Post onClick={this.handlePostClicked} key={index} {...scrapedPost} />
-           ) : <div className='height100width100 notfound'></div>}
-         </div>
+         <div id='mid-panel-wrapper'>
+           <div id='middle-panel'>
+           <div className='height100width100 scroll-box' id='keep-bottom'>
+             { this.state.scrapedPosts.length > 1 ? this.state.scrapedPosts.map((scrapedPost, index) =>
+               <Post onClick={this.handlePostClicked} key={index} {...scrapedPost} />
+             ) : <div className='height100width100 notfound'></div>}
+           </div>
+          </div>
         </div>
-      </div>
 
-      <div id='right-panel-wrapper'>
-        {this.state.isViewing ?
-            <Viewer post={this.state.currentPost}/>
-          :
-            <div className='height100width100 notselected'></div>
-        }
+        <div id='right-panel-wrapper'>
+          {this.state.isViewing ?
+              <Viewer post={this.state.currentPost}/>
+            :
+              <div className='height100width100 notselected'></div>
+          }
+        </div>
+    </div>
+    <div className={this.state.isRunning ? 'footer-blue' : 'footer-normal' } id='footer'>
+
+      <div className='footer-section'>
+        <p className='footer-data vertical-center-contents'>{this.state.footer.requestDepth}</p>
+      </div>
+      <div className='footer-section'>
+        <p className='footer-data vertical-center-contents'>{this.state.footer.dateDepth}</p>
+      </div>
+      <div className='footer-section vertical-center-contents'>
+        <p className='footer-title vertical-center-contents'>{this.state.footer.postCount} Posts</p>
+      </div>
+      <div className='footer-section'>
+        <p className='footer-data vertical-center-contents'>{this.state.footer.errorString}</p>
       </div>
     </div>
-    )
+  </div>
+)
   }
 }
 
