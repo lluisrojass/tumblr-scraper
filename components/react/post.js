@@ -6,7 +6,6 @@ class Post extends React.Component {
     this.state = { clicked:false }
   }
   onClick = () => {
-    console.log('ni')
     const d = JSON.parse(JSON.stringify(this.props)); /* shallow copy */
     this.props.onClick(() => this.setState({ clicked:false }), d);
     this.setState({ clicked:true });

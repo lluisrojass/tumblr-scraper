@@ -1,6 +1,6 @@
 'use strict';
 
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain, shell} = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -49,3 +49,7 @@ app.on('ready', () => {
 	mainWindow = createMainWindow();
 	mainWindow.webContents.openDevTools();
 });
+
+ipcMain.on('asynchronous-message',(event,url) => {
+	shell.openExternal(url);
+})

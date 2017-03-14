@@ -6,9 +6,11 @@ import { Config } from './config';
 import { Analytics } from './analytics';
 import { Post }  from './post';
 import Viewer from './viewer';
+import Footer from './footer';
 
 const archive = require('../archive');
 const getPostData = require('../userPost');
+const { ipcRenderer } = electronRequire('electron');
 
 //TODO: implement analytics
 //TODO: handle post error
@@ -38,34 +40,32 @@ function exactMatch(r,str){
   return match != null && str == match[0];
 }
 
-
-
-
-
 class Application extends React.Component {
 
   constructor(props){
     super(props);
     this.archive = new archive();
     this.defaultFooter = {
-      dateDepth:'Depth',
-      requestDepth:'Requesting',
+      dateDepth:null,
+      requestDepth:null,
       postCount:0,
-      errorString:'No Error'
+      errorString:null
     };
     this.state = {
       removeClickedPost:null,
       isRunning:false,
-      scrapedPosts:[],
+      isErrorFound:false,
       isViewing:false,
+      scrapedPosts:[],
       currentPost:null,
-      errorFound:false,
-      footer:JSON.parse(JSON.stringify(this.defaultFooter))
+      footerData:JSON.parse(JSON.stringify(this.defaultFooter))
     }
+
     this.archive.on('nextPage',(path) => {
-      this.state.footer.requestDepth = path;
+      this.state.footerData.requestDepth = path;
       this.setState(this.state);
     });
+
     this.archive.on('post', postInfo => {
       getPostData(postInfo, (err, data) => {
         if (err !== null){
@@ -85,28 +85,35 @@ class Application extends React.Component {
           images: image ? image['@list'] || [image] : [],
           url: url
         });
+
+        this.state.footerData.postCount += 1;
         this.setStateKeepScroll();
       });
     });
 
     this.archive.on('date',dateString => {
-      this.state.footer.dateDepth = dateString;
+      this.state.footerData.dateDepth = dateString;
       this.setState(this.state);
     });
 
+    this.archive.on('abort',() => {
+      console.log('Abort event caught inside application.js');
+    });
 
-    this.archive.on('abort',() => console.log('Abort event caught inside application.js'));
     this.archive.on('requestError',(urlInfo) => {
-      this.state.footer.errorString = 'Request Error '+urlInfo.path;
-      this.setState(this.state);
-    });
-    this.archive.on('responseError',(urlInfo) => {
+      this.state.footerData.errorString = urlInfo.message+' ('+urlInfo.path+')';
       this.stopRunning();
-      this.state.footer.errorString = 'Response Error '+urlInfo.path;
       this.setState(this.state);
     });
-    this.archive.on('end',() =>{
 
+    this.archive.on('responseError',(urlInfo) => {
+      console.log('shit');
+      this.state.footerData.errorString = urlInfo.message+' ('+urlInfo.path+')';
+      this.setState(this.state);
+    });
+
+    this.archive.on('end',() =>{
+      this.setState({ isRunning:false });
     });
   }
 
@@ -123,9 +130,13 @@ class Application extends React.Component {
     this.setState({ scrapedPosts : [],
                     isRunning: true,
                     currentPost: null,
-                    isViewing: false
+                    isViewing: false,
+                    footerData:JSON.parse(JSON.stringify(this.defaultFooter))
                   });
     this.archive.go(blogname, types);
+  }
+  openInBrowser = url => {
+    ipcRenderer.send('asynchronous-message',url);
   }
 
   handlePostClicked = (unClickCB, data) => {
@@ -145,20 +156,21 @@ class Application extends React.Component {
 
   stopRunning = () => {
     if (!this.archive.stop()){
-      console.log('error stopping, check loop.js');
+      console.log('error conducting stop, check loop.js');
     }
     this.setState({
       isRunning:false,
-      footer:JSON.parse(JSON.stringify(this.defaultFooter))
     });
+
   }
+
   setStateKeepScroll = () => {
     const m = document.getElementById('keep-bottom'),
     keepBottom = m.scrollTop+1 >= m.scrollHeight - m.clientHeight;
-    this.state.footer.postCount += 1;
     this.setState(this.state);
     if (keepBottom) m.scrollTop = m.scrollHeight - m.clientHeight;
   }
+
   render(){
     return(
       <div className='height100width100' id='wrapper'>
@@ -191,27 +203,13 @@ class Application extends React.Component {
 
         <div id='right-panel-wrapper'>
           {this.state.isViewing ?
-              <Viewer post={this.state.currentPost}/>
+              <Viewer post={this.state.currentPost} openInBrowser={this.openInBrowser}/>
             :
               <div className='height100width100 notselected'></div>
           }
         </div>
     </div>
-    <div className={this.state.isRunning ? 'footer-blue' : 'footer-normal' } id='footer'>
-
-      <div className='footer-section'>
-        <p className='footer-data vertical-center-contents'>{this.state.footer.requestDepth}</p>
-      </div>
-      <div className='footer-section'>
-        <p className='footer-data vertical-center-contents'>{this.state.footer.dateDepth}</p>
-      </div>
-      <div className='footer-section vertical-center-contents'>
-        <p className='footer-title vertical-center-contents'>{this.state.footer.postCount} Posts</p>
-      </div>
-      <div className='footer-section'>
-        <p className='footer-data vertical-center-contents'>{this.state.footer.errorString}</p>
-      </div>
-    </div>
+    <Footer isRunning={this.state.isRunning} {...this.state.footerData} isErrorFound={this.errorFound}/>
   </div>
 )
   }

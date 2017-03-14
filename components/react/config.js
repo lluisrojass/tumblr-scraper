@@ -7,7 +7,7 @@ class Config extends React.Component {
     this.typeMap = {
       photo:'is_photo',
       chat:'is_chat',
-      note:'is_note',
+      ask:'is_note',
       video:'is_video',
       text:'is_regular'
     };
@@ -28,7 +28,7 @@ class Config extends React.Component {
           isChecked:false,
           foreground:false,
         },
-        note:{
+        ask:{
           isChecked:false,
           foreground:false,
         },
@@ -111,15 +111,14 @@ class Config extends React.Component {
                             name={s}
                             {...this.state.sliders[s]}
                             handleChange={this.handleCheckboxChange}
-                     />)
-            })
+                     />)})
           }
           <Textbox
                   name='blogname'
                   addChar={this.addChar}
                   blogname={this.state.blogname}
           />
-          <button>{this.props.isRunning ? 'STOP':'GO'}</button>
+          <div className='button-wrapper'><button>{this.props.isRunning ? 'STOP':'GO'}</button></div>
         </form>
       </div>
     );
@@ -160,7 +159,7 @@ function FormButton(props){
     <div className='button-wrapper'>
       <a href='#' onClick={function(){ document.getElementById("customform").submit() }} type='submit' className='button'>Go</a>
     </div>
-  )
+  );
 }
 
 export { Config };

@@ -8,11 +8,12 @@ module.exports = class RequestLoop extends ee {
     super();
     const self = this;
     this.req = null;
+    this.doesBlogExist = false;
     this.options = {
       protocol:'http:',
       host:'',
       path:'/archive',
-      timeout:9000,
+      timeout:8000,
       headers:{
         'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36'
       }
@@ -20,13 +21,20 @@ module.exports = class RequestLoop extends ee {
     this.callback = function(res){
       res.setEncoding();
       if (res.statusCode !== 200){
-        console.log('RES ERROR MESSAGE: ');
-        self.emit('responseError',{'host':self.options.host,'path':self.options.path});
+        console.log('Status Code not 200 possiblly found');
+        self.emit('responseError',{
+                                    'host':self.options.host,
+                                    'path':self.options.path,
+                                    'message': self.doesBlogExist ?
+                                                `Error, ${res.statusCode} Received`
+                                               :
+                                                'Blog Does Not Exist'
+                                  });
         return;
       }
       res.on('data', chunk => self.emit('data',chunk));
       res.on('end',() => {
-        if (self.isLastPage()) self.emit('end'),console.log(self.request.aborted);
+        if (self.isLastPage()) self.emit('end');
         else {
           self.req = http.get(self.options,self.callback);
           self.addHandlers();
@@ -34,7 +42,7 @@ module.exports = class RequestLoop extends ee {
       });
     }
     this.requestHandlers = {
-      error: function(e){ console.log('REQ ERROR MESSAGE: '+e.message), self.emit('requestError',{'host':self.options.host,'path':self.options.path}) },
+      error: function(e){ self.emit('requestError',{'host':self.options.host,'path':self.options.path,'message':e.message}) },
       response: function(){ self.options.path = '' },
       abort: function(){ console.log('inside loop.js request aborted, now aborting loop.js'), self.emit('abort') }
     }
@@ -51,7 +59,13 @@ module.exports = class RequestLoop extends ee {
     this.addHandlers();
   }
   isLastPage(){ return '' === this.options.path; }
-  addPath(p){ this.options.path = p }
+  addPath(p){
+    if (!this.doesBlogExist){ /* path to next archive page found, blog exists */
+      this.doesBlogExist = true;
+    }
+    this.options.path = p
+  }
+
   // not working, need to use this.req.aborted to return a more useful boolean
   stop(){
     if (this.req) {
