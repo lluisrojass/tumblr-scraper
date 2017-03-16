@@ -25,11 +25,33 @@ class Post extends React.Component {
        </div>
        <div className='post-content'>
          <div className='post-headline'>
-           {this.props.images.length > 1 ? <div className='photoset-stamp'>{this.props.images.length}+ images</div> : null }
-           <h1 className='post-title'>{(this.props.headline ? this.props.headline : `${this.props.type} Post`).headlineShorten().capitalizeEach()}</h1>
-           <h1 className='post-date'>{this.props.datePublished ? this.props.datePublished.dateShorten() : 'No Date'}</h1>
+           {this.props.images.length > 1 ?
+              <div className='photoset-stamp'>{this.props.images.length}+ images</div>
+            :
+              null
+           }
+           <h1 className='post-title'>
+           {(this.props.headline ?
+              this.props.headline
+             :
+              `${this.props.type} Post`).headlineShorten().capitalizeEach()
+           }
+          </h1>
+           <h1 className='post-date'>
+            {this.props.datePublished ?
+                this.props.datePublished.dateShorten()
+              :
+                'No Date'
+            }
+           </h1>
          </div>
-         <p className='post-body'>{this.props.articleBody ? this.props.articleBody.bodyShorten() : ''}</p>
+         <p className='post-body'>
+         {this.props.articleBody ?
+            this.props.articleBody.bodyShorten()
+           :
+            ''
+         }
+         </p>
        </div>
      </div>
     )

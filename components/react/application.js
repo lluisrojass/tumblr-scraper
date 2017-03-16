@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Config } from './config';
-import { Analytics } from './analytics';
+import { Notification } from './notification';
 import { Post }  from './post';
 import Viewer from './viewer';
 import Footer from './footer';
@@ -17,6 +17,9 @@ const { ipcRenderer } = electronRequire('electron');
 //TODO: implement errors and end
 //TODO: request not aborting on abort call
 //TODO: remove [[MORE]] on text (possibly others) posts.
+//TODO: request timeout not working
+//TODO: add advanced request settings
+//TODO: fix footer
 
 String.prototype.dateShorten = function(){
   return this.replace(/(\w|-|:)*/,function(txt) {
@@ -49,12 +52,12 @@ class Application extends React.Component {
       dateDepth:null,
       requestDepth:null,
       postCount:0,
-      errorString:null
     };
     this.state = {
       removeClickedPost:null,
       isRunning:false,
       isErrorFound:false,
+      notification:'Warning: Due to high number of http requests, users might experience lag or high CPU Activity',
       isViewing:false,
       scrapedPosts:[],
       currentPost:null,
@@ -69,8 +72,12 @@ class Application extends React.Component {
     this.archive.on('post', postInfo => {
       getPostData(postInfo, (err, data) => {
         if (err !== null){
-          console.warn('Terminal','Error fetching Post Data');
-
+          this.setState({
+            notification: err.type === 'requestError' ?
+                  `Error: ${err.msg} requesting ${err.path}`
+                :
+                  `Error: ${err.msg} requesting ${err.path}`
+          });
           return;
         }
 
@@ -101,35 +108,49 @@ class Application extends React.Component {
     });
 
     this.archive.on('requestError',(urlInfo) => {
-      this.state.footerData.errorString = urlInfo.message+' ('+urlInfo.path+')';
+      this.state.setState({
+        notification:urlInfo.message+' ('+urlInfo.path+')',
+        isErrorFound:true
+      });
       this.stopRunning();
       this.setState(this.state);
     });
 
     this.archive.on('responseError',(urlInfo) => {
-      console.log('shit');
-      this.state.footerData.errorString = urlInfo.message+' ('+urlInfo.path+')';
-      this.setState(this.state);
+      this.setState({
+        notification:urlInfo.message+' ('+urlInfo.path+')',
+        isErrorFound:true
+      });
+      this.stopRunning();
     });
 
     this.archive.on('end',() =>{
-      this.setState({ isRunning:false });
+      this.setState({
+        isRunning:false,
+        notification:'Finished'
+      });
     });
   }
 
   startRunning = (blogname, types) => {
     if (!types.length){
-      console.warn('Terminal:', 'No types selected');
+      this.setState(notification:'No Post Types Selected');
       return;
     }
     if (!(exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/, blogname))){
-      console.warn('Terminal', blogname+' is invalid Blogname');
+      this.setState({notification:'"'+blogname+'" invalid Blogname'});
+      return;
+    }
+    if (blogname.length > 32){
+      this.setState(notification:'Blog Name must be 32 characters or less');
       return;
     }
     this.archive.stop();
     this.setState({ scrapedPosts : [],
+                    notification:'',
                     isRunning: true,
                     currentPost: null,
+                    isErrorFound:false,
                     isViewing: false,
                     footerData:JSON.parse(JSON.stringify(this.defaultFooter))
                   });
@@ -141,7 +162,7 @@ class Application extends React.Component {
 
   handlePostClicked = (unClickCB, data) => {
     delete data['onClick'];
-    Object.keys(data).forEach((elem) => {
+    Object.keys(data).forEach((elem) => { /* remove null data */
       if (!data[elem]){
         delete data[elem];
       }
@@ -158,10 +179,7 @@ class Application extends React.Component {
     if (!this.archive.stop()){
       console.log('error conducting stop, check loop.js');
     }
-    this.setState({
-      isRunning:false,
-    });
-
+    this.setState({  isRunning:false });
   }
 
   setStateKeepScroll = () => {
@@ -187,29 +205,40 @@ class Application extends React.Component {
                       stopRunning={this.stopRunning}
                 />
              </div>
-             <Analytics />
+             <Notification message={this.state.notification} isFatal={this.state.isErrorFound}/>
            </div>
          </div>
 
          <div id='mid-panel-wrapper'>
            <div id='middle-panel'>
            <div className='height100width100 scroll-box' id='keep-bottom'>
-             { this.state.scrapedPosts.length > 1 ? this.state.scrapedPosts.map((scrapedPost, index) =>
-               <Post onClick={this.handlePostClicked} key={index} {...scrapedPost} />
-             ) : <div className='height100width100 notfound'></div>}
+             { this.state.scrapedPosts.length > 1 ?
+                this.state.scrapedPosts.map((scrapedPost, index) =>
+                  <Post onClick={this.handlePostClicked}
+                        key={index}
+                        {...scrapedPost}
+                  />)
+             :
+                  <div className='height100width100 notfound'></div>
+             }
            </div>
           </div>
         </div>
 
         <div id='right-panel-wrapper'>
           {this.state.isViewing ?
-              <Viewer post={this.state.currentPost} openInBrowser={this.openInBrowser}/>
+              <Viewer post={this.state.currentPost}
+                      openInBrowser={this.openInBrowser}
+              />
             :
               <div className='height100width100 notselected'></div>
           }
         </div>
     </div>
-    <Footer isRunning={this.state.isRunning} {...this.state.footerData} isErrorFound={this.errorFound}/>
+    <Footer isRunning={this.state.isRunning}
+            {...this.state.footerData}
+            isErrorFound={this.errorFound}
+    />
   </div>
 )
   }

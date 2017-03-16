@@ -96,8 +96,8 @@ body, html, #app-container {
 }
 .sk-fading-circle {
 	margin-left: .6vh;
-  width: 1.8vh;
-  height: 1.8vh;
+  width: 1.9vh;
+  height: 1.9vh;
   position: relative;
 }
 
@@ -236,7 +236,7 @@ body, html, #app-container {
 	flex-direction: column;
 }
 #content{
-	height: 100%;
+	height: 97%;
 	display: flex;
 }
 /* footer */
@@ -247,7 +247,7 @@ body, html, #app-container {
 	letter-spacing: .8px;;
 	font-weight: 300;
 	width: 100%;
-	height: 2.5%;
+	height: 3%;
 	text-align: left;
 }
 .footer-normal{
@@ -255,34 +255,37 @@ body, html, #app-container {
 	border-top:  1.5px solid #c9cbcf;
 	background-color: #E6E6E6;
 }
-.footer-red{
-	background-color: #ff3f3f;
-	color: white;
-}
 .footer-blue{
 	background-color: #559DF8;
 	color: white;
 }
-.footer-section{
-	width: auto;
+.footer-request-status{
+	width: 50%;
+	padding-left: .8vh;
+}
+.footer-posts-status{
+	display: flex;
+	width: 50%;
 	padding-left: .7vh;
+}
+.footer-posts-status div{
+	width: 33%;
 }
 
 /*
 		Left Panel
 			-> title-wrapper 20%
-			-> config-wrapper 50%
+			-> config-wrapper 60%
 			  -> form-wrapper 100%
 					-> form 100%
-						-> input-row 10%
-						-> input-row 10%
-						-> input-row 10%
-						-> input-row 10%
-						-> input-row 10%
-						-> blog-input-wrapper 20%
-
+						-> input-row 7%
+						-> input-row 7%
+						-> input-row 7%
+						-> input-row 7%
+						-> input-row 7%
+						-> blog-input-wrapper 8%
 						-> button-wrapper 30%
-			-> none 30%
+			-> none 20%
 
 */
 
@@ -300,9 +303,8 @@ body, html, #app-container {
 }
 #config-wrapper{
 	padding: 0px 10%;
-	height: 70%;
+	height: 60%;
 	box-sizing: border-box;
-	border:inherit;
 }
 #title-wrapper{
 	width: 100%;
@@ -324,24 +326,50 @@ form {
 }
 .input-row{
 	width: 100%;
-	height: 5%;
-	border:2px solid red;
+	height: 7%;
 }
 .typename {
 	font-weight: 300;
 	display: inline;
 }
 .blog-input-wrapper{
-	height: 10%;
-	border:2px solid red;
+	height: 8%;
 	width: 100%;
 }
+.blog-input-wrapper div p{
+	font-weight: 300;
+	display: inline;
+}
 .blog-input-wrapper div input{
-	width: 55%;
-	font-size: 13px;
+	position: relative;
+	top: -2px;
+	width: 50%;
+	font-size: 12px;
 	float: right;
 }
-
+.button-wrapper{
+	height: 15%;
+	width: 100%;
+	text-align: center;
+}
+.stop { font-weight: 500 }
+#notification-wrapper{
+	height: 20%;
+	padding: 10% 8%;
+}
+.warning-text{
+	color: #e5b700;
+	font-weight: 400;
+}
+.notif-label{
+	line-height: 14px;
+	font-weight: 400;
+	font-size: 13px;
+}
+.error-text{
+	color: red;
+	font-weight: 400;
+}
 
 
 /*
@@ -552,10 +580,7 @@ input:checked + .slider:before {
 
 /*button css generated at http://livetools.uiparade.com/button-builder.html# */
 
-.button-wrapper{
-	width:100%;
-	text-align: center;
-}
+
 
 .button {
 		margin: 5px;

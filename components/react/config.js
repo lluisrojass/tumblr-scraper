@@ -114,11 +114,18 @@ class Config extends React.Component {
                      />)})
           }
           <Textbox
-                  name='blogname'
+                  name='Blog Name'
                   addChar={this.addChar}
                   blogname={this.state.blogname}
           />
-          <div className='button-wrapper'><button>{this.props.isRunning ? 'STOP':'GO'}</button></div>
+          <div className='button-wrapper'>
+            {this.props.isRunning ?
+              <button className='stop fbutton vertical-center-contents'>STOP</button>
+            :
+              <button className='go fbutton vertical-center-contents'>GO</button>
+            }
+
+          </div>
         </form>
       </div>
     );
@@ -146,18 +153,10 @@ function Slider(props){
 
 function Textbox(props){
   return(
-    <div className='blog-input-wrapper'>
-      <div className='vertical-center-contents'>{props.name}
+    <div className='blog-input-wrapper '>
+      <div className='vertical-center-contents'><p>{props.name}</p>
         <input type='text' name={props.name} value={props.blogname} onChange={props.addChar} />
       </div>
-    </div>
-  );
-}
-
-function FormButton(props){
-  return(
-    <div className='button-wrapper'>
-      <a href='#' onClick={function(){ document.getElementById("customform").submit() }} type='submit' className='button'>Go</a>
     </div>
   );
 }

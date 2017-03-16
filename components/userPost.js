@@ -20,12 +20,13 @@ module.exports = function(postData,callback){
       'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
     }
   };
-  
+
   const returnData = {
     link:postData.host+postData.path,
     type:typeTranslate(postData.type),
     postData:null
   };
+
   const parser = new ContentParser();
 
   parser.on('postData',(data) =>{
@@ -38,8 +39,9 @@ module.exports = function(postData,callback){
     if (res.statusCode !== 200) {
       this.abort();
       error = {
+        path:options.path,
         type:'responseError',
-        msg:res.statusCode+' status code returned'
+        msg:res.statusCode+' returned '
       }
       callback(error,returnData); // response error
     }
@@ -49,8 +51,9 @@ module.exports = function(postData,callback){
   }).on('error',(e) => {
     this.abort();
     error = {
+      path:options.path,
       type:'requestError',
-      msg:'Error with request: ' + e.message
+      msg:e.message
     }
     callback(error,returnData); // request error
   });
