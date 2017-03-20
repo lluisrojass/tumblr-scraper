@@ -12,7 +12,6 @@ class Config extends React.Component {
       text:'is_regular'
     };
     this.state = {
-      buttonText:'GO',
       blogname:'',
       returnTypes:JSON.parse(JSON.stringify(this.defaultTypes)),
       sliders:{
@@ -119,12 +118,20 @@ class Config extends React.Component {
                   blogname={this.state.blogname}
           />
           <div className='button-wrapper'>
+
             {this.props.isRunning ?
-              <button className='stop fbutton vertical-center-contents'>STOP</button>
+              <button className='stop-button vertical-center-contents'>STOP</button>
             :
-              <button className='go fbutton vertical-center-contents'>GO</button>
+              <button className='go-button vertical-center-contents'>START</button>
             }
 
+            {!this.props.defaultPosition && !this.props.isRunning && !this.props.finalPosition && !this.props.isErrorFound ?
+              <button onClick={this.props.continueRunning} className='resume-button fbutton vertical-center-contents'>
+                    RESUME
+              </button>
+            :
+               null
+            }
           </div>
         </form>
       </div>

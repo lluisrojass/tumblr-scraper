@@ -12,14 +12,9 @@ const archive = require('../archive');
 const getPostData = require('../userPost');
 const { ipcRenderer } = electronRequire('electron');
 
-//TODO: implement analytics
-//TODO: handle post error
-//TODO: implement errors and end
 //TODO: request not aborting on abort call
-//TODO: remove [[MORE]] on text (possibly others) posts.
 //TODO: request timeout not working
-//TODO: add advanced request settings
-//TODO: fix footer
+//TODO: allow for better notifying with return types from archive.js a
 
 String.prototype.dateShorten = function(){
   return this.replace(/(\w|-|:)*/,function(txt) {
@@ -32,6 +27,9 @@ String.prototype.bodyShorten = function(){
 }
 String.prototype.headlineShorten = function(){
   return (this.length >= 26) ? this.substr(0,this.charAt(23) === ' ' ? 22: 23) + '...' : this.toString();
+}
+String.prototype.errorShorten = function(){
+  return (this.length >= 34) ? this.substr(0,31) + '...' : this.toString();
 }
 String.prototype.capitalizeEach = function(){
     return this.replace(/\w\S*/g, function(txt) {
@@ -52,15 +50,17 @@ class Application extends React.Component {
       dateDepth:null,
       requestDepth:null,
       postCount:0,
-    };
+    }
     this.state = {
       removeClickedPost:null,
+      currentPost:null,
+      defaultPosition:true,
+      finalPosition:false,
       isRunning:false,
       isErrorFound:false,
-      notification:'Warning: Due to high number of http requests, users might experience lag or high CPU Activity',
       isViewing:false,
       scrapedPosts:[],
-      currentPost:null,
+      notification:'Due to large number of requests, users could experience large CPU Activity',
       footerData:JSON.parse(JSON.stringify(this.defaultFooter))
     }
 
@@ -73,22 +73,20 @@ class Application extends React.Component {
       getPostData(postInfo, (err, data) => {
         if (err !== null){
           this.setState({
-            notification: err.type === 'requestError' ?
-                  `Error: ${err.msg} requesting ${err.path}`
-                :
-                  `Error: ${err.msg} requesting ${err.path}`
+            notification: `Error: ${err.msg} requesting ${err.path}`
           });
           return;
         }
 
         let {datePublished=null, articleBody=null, headline=null,
-        image, url=''} = data.postData;
+        image, url='',video=null} = data.postData;
 
         this.state.scrapedPosts.push({
           type: data.type,
           datePublished: datePublished,
           articleBody: articleBody,
           headline: headline,
+          video: video,
           images: image ? image['@list'] || [image] : [],
           url: url
         });
@@ -103,22 +101,21 @@ class Application extends React.Component {
       this.setState(this.state);
     });
 
-    this.archive.on('abort',() => {
+    this.archive.on('abort',() => { /* not working */
       console.log('Abort event caught inside application.js');
     });
 
     this.archive.on('requestError',(urlInfo) => {
-      this.state.setState({
-        notification:urlInfo.message+' ('+urlInfo.path+')',
+      this.setState({
+        notification:urlInfo.message+' ( '+urlInfo.path+' )',
         isErrorFound:true
       });
       this.stopRunning();
-      this.setState(this.state);
     });
 
     this.archive.on('responseError',(urlInfo) => {
       this.setState({
-        notification:urlInfo.message+' ('+urlInfo.path+')',
+        notification:urlInfo.message+' ( '+urlInfo.path+' )',
         isErrorFound:true
       });
       this.stopRunning();
@@ -127,27 +124,51 @@ class Application extends React.Component {
     this.archive.on('end',() =>{
       this.setState({
         isRunning:false,
+        finalPosition:true,
         notification:'Finished'
       });
     });
   }
 
+  continueRunning = (e) => {
+    e.preventDefault();
+    this.setState({
+      isRunning:true
+    })
+    this.archive.continue();
+  }
+  stopRunning = () => {
+    this.archive.stop();
+    this.setState({ isRunning:false });
+  }
+
   startRunning = (blogname, types) => {
     if (!types.length){
-      this.setState(notification:'No Post Types Selected');
-      return;
-    }
-    if (!(exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/, blogname))){
-      this.setState({notification:'"'+blogname+'" invalid Blogname'});
+      this.setState({
+        notification:'No Post Types Selected',
+        isErrorFound:true
+      });
       return;
     }
     if (blogname.length > 32){
-      this.setState(notification:'Blog Name must be 32 characters or less');
+      this.setState({
+        notification:'Blog Name must be 32 characters or less',
+        isErrorFound:true
+      });
+      return;
+    }
+    if (!(exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/, blogname))){
+      this.setState({
+        notification:'"'+blogname.errorShorten()+'" invalid Blog Name',
+        isErrorFound:true
+      });
       return;
     }
     this.archive.stop();
     this.setState({ scrapedPosts : [],
                     notification:'',
+                    defaultPosition:false,
+                    finalPosition:false,
                     isRunning: true,
                     currentPost: null,
                     isErrorFound:false,
@@ -156,6 +177,7 @@ class Application extends React.Component {
                   });
     this.archive.go(blogname, types);
   }
+
   openInBrowser = url => {
     ipcRenderer.send('asynchronous-message',url);
   }
@@ -175,12 +197,7 @@ class Application extends React.Component {
     });
   }
 
-  stopRunning = () => {
-    if (!this.archive.stop()){
-      console.log('error conducting stop, check loop.js');
-    }
-    this.setState({  isRunning:false });
-  }
+
 
   setStateKeepScroll = () => {
     const m = document.getElementById('keep-bottom'),
@@ -203,16 +220,25 @@ class Application extends React.Component {
                       startRunning={this.startRunning}
                       isRunning={this.state.isRunning}
                       stopRunning={this.stopRunning}
+                      defaultPosition={this.state.defaultPosition}
+                      continueRunning={this.continueRunning}
+                      finalPosition={this.state.finalPosition}
+                      isErrorFound={this.state.isErrorFound}
                 />
              </div>
-             <Notification message={this.state.notification} isFatal={this.state.isErrorFound}/>
+             <Notification
+                          message={this.state.notification}
+                          isFatal={this.state.isErrorFound}
+                          isRunning={this.state.isRunning}
+                          finalPosition={this.state.finalPosition}
+             />
            </div>
          </div>
 
          <div id='mid-panel-wrapper'>
            <div id='middle-panel'>
            <div className='height100width100 scroll-box' id='keep-bottom'>
-             { this.state.scrapedPosts.length > 1 ?
+             { this.state.scrapedPosts.length > 0 ?
                 this.state.scrapedPosts.map((scrapedPost, index) =>
                   <Post onClick={this.handlePostClicked}
                         key={index}
@@ -238,9 +264,9 @@ class Application extends React.Component {
     <Footer isRunning={this.state.isRunning}
             {...this.state.footerData}
             isErrorFound={this.errorFound}
+            defaultPosition={this.state.defaultPosition}
     />
-  </div>
-)
+  </div>)
   }
 }
 

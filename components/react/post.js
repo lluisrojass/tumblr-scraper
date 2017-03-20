@@ -22,11 +22,12 @@ class Post extends React.Component {
               <img src={`public/img/${this.props.type}_default.png`} className='post-image' />
            }
         </div>
+
        </div>
        <div className='post-content'>
          <div className='post-headline'>
            {this.props.images.length > 1 ?
-              <div className='photoset-stamp'>{this.props.images.length}+ images</div>
+              <div className='photoset-stamp'>{this.props.images.length} images</div>
             :
               null
            }

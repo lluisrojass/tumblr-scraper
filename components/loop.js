@@ -12,7 +12,7 @@ module.exports = class RequestLoop extends ee {
     this.options = {
       protocol:'http:',
       host:'',
-      path:'/archive',
+      path:'',
       timeout:8000,
       headers:{
         'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.98 Safari/537.36'
@@ -21,12 +21,11 @@ module.exports = class RequestLoop extends ee {
     this.callback = function(res){
       res.setEncoding();
       if (res.statusCode !== 200){
-        console.log('Status Code not 200 possiblly found');
         self.emit('responseError',{
                                     'host':self.options.host,
                                     'path':self.options.path,
                                     'message': self.doesBlogExist ?
-                                                `Error, ${res.statusCode} Received`
+                                                `Error: ${res.statusCode} Received`
                                                :
                                                 'Blog Does Not Exist'
                                   });
@@ -53,26 +52,24 @@ module.exports = class RequestLoop extends ee {
       self.req.on(elem,self.requestHandlers[elem]);
     });
   }
-  go(blogname){
+  go(blogname, path='/archive'){
+    this.options.path = path;
     this.options.host = `${blogname}.tumblr.com`
+    console.log('happened with '+blogname+path);
+    if (this.doesBlogExist) this.doesBlogExist = false;
+
     this.req = http.get(this.options,this.callback);
     this.addHandlers();
   }
-  isLastPage(){ return '' === this.options.path; }
-  addPath(p){
-    if (!this.doesBlogExist){ /* path to next archive page found, blog exists */
-      this.doesBlogExist = true;
-    }
-    this.options.path = p
-  }
 
-  // not working, need to use this.req.aborted to return a more useful boolean
-  stop(){
-    if (this.req) {
-      this.req.abort();
-      this.options.path = '/archive';
-      return true;
-    }
-    return false
+
+  stop()       { if (this.req) this.req.abort() } /* not working */
+  isLastPage() { return '' === this.options.path }
+  continue(){
+    this.go(this.options.host.substring(0,this.options.host.indexOf('.')), this.options.path)
+  }
+  addPath(p){
+    this.options.path = p;
+    if (!this.doesBlogExist) this.doesBlogExist = true;
   }
 }

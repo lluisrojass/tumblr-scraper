@@ -1,17 +1,16 @@
 'use strict';
 
 const htmlparser2 = require('htmlparser2');
-var ee = require('events');
-
+const ee = require('events');
+const supportedVideoSites = require('./supportedSites');
 
 class ArchiveParser extends ee {
   constructor(postTypes){
     super();
     const self = this;
     this.currMediaType = null;
-    this.types = []; /* 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(question) 'is_audio'*/
+    this.types = []; /* 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(ask) 'is_audio'*/
     postTypes.forEach(elem => this.types.push(elem));
-    this.parser = null;
     this.isMediaFound = !1;
     this.isDateFound = !1;
     this.date = '';
@@ -46,19 +45,6 @@ class ArchiveParser extends ee {
         }
       }
     },{decodeEntities: true});
-
-    this.parser.__proto__.validate = function(c){
-      var valid = !1;
-      if (c.includes("is_original")){
-        this.types.forEach((e) => {
-          if (c.includes(e)){
-            valid = !0;
-            this.currMediaType = e;
-          }
-        });
-      }
-      return valid;
-    }
   }
 
   validate(c) {
@@ -73,36 +59,83 @@ class ArchiveParser extends ee {
     }
     return valid;
   };
-  end(){ this.parser.parseComplete() }
-  write(chunk){ this.parser.write(chunk); }
+  end()        { this.parser.parseComplete() }
+  write(chunk) { this.parser.write(chunk);   }
 }
 
-
 class ContentParser extends ee{
-  constructor(){
+  constructor(type){
     super();
 
+    var isJSONWrapperFound = false;
+    var isDataEmitted = false;
     const self = this;
-    var found = !1;
+    const isLookingForVideo = type === 'is_video' ? !0 : !1;
+
+    var dataManager = {
+      set videoURL(url){
+        if (this.returnData){ /* ld+json found first */
+          this.returnData.video = url;
+          self.emit('postData', this.returnData);
+          isDataEmitted = true; /* prevent double emit */
+        } else this.vidURL = url;
+      },
+      set semData(ldjson){
+        ldjson = JSON.parse(ldjson);
+        if (this.vidURL){ /* video URL found before ld+json */
+          ldjson.video = this.vidURL;
+          self.emit('postData',ldjson);
+          isDataEmitted = true; /* prevent double emit */
+        } else {
+          if (!isLookingForVideo) {
+            self.emit('postData',ldjson); /* Not looking for video */
+            isDataEmitted = true; /* prevent double emit */
+          }
+          else this.returnData = ldjson;
+        }
+      },
+      vidURL:null,
+      returnData:null,
+    }
 
     this.parser = new htmlparser2.Parser({
       onopentag:function(name,attribs) {
         if (name === 'script' && attribs.type && attribs.type === 'application/ld+json'){
-          found = !0;
+          isJSONWrapperFound = !0;
         }
-        return;
+        if (isLookingForVideo && name === 'iframe' && attribs['src']) {
+
+          const { src } = attribs;
+          let terminate = false;
+          let siteIndex = 0;
+          let urlIsMatched = false;
+
+          while(!terminate){
+            if (src.indexOf(supportedVideoSites[siteIndex]) !== -1) { /* faster than regex */
+              if (!isDataEmitted) dataManager.videoURL = src;
+              urlIsMatched = true;
+            }
+            siteIndex += 1;
+            terminate = !supportedVideoSites[siteIndex] || urlIsMatched;
+          }
+        }
       },
       ontext:function(text){
-        if( found ){
-          self.emit('postData', JSON.parse(text));
-          found = !1;
+        if (isJSONWrapperFound){
+          dataManager.semData = text;
+          isJSONWrapperFound = !1;
         }
         return;
       }
     },{decodeEntities: true});
   }
-  write(chunk){ this.parser.write(chunk) }
-  end(){ this.parser.end(); }
+
+  write(chunk){
+    this.parser.write(chunk);
+  }
+  end(){
+    this.parser.end();
+  }
 }
 
 module.exports.ArchiveParser = ArchiveParser;

@@ -12,9 +12,11 @@ module.exports = function(postData,callback){
   var error = null
   var request = null;
 
+  var haltParse = false;
+
   const options = {
     host:postData.host,
-    path:postData.path+'/mobile',
+    path:postData.type === 'is_video' ? postData.path : postData.path+'/mobile',
     timeout:5000,
     headers:{
       'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
@@ -27,11 +29,12 @@ module.exports = function(postData,callback){
     postData:null
   };
 
-  const parser = new ContentParser();
+  const parser = new ContentParser(postData.type);
 
   parser.on('postData',(data) =>{
     returnData.postData = data;
     request.abort();
+    haltParse = true;
     callback(error,returnData); // data found, all good to continue.
   });
 
@@ -45,8 +48,8 @@ module.exports = function(postData,callback){
       }
       callback(error,returnData); // response error
     }
-    res.on('data',(chunk)=> {
-      parser.write(chunk);
+    res.on('data',(chunk)=> { 
+      if (!haltParse) parser.write(chunk);
     });
   }).on('error',(e) => {
     this.abort();
