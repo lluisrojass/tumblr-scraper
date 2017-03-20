@@ -7,35 +7,15 @@ import { Notification } from './notification';
 import { Post }  from './post';
 import Viewer from './viewer';
 import Footer from './footer';
-
 const archive = require('../archive');
 const getPostData = require('../userPost');
+const sU = require('../stringUtilities');
 const { ipcRenderer } = electronRequire('electron');
 
 //TODO: request not aborting on abort call
 //TODO: request timeout not working
 //TODO: allow for better notifying with return types from archive.js a
 
-String.prototype.dateShorten = function(){
-  return this.replace(/(\w|-|:)*/,function(txt) {
-      return txt.substr(0,txt.indexOf('T'));
-  });
-}
-String.prototype.bodyShorten = function(){
-  var CharIndex = this[19] === ' ' ? 18: 19;
-  return (this.length > 196) ? this.substr(0,this.charAt(193) === ' ' ? 192 : 193) + '...' : this.toString();
-}
-String.prototype.headlineShorten = function(){
-  return (this.length >= 26) ? this.substr(0,this.charAt(23) === ' ' ? 22: 23) + '...' : this.toString();
-}
-String.prototype.errorShorten = function(){
-  return (this.length >= 34) ? this.substr(0,31) + '...' : this.toString();
-}
-String.prototype.capitalizeEach = function(){
-    return this.replace(/\w\S*/g, function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
 function exactMatch(r,str){
   const match = str.match(r);
   return match != null && str == match[0];
@@ -90,7 +70,6 @@ class Application extends React.Component {
           images: image ? image['@list'] || [image] : [],
           url: url
         });
-
         this.state.footerData.postCount += 1;
         this.setStateKeepScroll();
       });
@@ -137,6 +116,7 @@ class Application extends React.Component {
     })
     this.archive.continue();
   }
+
   stopRunning = () => {
     this.archive.stop();
     this.setState({ isRunning:false });
@@ -196,8 +176,6 @@ class Application extends React.Component {
       isViewing:true
     });
   }
-
-
 
   setStateKeepScroll = () => {
     const m = document.getElementById('keep-bottom'),
@@ -269,6 +247,5 @@ class Application extends React.Component {
   </div>)
   }
 }
-
 
 ReactDOM.render(<Application />,document.getElementById('app-container'));

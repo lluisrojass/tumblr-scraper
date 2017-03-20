@@ -2,7 +2,7 @@
 
 const htmlparser2 = require('htmlparser2');
 const ee = require('events');
-const supportedVideoSites = require('./supportedSites');
+const supportedVideoSites = require('./supportedSites.json')['sites'];
 
 class ArchiveParser extends ee {
   constructor(postTypes){
@@ -23,17 +23,14 @@ class ArchiveParser extends ee {
           if (self.isMediaFound && attribs['data-peepr'] ) {
             const d = JSON.parse(attribs['data-peepr'])
             self.emit('post',{'host':`${d.tumblelog}.tumblr.com`,'path':`/post/${d.postId}`,'type':self.currMediaType});
-            // clear variables
-            self.currMediaType = null;
+            self.currMediaType = null; /* clear variables */
             self.isMediaFound = !1;
           }
           else if (attribs.id && attribs.id === "next_page_link") {
-            self.emit("nextPage",attribs.href); // subscribe to the change in the request loop
+            self.emit("nextPage",attribs.href);
           }
         }
-        else if (name === "h2" && attribs.class && attribs.class === "date") {
-            self.isDateFound = !0;
-        }
+        else if (name === "h2" && attribs.class && attribs.class === "date") self.isDateFound = !0;
       },
       ontext:function(t){
         if (self.isDateFound){
@@ -59,16 +56,22 @@ class ArchiveParser extends ee {
     }
     return valid;
   };
-  end()        { this.parser.parseComplete() }
-  write(chunk) { this.parser.write(chunk);   }
+
+  end() {
+    this.parser.parseComplete()
+  }
+
+  write(chunk) {
+    this.parser.write(chunk);
+  }
 }
 
-class ContentParser extends ee{
+class PostParser extends ee{
   constructor(type){
     super();
 
     var isJSONWrapperFound = false;
-    var isDataEmitted = false;
+    var isDataEmitted = false; /* prevent double emit */
     const self = this;
     const isLookingForVideo = type === 'is_video' ? !0 : !1;
 
@@ -77,7 +80,7 @@ class ContentParser extends ee{
         if (this.returnData){ /* ld+json found first */
           this.returnData.video = url;
           self.emit('postData', this.returnData);
-          isDataEmitted = true; /* prevent double emit */
+          isDataEmitted = true;
         } else this.vidURL = url;
       },
       set semData(ldjson){
@@ -85,11 +88,11 @@ class ContentParser extends ee{
         if (this.vidURL){ /* video URL found before ld+json */
           ldjson.video = this.vidURL;
           self.emit('postData',ldjson);
-          isDataEmitted = true; /* prevent double emit */
+          isDataEmitted = true;
         } else {
           if (!isLookingForVideo) {
             self.emit('postData',ldjson); /* Not looking for video */
-            isDataEmitted = true; /* prevent double emit */
+            isDataEmitted = true; 
           }
           else this.returnData = ldjson;
         }
@@ -138,5 +141,4 @@ class ContentParser extends ee{
   }
 }
 
-module.exports.ArchiveParser = ArchiveParser;
-module.exports.ContentParser = ContentParser;
+module.exports = { ArchiveParser, PostParser };

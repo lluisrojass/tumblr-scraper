@@ -1,4 +1,4 @@
-
+'use strict';
 
 const http = require('http');
 const ee = require('events');
@@ -46,12 +46,14 @@ module.exports = class RequestLoop extends ee {
       abort: function(){ console.log('inside loop.js request aborted, now aborting loop.js'), self.emit('abort') }
     }
   }
+
   addHandlers(){
     const self = this;
     Object.keys(this.requestHandlers).forEach(elem => {
       self.req.on(elem,self.requestHandlers[elem]);
     });
   }
+
   go(blogname, path='/archive'){
     this.options.path = path;
     this.options.host = `${blogname}.tumblr.com`
@@ -62,14 +64,21 @@ module.exports = class RequestLoop extends ee {
     this.addHandlers();
   }
 
+  stop(){ /* not working */
+    if (this.req) this.req.abort()
+  }
 
-  stop()       { if (this.req) this.req.abort() } /* not working */
-  isLastPage() { return '' === this.options.path }
+  isLastPage(){
+    return '' === this.options.path
+  }
+
   continue(){
     this.go(this.options.host.substring(0,this.options.host.indexOf('.')), this.options.path)
   }
+
   addPath(p){
     this.options.path = p;
     if (!this.doesBlogExist) this.doesBlogExist = true;
   }
+
 }
