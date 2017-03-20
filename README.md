@@ -2,4 +2,4 @@
 
  Scrapes a tumblr blog for blogger uploads.
 
-![prototype]( https://i.gyazo.com/87324d3a8521ed98c8faf917b6e73685.gif)
+![prototype](https://i.gyazo.com/03247cf67653e5eb8635b3d16708c1c3.gif)
