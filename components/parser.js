@@ -77,16 +77,16 @@ class PostParser extends ee{
 
     var dataManager = {
       set videoURL(url){
-        if (this.returnData){ /* ld+json found first */
-          this.returnData.video = url;
-          self.emit('postData', this.returnData);
+        if (this._d){ /* ld+json found first */
+          this._d.video = url;
+          self.emit('postData', this._d);
           isDataEmitted = true;
-        } else this.vidURL = url;
+        } else this._vidURL = url;
       },
-      set semData(ldjson){
+      set semJSON(ldjson){
         ldjson = JSON.parse(ldjson);
-        if (this.vidURL){ /* video URL found before ld+json */
-          ldjson.video = this.vidURL;
+        if (this._vidURL){ /* video URL found before ld+json */
+          ldjson.video = this._vidURL;
           self.emit('postData',ldjson);
           isDataEmitted = true;
         } else {
@@ -94,30 +94,27 @@ class PostParser extends ee{
             self.emit('postData',ldjson); /* Not looking for video */
             isDataEmitted = true;
           }
-          else this.returnData = ldjson;
+          else this._d = ldjson;
         }
       },
-      vidURL:null,
-      returnData:null,
+      _vidURL:null,
+      _d:null,
     }
 
     this.parser = new htmlparser2.Parser({
       onopentag:function(name,attribs) {
-        if (name === 'script' && attribs.type && attribs.type === 'application/ld+json'){
+        if (name === 'script' && attribs.type && attribs.type === 'application/ld+json')
           isJSONWrapperFound = !0;
-        }
-        if (isLookingForVideo && name === 'iframe' && attribs['src']) {
 
+        if (isLookingForVideo && name === 'iframe' && attribs['src']) {
           const { src } = attribs;
           let terminate = false;
           let siteIndex = 0;
           let urlIsMatched = false;
-
           while(!terminate){
             if (src.indexOf(supportedVideoSites[siteIndex]) !== -1) { /* faster than regex */
-              if (!isDataEmitted){
-                dataManager.videoURL = src.includes('http') ? src : 'https:'+src;
-              }
+              if (!isDataEmitted)
+                dataManager.videoURL = src.substring(0,4) === 'http' ? src : 'http:'+src;
               urlIsMatched = true;
             }
             siteIndex += 1;
@@ -127,7 +124,7 @@ class PostParser extends ee{
       },
       ontext:function(text){
         if (isJSONWrapperFound){
-          dataManager.semData = text;
+          dataManager.semJSON = text;
           isJSONWrapperFound = !1;
         }
         return;
@@ -138,9 +135,11 @@ class PostParser extends ee{
   write(chunk){
     this.parser.write(chunk);
   }
+
   end(){
     this.parser.end();
   }
+
 }
 
 module.exports = { ArchiveParser, PostParser };
