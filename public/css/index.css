@@ -274,7 +274,7 @@ body, html, #app-container {
 
 /*
 		Left Panel
-			-> title-wrapper 22%
+			-> title-wrapper 30%
 			-> config-wrapper 60%
 			  -> form-wrapper 100%
 					-> form 100%
@@ -284,9 +284,9 @@ body, html, #app-container {
 						-> input-row 10%
 						-> input-row 10%
 						-> input-row 10%
-						-> blog-input-wrapper 20%
-						-> button-wrapper 20%
-			-> notification-wrapper 15%
+						-> blog-input-wrapper 10%
+						-> button-wrapper 10%
+			-> notification-wrapper 10%
 
 */
 
@@ -351,7 +351,7 @@ form {
 	float: right;
 }
 .button-wrapper{
-	height: 20%;
+	height: 15%;
 	width: 100%;
 	text-align: center;
 }
@@ -393,20 +393,30 @@ form {
 	color: white;
 }
 #notification-wrapper{
-	height: 15%;
-	padding: 10% 8%;
-	text-align: center;
+	height: 10%;
+	padding: 5% 7%;
 }
 .notif-label{
 	font-weight: 400;
+	color: #888888;
+	letter-spacing: .4px;
 	font-size: 80%;
-	line-height: 1.2;
+	line-height: 1;
+	font-size: 1.1vw;
+}
+a{
+	text-decoration: none;
+	color: inherit;
+}
+a:hover{
+	color: #00a0b0;
+	font-weight: 90;
 }
 .warning-text{
-	color: #fcb92a;
+	color: #888888;
 }
 .success-text{
-	color: green;
+	color: #347E50;
 }
 .error-text{
 	color: #db3939;
@@ -629,60 +639,4 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-}
-
-
-/*button css generated at http://livetools.uiparade.com/button-builder.html# */
-
-.button {
-		margin: 5px;
-    display: inline-block;
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    background-color: #538fbe;
-    padding: 5px 17.5px;
-    font-size: 11px;
-		font-weight: 200;
-    border: 1px solid #2d6898;
-		background-image: linear-gradient(bottom, rgb(73,132,180) 0%, rgb(97,155,203) 100%);
-
-		border-radius: 5px;
-		text-shadow: x-offset y-offset blur color;
-		-webkit-box-shadow: 0px 6px 0px #2b638f;
-		-moz-box-shadow: 0px 6px 0px #2b638f;
-		box-shadow: 0px 4px 0px #2b638f;
-}
-.button:hover {
-    background-image: linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
-    background-image: -o-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
-    background-image: -moz-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
-    background-image: -ms-linear-gradient(bottom, rgb(79,142,191) 0%, rgb(102,166,214) 100%);
-
-    background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0, rgb(79,142,191)),
-        color-stop(1, rgb(102,166,214))
-    );
-
-}
-.button:active {
-    background-image: linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-    background-image: -o-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-    background-image: -moz-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-    background-image: -webkit-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-    background-image: -ms-linear-gradient(bottom, rgb(88,154,204) 0%, rgb(90,150,199) 100%);
-
-    background-image: -webkit-gradient(
-        linear,
-        left bottom,
-        left top,
-        color-stop(0, rgb(88,154,204)),
-        color-stop(1, rgb(90,150,199))
-    );
-		box-shadow: 0px 2px 0px #2b638f, 0px 1px 6px rgba(0,0,0,.4), inset 0px 1px 0px rgba(255,255,255,.3), inset 0px 0px 3px rgba(255,255,255,.5);
-		transform: translate(0, 2px);
 }
