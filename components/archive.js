@@ -13,9 +13,6 @@ module.exports = class Archive extends ee {
     this.loop = new Loop();
     this.loop.on('data', chunk => this.parser.write(chunk));
     this.loop.on('end',() => this.parser.end());
-    this.loop.on('abort',() => {
-      console.log('inside archive.js abort emitted');
-    });
     pipeEvents(['abort','requestError','responseError','end'],this.loop,this);
   }
 
@@ -29,7 +26,7 @@ module.exports = class Archive extends ee {
   continue(){
     this.loop.continue();
   }
-  
+
   stop(){
     this.loop.stop();
     if (this.parser) this.parser.end();
