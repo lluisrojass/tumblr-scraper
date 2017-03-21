@@ -1,7 +1,8 @@
 {
   "sites":[
     "player.vimeo.com/video/",
-    "www.tumblr.com/video/",
-    "www.youtube.com/embed/"
+    "tumblr.com/video/",
+    "youtube.com/embed/",
+    "dailymotion.com/embed/"
   ]
 }
