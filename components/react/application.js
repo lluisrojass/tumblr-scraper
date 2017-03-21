@@ -42,7 +42,7 @@ class Application extends React.Component {
       isErrorFound:false,
       isViewing:false,
       scrapedPosts:[],
-      notification:'Due to large number of requests, users could experience large CPU Activity',
+      notification:'Due to large number of requests, users could experience high CPU Activity.',
       footerData:JSON.parse(JSON.stringify(this.defaultFooter))
     }
 
@@ -56,7 +56,7 @@ class Application extends React.Component {
         if (err !== null){
           console.log('post error found');
           this.setState({
-            notification: `Error: ${err.msg} requesting ${err.path}`
+            notification: `Error: ${err.msg} requesting ${err.path}.`
           });
           return;
         }
@@ -84,13 +84,16 @@ class Application extends React.Component {
       this.setState(this.state);
     });
 
-    this.archive.on('abort',() => { /* not working */
-      console.log('Abort event caught inside application.js');
+    this.archive.on('abort',() => {
+      this.setState({isRunning:false,
+      notification:'Request Aborted.'
+    })
+      console.log('abort caught');
     });
 
     this.archive.on('requestError',(urlInfo) => {
       this.setState({
-        notification:urlInfo.message+' ( '+urlInfo.path+' )',
+        notification:urlInfo.message+' ('+urlInfo.host+urlInfo.path+').',
         isErrorFound:true
       });
       this.stopRunning();
@@ -98,7 +101,7 @@ class Application extends React.Component {
 
     this.archive.on('responseError',(urlInfo) => {
       this.setState({
-        notification:urlInfo.message+' ( '+urlInfo.path+' )',
+        notification:urlInfo.message+' ('+urlInfo.host+urlInfo.path+').',
         isErrorFound:true
       });
       this.stopRunning();
@@ -108,7 +111,7 @@ class Application extends React.Component {
       this.setState({
         isRunning:false,
         finalPosition:true,
-        notification:'Finished'
+        notification:'Finished.'
       });
     });
   }
@@ -116,7 +119,8 @@ class Application extends React.Component {
   continueRunning = (e) => {
     e.preventDefault();
     this.setState({
-      isRunning:true
+      isRunning:true,
+      notification:''
     })
     this.archive.continue();
   }
@@ -130,21 +134,21 @@ class Application extends React.Component {
     this.setState({finalPosition:false});
     if (!types.length){
       this.setState({
-        notification:'No Post Types Selected',
+        notification:'No Post Types Selected.',
         isErrorFound:true
       });
       return;
     }
     if (blogname.length > 32){
       this.setState({
-        notification:'Blog Name must be 32 characters or less',
+        notification:'Blog Name must be 32 characters or less.',
         isErrorFound:true
       });
       return;
     }
     if (!(exactMatch(/([0-9]|[a-z]|[A-Z])+(\-*([0-9]|[a-z]|[A-Z]))*/, blogname))){
       this.setState({
-        notification:'"'+blogname.errorShorten()+'" invalid Blog Name',
+        notification:'Invalid Blog Name "'+blogname.errorShorten()+'".',
         isErrorFound:true
       });
       return;
@@ -209,6 +213,7 @@ class Application extends React.Component {
                           isFatal={this.state.isErrorFound}
                           isRunning={this.state.isRunning}
                           finalPosition={this.state.finalPosition}
+                          openInBrowser={this.openInBrowser}
              />
            </div>
          </div>
