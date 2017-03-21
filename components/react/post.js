@@ -4,11 +4,17 @@ class Post extends React.Component {
   constructor(props){
     super(props);
     this.isClicked = false;
+    this.doesStampExist = props.images.length > 0 ? true : false;
   }
   onClick = () => {
-    const self = this;
-    const d = JSON.parse(JSON.stringify(this.props)); /* shallow copy */
-    this.props.onClick(() => this.isClicked = false, d);
+    const data = JSON.parse(JSON.stringify(this.props)); /* shallow copy */
+    delete data['onClick'];
+    Object.keys(data).forEach((elem) => { /* remove null data */
+      if (!data[elem]){
+        delete data[elem];
+      }
+    });
+    this.props.onClick(() => this.isClicked = false, data);
     this.isClicked = true;
   }
   render(){
@@ -34,9 +40,9 @@ class Post extends React.Component {
            }
            <h1 className='post-title'>
            {(this.props.headline ?
-              this.props.headline
+              this.props.headline.headlineShorten(this.doesStampExist)
              :
-              `${this.props.type} Post`).headlineShorten().capitalizeEach()
+              `${this.props.type} Post`).capitalizeEach()
            }
           </h1>
            <h1 className='post-date'>
