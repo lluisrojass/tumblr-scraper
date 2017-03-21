@@ -36,6 +36,8 @@ module.exports = function(postData,callback){
   request = http.get(options,(res) => {
     if (res.statusCode !== 200) {
       this.abort();
+      
+      console.log('error inside postData');
       error = {
         path:options.path,
         type:'responseError',
@@ -47,6 +49,7 @@ module.exports = function(postData,callback){
       if (!haltParse) parser.write(chunk);
     });
   }).on('error',(e) => {
+    console.log('error inside postData');
     this.abort();
     error = {
       path:options.path,
