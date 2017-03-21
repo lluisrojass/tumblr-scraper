@@ -6,13 +6,10 @@ class Notification extends React.Component{
   }
   decideClassName = () => {
     const {isFatal, finalPosition, isRunning} = this.props;
-    var shit = 'warning-text';
-
-    if (isFatal && !isRunning && !finalPosition) shit = 'error-text';
-    else if (!isFatal && isRunning && !finalPosition) shit = 'warning-text';
-    else if (!isFatal && !isRunning && finalPosition)  shit = 'success-text';
-    console.log(`"${shit}" isFatal:${isFatal} finalPosition:${finalPosition} isRunning:${isRunning} `);
-    return shit;
+    if (isFatal && !isRunning && !finalPosition) return 'error-text';
+    else if (!isFatal && isRunning && !finalPosition) return 'warning-text';
+    else if (!isFatal && !isRunning && finalPosition)  return 'success-text';
+    else return 'warning-text'
   }
   render(){
     return(

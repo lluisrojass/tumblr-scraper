@@ -64,6 +64,7 @@ class Application extends React.Component {
         let {datePublished=null, articleBody=null, headline=null,
         image, url='',video=null} = data.postData;
 
+
         this.state.scrapedPosts.push({
           type: data.type,
           datePublished: datePublished,
@@ -154,7 +155,7 @@ class Application extends React.Component {
                     defaultPosition:false,
                     isRunning: true,
                     currentPost: null,
-                    isErrorFound:false,
+                    isErrorFound: false,
                     isViewing: false,
                     footerData:JSON.parse(JSON.stringify(this.defaultFooter))
                   });
@@ -166,12 +167,6 @@ class Application extends React.Component {
   }
 
   handlePostClicked = (unClickCB, data) => {
-    delete data['onClick'];
-    Object.keys(data).forEach((elem) => { /* remove null data */
-      if (!data[elem]){
-        delete data[elem];
-      }
-    });
 
     if (this.state.removeClickedPost) this.state.removeClickedPost();
 
