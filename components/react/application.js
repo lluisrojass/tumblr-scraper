@@ -1,5 +1,10 @@
 'use strict';
 
+require('../stringUtilities');
+const archive = require('../archive');
+const getPostData = require('../userPost');
+const { ipcRenderer } = electronRequire('electron');
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Config } from './config';
@@ -7,10 +12,7 @@ import { Notification } from './notification';
 import { Post }  from './post';
 import Viewer from './viewer';
 import Footer from './footer';
-const archive = require('../archive');
-const getPostData = require('../userPost');
-const sU = require('../stringUtilities');
-const { ipcRenderer } = electronRequire('electron');
+
 
 //TODO: request not aborting on abort call
 //TODO: request timeout not working
@@ -52,6 +54,7 @@ class Application extends React.Component {
     this.archive.on('post', postInfo => {
       getPostData(postInfo, (err, data) => {
         if (err !== null){
+          console.log('post error found');
           this.setState({
             notification: `Error: ${err.msg} requesting ${err.path}`
           });
@@ -123,6 +126,7 @@ class Application extends React.Component {
   }
 
   startRunning = (blogname, types) => {
+    this.setState({finalPosition:false});
     if (!types.length){
       this.setState({
         notification:'No Post Types Selected',
@@ -148,7 +152,6 @@ class Application extends React.Component {
     this.setState({ scrapedPosts : [],
                     notification:'',
                     defaultPosition:false,
-                    finalPosition:false,
                     isRunning: true,
                     currentPost: null,
                     isErrorFound:false,
@@ -169,11 +172,13 @@ class Application extends React.Component {
         delete data[elem];
       }
     });
+
     if (this.state.removeClickedPost) this.state.removeClickedPost();
+
     this.setState({
+      isViewing:true,
       removeClickedPost:unClickCB,
-      currentPost:data,
-      isViewing:true
+      currentPost:data
     });
   }
 
