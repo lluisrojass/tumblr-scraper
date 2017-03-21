@@ -5,7 +5,7 @@ String.prototype.dateShorten = function(){
 }
 String.prototype.bodyShorten = function(){
   const CharIndex = this[19] === ' ' ? 18: 19;
-  return (this.length > 196) ? this.substr(0,this.charAt(193) === ' ' ? 192 : 193) + '...' : this.toString();
+  return (this.length > 130) ? this.substr(0,this.charAt(127) === ' ' ? 127 : 128) + '...' : this.toString();
 }
 String.prototype.headlineShorten = function(doesStampExist=false){
   const index = doesStampExist ? 11 : 23;
