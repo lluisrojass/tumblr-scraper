@@ -92,7 +92,7 @@ class PostParser extends ee{
         } else {
           if (!isLookingForVideo) {
             self.emit('postData',ldjson); /* Not looking for video */
-            isDataEmitted = true; 
+            isDataEmitted = true;
           }
           else this.returnData = ldjson;
         }
@@ -115,7 +115,9 @@ class PostParser extends ee{
 
           while(!terminate){
             if (src.indexOf(supportedVideoSites[siteIndex]) !== -1) { /* faster than regex */
-              if (!isDataEmitted) dataManager.videoURL = src;
+              if (!isDataEmitted){
+                dataManager.videoURL = src.includes('http') ? src : 'https:'+src;
+              }
               urlIsMatched = true;
             }
             siteIndex += 1;
