@@ -3,21 +3,22 @@ import React from 'react';
 class Post extends React.Component {
   constructor(props){
     super(props);
-    this.state = { clicked:false }
+    this.isClicked = false;
   }
   onClick = () => {
+    const self = this;
     const d = JSON.parse(JSON.stringify(this.props)); /* shallow copy */
-    this.props.onClick(() => this.setState({ clicked:false }), d);
-    this.setState({ clicked:true });
+    this.props.onClick(() => this.isClicked = false, d);
+    this.isClicked = true;
   }
   render(){
     return(
-      <div className={`post ${this.state.clicked ? 'clicked': ''}`} onClick={this.onClick}>
+      <div className={`post ${this.isClicked ? 'clicked': ''}`} onClick={this.onClick}>
        <div className='image-wrapper'>
         <div className='hide-overflow vertical-center-contents'>
            {
              this.props.images.length > 0 ?
-               <img src={this.props.images[0]} className='post-image' />
+               <img src={this.props.images[0].downsizeImageResolution()} className='post-image' />
              :
               <img src={`public/img/${this.props.type}_default.png`} className='post-image' />
            }

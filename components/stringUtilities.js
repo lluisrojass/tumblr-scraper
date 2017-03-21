@@ -18,3 +18,12 @@ String.prototype.capitalizeEach = function(){
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
+String.prototype.downsizeImageResolution = function(){
+  const resolution = Number(((this.substring(this.length - 8,this.length-4))));
+  if (!isNaN(resolution)){
+    return this.replace(resolution.toString(),'250');
+    console.log(this.replace(resolution.toString(),'500'));
+  } else {
+    return this.toString();
+  }
+}
