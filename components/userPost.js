@@ -8,9 +8,11 @@ function typeTranslate(tumblrTypeString) {
 }
 
 module.exports = function(postData,callback){
-  var error = null
+
+  var error = null;
   var request = null;
   var haltParse = false;
+
   const parser = new PostParser(postData.type);
   const options = {
     host:postData.host,
@@ -30,13 +32,12 @@ module.exports = function(postData,callback){
     returnData.postData = data;
     request.abort();
     haltParse = true;
-    callback(error,returnData); // data found, all good to continue.
+    callback(null,returnData); // data found, all good to continue.
   });
 
   request = http.get(options,(res) => {
+
     if (res.statusCode !== 200) {
-      this.abort();
-      
       console.log('error inside postData');
       error = {
         path:options.path,
@@ -44,10 +45,14 @@ module.exports = function(postData,callback){
         msg:res.statusCode+' received.'
       }
       callback(error,returnData); // response error
+      return;
     }
+
     res.on('data',(chunk)=> {
-      if (!haltParse) parser.write(chunk);
+      if (!haltParse)
+        parser.write(chunk);
     });
+
   }).on('error',(e) => {
     console.log('error inside postData');
     this.abort();

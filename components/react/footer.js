@@ -1,9 +1,5 @@
 import React from 'react';
 
-Footer.propTypes = {
-  isRunning:React.PropTypes.bool.isRequired,
-}
-
 function Footer(props){
   return(
     <div className={props.isRunning ? 'footer-blue' : 'footer-normal'} id='footer'>
@@ -23,6 +19,7 @@ function Footer(props){
     </div>
   )
 }
+
 function Spinner(props){
   return(
     <div className={`sk-fading-circle vertical-center-contents ${props.isRunning ? '':'invisible'}`}>

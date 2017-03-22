@@ -21,6 +21,8 @@ String.prototype.capitalizeEach = function(){
 }
 String.prototype.downsizeImageResolution = function(){
   const resolution = Number(((this.substring(this.length - 8,this.length-4))));
-  if (!isNaN(resolution)) return this.replace(resolution.toString(),'250');
-  else return this.toString();
+  if (!isNaN(resolution))
+    return this.replace(resolution.toString(),'250');
+  else
+    return this.toString();
 }

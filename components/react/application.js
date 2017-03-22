@@ -13,11 +13,6 @@ import { Post }  from './post';
 import Viewer from './viewer';
 import Footer from './footer';
 
-
-//TODO: request not aborting on abort call
-//TODO: request timeout not working
-//TODO: allow for better notifying with return types from archive.js a
-
 function exactMatch(r,str){
   const match = str.match(r);
   return match != null && str == match[0];
@@ -28,11 +23,13 @@ class Application extends React.Component {
   constructor(props){
     super(props);
     this.archive = new archive();
+
     this.defaultFooter = {
       dateDepth:null,
       requestDepth:null,
       postCount:0,
     }
+
     this.state = {
       removeClickedPost:null,
       currentPost:null,
@@ -54,7 +51,6 @@ class Application extends React.Component {
     this.archive.on('post', postInfo => {
       getPostData(postInfo, (err, data) => {
         if (err !== null){
-          console.log('post error found');
           this.setState({
             notification: `Error: ${err.msg} requesting ${err.path}.`
           });
@@ -63,7 +59,6 @@ class Application extends React.Component {
 
         let {datePublished=null, articleBody=null, headline=null,
         image, url='',video=null} = data.postData;
-
 
         this.state.scrapedPosts.push({
           type: data.type,
@@ -74,6 +69,7 @@ class Application extends React.Component {
           images: image ? image['@list'] || [image] : [],
           url: url
         });
+
         this.state.footerData.postCount += 1;
         this.setStateKeepScroll();
       });
@@ -85,10 +81,10 @@ class Application extends React.Component {
     });
 
     this.archive.on('abort',() => {
-      this.setState({isRunning:false,
-      notification:'Request Aborted.'
-    })
-      console.log('abort caught');
+      this.setState({
+        isRunning:false,
+        notification:'Request Aborted.'
+      });
     });
 
     this.archive.on('requestError',(urlInfo) => {
@@ -107,7 +103,7 @@ class Application extends React.Component {
       this.stopRunning();
     });
 
-    this.archive.on('end',() =>{
+    this.archive.on('end',() => {
       this.setState({
         isRunning:false,
         finalPosition:true,
@@ -131,7 +127,7 @@ class Application extends React.Component {
   }
 
   startRunning = (blogname, types) => {
-    this.setState({finalPosition:false});
+    this.setState({ finalPosition:false });
     if (!types.length){
       this.setState({
         notification:'No Post Types Selected.',
@@ -236,7 +232,8 @@ class Application extends React.Component {
 
         <div id='right-panel-wrapper'>
           {this.state.isViewing ?
-              <Viewer post={this.state.currentPost}
+              <Viewer
+                      post={this.state.currentPost}
                       openInBrowser={this.openInBrowser}
               />
             :
@@ -244,7 +241,8 @@ class Application extends React.Component {
           }
         </div>
     </div>
-    <Footer isRunning={this.state.isRunning}
+    <Footer
+            isRunning={this.state.isRunning}
             {...this.state.footerData}
             isErrorFound={this.errorFound}
             defaultPosition={this.state.defaultPosition}

@@ -6,29 +6,29 @@ const ee = require('events');
 const pipeEvents = require('pipe-event');
 
 module.exports = class Archive extends ee {
-
   constructor(){
     super();
     this.parser = null;
-    this.loop = new Loop();
-    this.loop.on('data', chunk => this.parser.write(chunk));
-    this.loop.on('end',() => this.parser.end());
-    pipeEvents(['abort','requestError','responseError','end'],this.loop,this);
+    this.loop = new Loop()
+                .on('data', chunk => this.parser.write(chunk))
+                .on('end',() => this.parser.end());
+
+    pipeEvents(['abort','requestError','responseError','end'], this.loop,this);
   }
 
   go(blogName, mediaTypes){
-    this.parser = new ArchiveParser(mediaTypes);
-    this.parser.on('nextPage', path => this.loop.addPath(path));
-    pipeEvents(['nextPage','post','date'],this.parser,this);
-    this.loop.go(blogName);
-  }
+    this.parser = new ArchiveParser(mediaTypes)
+                      .on('nextPage', path => this.loop.addPath(path))
+                      .on('post', () => this.loop.stress());
 
-  continue(){
-    this.loop.continue();
+    pipeEvents(['nextPage','post','date'], this.parser, this);
+    this.loop.go(blogName);
   }
 
   stop(){
     this.loop.stop();
     if (this.parser) this.parser.end();
   }
+
+  continue() { this.loop.continue(); }
 }

@@ -56,22 +56,18 @@ class Config extends React.Component {
     const isChecked = event.target.checked;
     switch(name){
       case 'all':
-        if (isChecked) { /* all */
+        if (isChecked) { /* select all */
           this.state.returnTypes = JSON.parse(JSON.stringify(this.defaultTypes));
+          this.state.sliders.all.isChecked = !0;
           for (var e in this.state.sliders) {
-            if (e === 'all') {
-              this.state.sliders[e] = {
-                isChecked: !0,
-                foreground: true
-              }
-            } else {
+            if (e !== 'all') {
               this.state.sliders[e] = {
                 isChecked: !1,
                 foreground: false
               }
             }
           }
-        } else { /* none */
+        } else { /* select none */
           this.state.returnTypes = [];
           for (var s in this.state.sliders){
             this.state.sliders[s] = {
@@ -87,7 +83,7 @@ class Config extends React.Component {
           event.preventDefault();
           return;
         }
-        if (isChecked) { /* add type */
+        else if (isChecked) { /* add type */
           this.state.sliders[name].isChecked = !0;
           this.state.returnTypes.push(this.typeMap[name]);
         } else { /* delete type */
@@ -98,7 +94,7 @@ class Config extends React.Component {
     this.setState(this.state);
   }
 
-  addChar = event => { this.setState({blogname:event.target.value}) }
+  addChar = event => { this.setState({ blogname:event.target.value }) }
 
   render(){
     return(

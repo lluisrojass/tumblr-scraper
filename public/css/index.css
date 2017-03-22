@@ -395,6 +395,7 @@ form {
 #notification-wrapper{
 	height: 10%;
 	padding: 5% 7%;
+	word-wrap: break-word;
 }
 .notif-label{
 	font-weight: 400;
@@ -416,10 +417,10 @@ a:hover{
 	color: #888888;
 }
 .success-text{
-	color: #347E50;
+	color: #54AE3B;
 }
 .error-text{
-	color: #db3939;
+	color: #ff4c42;
 }
 
 
