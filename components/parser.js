@@ -49,7 +49,7 @@ class ArchiveParser extends ee {
                               'type':this.currentMediaType
                             });
 
-          flagCleanup();
+          this.flagCleanup();
         }
       }
 
