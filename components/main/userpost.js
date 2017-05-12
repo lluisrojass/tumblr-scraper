@@ -3,16 +3,10 @@
 const http = require('http');
 const { PostParser } = require('./parser');
 
-function typeTranslate(tumblrTypeString) {
-  return tumblrTypeString.includes('regular') ? 'text' : tumblrTypeString.replace('is_','');
-}
-
-module.exports = function(postData,callback){
-
+module.exports = function(postData, callback){
   var error = null;
   var request = null;
   var haltParse = false;
-
   const parser = new PostParser(postData.type);
   const options = {
     host:postData.host,
@@ -22,9 +16,10 @@ module.exports = function(postData,callback){
       'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
     }
   };
+  
   const returnData = {
     link:postData.host+postData.path,
-    type:typeTranslate(postData.type),
+    type:postData.type.tumblrTypeTranslate(),
     postData:null
   };
 
@@ -38,7 +33,8 @@ module.exports = function(postData,callback){
   request = http.get(options,(res) => {
 
     if (res.statusCode !== 200) {
-      console.log('error inside postData');
+
+      res.headers['location'].debug();
       error = {
         path:options.path,
         type:'responseError',
@@ -55,7 +51,7 @@ module.exports = function(postData,callback){
 
   }).on('error',(e) => {
     console.log('error inside postData');
-    this.abort();
+    request.abort();
     error = {
       path:options.path,
       type:'requestError',

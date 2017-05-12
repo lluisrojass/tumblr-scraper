@@ -355,16 +355,19 @@ form {
 	width: 100%;
 	text-align: center;
 }
+button:focus {
+  outline: none;
+}
 .go-button {
 	display: inline-block;
 	border: 1px solid #1C61C1;
 	border-radius: 4px;
-	color: #1C61C1;
-	background-color: #E6E6E6;
+	color: white;
+	background-color: #186CE6;
 	font-weight: 100;
 }
-.go-button:hover{
-	background-color: #186CE6;
+.go-button:active{
+	background-color: #104ba1;
 	color: white;
 }
 .stop-button {
@@ -376,7 +379,6 @@ form {
 	color: #D3201C;
 }
 .stop-button:hover{
-	color:white;
 	background-color:#D3201C;
 }
 .resume-button {
@@ -385,12 +387,11 @@ form {
 	border-radius: 4px;
 	font-weight: 100;
 	border: 1px solid #40676d;
-	color: #40676d;
-	background-color: inherit;
-}
-.resume-button:hover{
-	background-color: #40676d;
 	color: white;
+	background-color: #40676d;
+}
+.resume-button:active{
+	background-color: #263d41;
 }
 #notification-wrapper{
 	height: 10%;
@@ -401,9 +402,8 @@ form {
 	font-weight: 400;
 	color: #888888;
 	letter-spacing: .4px;
-	font-size: 80%;
 	line-height: 1;
-	font-size: 1.1vw;
+	font-size: 10px;
 }
 a{
 	text-decoration: none;
@@ -521,10 +521,6 @@ a:hover{
 					-> a ?%
 */
 
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
 
 #right-panel-wrapper{
 	height: 100%;
@@ -561,8 +557,15 @@ iframe{
 	width: 95%;
 	height: 100%;
 }
+#test p {
+    margin-top: 25px;
+    font-size: 21px;
+    text-align: center;
+
+}
 
 .viewer-body{
+	-webkit-animation: fadein 2s;
 	color: #052427;
 	font-size: 15px;
 	font-weight: 100;

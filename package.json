@@ -10,12 +10,13 @@
   "main": "App.js",
   "scripts": {
     "start": "electron App.js",
-    "test": "watchify test3.js -t babelify -o public/js/bundle.js --debug --verbose",
-    "watch": "watchify components/react/application.js -t babelify --noparse=$PWD/components/loop.js $PWD/components/userPost.js -o public/js/bundle.js --debug --verbose"
+    "test": "watchify test3.js -t babelify -o test3.min.js --debug --verbose",
+    "watch": "watchify components/renderer/react/application.js -t babelify --noparse=$PWD/components/loop.js -o public/js/bundle.js --debug --verbose"
   },
   "author": "Luis Rojas",
   "license": "MIT",
   "dependencies": {
+    "colors": "^1.1.2",
     "datejs": "^1.0.0-rc3",
     "htmlparser2": "^3.9.2",
     "jquery": "^3.1.1",

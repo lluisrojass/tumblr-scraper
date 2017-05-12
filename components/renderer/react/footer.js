@@ -6,13 +6,23 @@ function Footer(props){
       <Spinner isRunning={props.isRunning} />
       <div className='footer-request-status'>
         <p className='vertical-center-contents'>
-          {props.requestDepth ? 'Requesting.. '+props.requestDepth+' ' : '' }{props.dateDepth ? '('+props.dateDepth+')' : ''}
+          {
+            props.requestDepth &&
+              'Requesting.. '+props.requestDepth+' '
+          }
+          {
+            props.dateDepth &&
+              '('+props.dateDepth+')'
+          }
         </p>
       </div>
       <div className='footer-posts-status'>
         <div>
           <p className='vertical-center-contents'>
-            {props.postCount ? props.postCount+' Posts':'' }
+            {
+              props.isRunning && props.postCount &&
+                props.postCount+' Posts'
+            }
           </p>
         </div>
       </div>
