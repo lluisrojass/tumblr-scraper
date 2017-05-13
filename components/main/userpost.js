@@ -1,62 +1,60 @@
 'use strict';
 
 const http = require('http');
-const { PostParser } = require('./parser');
+const https = require('https');
+const {PostParser} = require('./parser');
+require('../shared/stringutils');
 
 module.exports = function(postData, callback){
-  var error = null;
-  var request = null;
+  const {type, host, path, ishttps} = postData;
+  const protocol = ishttps ? https : http;
   var haltParse = false;
   const parser = new PostParser(postData.type);
   const options = {
-    host:postData.host,
-    path:postData.type === 'is_video' ? postData.path : postData.path+'/mobile',
+    host:host,
+    path:type === 'is_video' ? path : path+'/mobile',
     timeout:5000,
     headers:{
-      'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1'
+      'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) '+
+                   'AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 '+
+                   'Safari/601.1'
     }
   };
-  
-  const returnData = {
-    link:postData.host+postData.path,
-    type:postData.type.tumblrTypeTranslate(),
-    postData:null
+  const pData = {
+    href:host+path,
+    type:type.tumblrTypeTranslate(),
+    post:null
   };
-
-  parser.on('postData',(data) =>{
-    returnData.postData = data;
-    request.abort();
+  parser.on('post', (data) =>{
     haltParse = true;
-    callback(null,returnData); // data found, all good to continue.
+    pData['post'] = data;
+    request.abort();
+    callback(null, pData); // data found, all good to continue.
   });
-
-  request = http.get(options,(res) => {
-
+  const request = protocol.get(options, (res) => {
     if (res.statusCode !== 200) {
-
-      res.headers['location'].debug();
-      error = {
+      console.log('Error: '+options.host+options.path+' recieved  '+res.statusCode);
+      haltParse = true;
+      callback({
         path:options.path,
-        type:'responseError',
+        type:'response',
         msg:res.statusCode+' received.'
-      }
-      callback(error,returnData); // response error
+      }, null); // response error
+      request.abort();
       return;
     }
-
-    res.on('data',(chunk)=> {
+    res.on('data',(chunk) => {
       if (!haltParse)
         parser.write(chunk);
     });
-
-  }).on('error',(e) => {
-    console.log('error inside postData');
+  }).on('error', (e) => {
+    haltParse = true;
+    console.log('Error: '+options.host+options.path+' recieved msg '+e.message);
     request.abort();
-    error = {
+    callback({
       path:options.path,
-      type:'requestError',
+      type:'request',
       msg:e.message
-    }
-    callback(error,returnData); // request error
+    }, null);
   });
 }

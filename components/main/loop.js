@@ -30,24 +30,29 @@ module.exports = class RequestLoop extends ee {
                      'Chrome/56.0.2924.87 Safari/537.36'
       }
     };
-    const parser = new ArchiveParser().on('page', page => options.path = page);
     const switchProtocol = function(){
       protocol = (protocol == http) ? https : http;
       options.agent.destroy();
       options.agent = new protocol.Agent(agentOptions);
     }
-    var req = null;
-    var running = false;
-    var aborting = false;
-    var redir = false;
-    pipeEvents(['page', 'post', 'date'], parser, self);
+    const parser = new ArchiveParser().on('page', page => options.path = page['path'])
+                                      .on('post', post => {
+                                        post.ishttps = protocol == https;
+                                        self.emit('post', post);
+                                      });
+    pipeEvents(['page', 'date'], parser, self);
     const cache = {
       blogname:'',
-      path:''
-    }
+      path:'',
+      types:[]
+    };
+    var req = null; /* current request */
+    var running = false;
+    var redir = false;
     const newRequest = function(){
       return protocol.get(options, callback)
         .on('error', (e) => {
+          console.log('Error:(loop) '+options.host+options.path+' recieved msg '+e.code);
           if (running){
             running = false;
             req.once('abort',() => {
@@ -69,7 +74,10 @@ module.exports = class RequestLoop extends ee {
             req.abort();
           }
         })
-        .on('response', () => options.path = '')
+        .on('response', () => {
+          cache['path'] = options.path;
+          options.path = '';
+        })
         .setTimeout(7000, () => {
           if (running){
             running = false;
@@ -79,24 +87,26 @@ module.exports = class RequestLoop extends ee {
         });
     }
 
-    const callback = function(res) {
+    const callback = function(res){
       res.setEncoding();
       if (res.statusCode !== 200) {
         switch(res.statusCode){
           case 302:
           case 303:
           case 307:
-            if (redir){
-              if (running){ /* end with redirect error */
+            if (redir){ /* end with redirect error */
+              redir = false;
+              if (running){
                 running = false;
                 req.once('abort',() => {
                   self.emit('error', {
-                    'host':options.host,
-                    'path':options.path,
-                    'message':'Redirect error'
+                    host:options.host,
+                    path:options.path,
+                    msg:'Redirect error'
                   });
                 });
                 req.abort();
+
               }
             } else {
               redir = true;
@@ -118,8 +128,9 @@ module.exports = class RequestLoop extends ee {
                       return 'Blog redirects out of Tumblr, cannot scrape';
                     default:
                       return `${c} ${http.STATUS_CODES[c]}`;
-                    }
+                  }
                 })(res.statusCode);
+                console.log('Error:(loop) '+options.host+options.path+' recieved msg '+res.statusCode);
                 self.emit('error', {
                   'host': options.host,
                   'path': options.path,
@@ -135,7 +146,7 @@ module.exports = class RequestLoop extends ee {
       res.on('data', chunk => parser.write(chunk));
 
       res.on('end', () => {
-        if (running && '' === options.path){
+        if (running && '' === options.path){ /* no next page found, loop end */
           parser.end();
           self.emit('end');
         }
@@ -144,13 +155,19 @@ module.exports = class RequestLoop extends ee {
       });
     }
 
-    this.go = function(blogname, path='/archive', types){
-      parser.setMediaTypes(types);
+    this.go = function(types, blogname, path='/archive'){
+      if (cache['types'] !== types){
+        cache.types = types;
+        parser.setMediaTypes(types);
+      }
       if (cache['blogname'] !== blogname){
         cache.blogname = blogname;
         options.host = `${blogname}.tumblr.com`;
       }
-      options.path = path;
+      if (cache['path'] !== path){
+        cache.path = path;
+        options.path = path;
+      }
       running = true;
       req = newRequest();
     }
@@ -164,8 +181,10 @@ module.exports = class RequestLoop extends ee {
     }
 
     this.continue = function(){
-      if (cache['blogname'] && options.path !== '') {
-        self.go(cache['blogname'], options.path);
+      if (cache['blogname'] && cache['path'] && cache['types']) {
+        options.path = options.path || cache['path'];
+        running = true;
+        req = newRequest();
         return true;
       }
       return false;
