@@ -10,7 +10,6 @@ class ArchiveParser extends ee {
     super();
     var self = this;
     var ptype = null;
-    var wut = 0;
     var date = '';
     var pfound = false;
     var dfound = false;
@@ -36,7 +35,7 @@ class ArchiveParser extends ee {
           self.emit('page',{ path: attribs.href });
         else if (name === 'h2' && attribs.class && attribs.class === 'date')
           dfound = true;
-        else if (pfound && name === 'a' && attribs.href) {
+        else if (attribs['data-peepr'] && pfound && name === 'a' && attribs.href) {
           let {path, hostname} = url.parse(attribs.href);
           self.emit('post',{ 'host': hostname, 'path':path, 'type': ptype });
           pfound = false;

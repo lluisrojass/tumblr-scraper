@@ -134,7 +134,7 @@ module.exports = class RequestLoop extends ee {
                 self.emit('error', {
                   'host': options.host,
                   'path': options.path,
-                  'message': msg
+                  'msg': msg
                 });
               });
               req.abort();
