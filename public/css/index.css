@@ -399,13 +399,15 @@ button:focus {
 	height: 10%;
 	padding: 5% 7%;
 	word-wrap: break-word;
+	text-align: center;
 }
 .notif-label{
 	font-weight: 400;
-	color: #888888;
+	color: #cfcfcf;
 	letter-spacing: .4px;
 	line-height: 1;
 	font-size: 10px;
+	font-weight: bold;
 }
 a{
 	text-decoration: none;
