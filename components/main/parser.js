@@ -4,6 +4,7 @@ const htmlparser2 = require('htmlparser2');
 const ee = require('events');
 const videoSites = require('./supportedSites.json')['sites'];
 const url = require('url');
+const cache = require('./loopcache.json');
 
 class ArchiveParser extends ee {
   constructor() {
@@ -35,11 +36,14 @@ class ArchiveParser extends ee {
           self.emit('page',{ path: attribs.href });
         else if (name === 'h2' && attribs.class && attribs.class === 'date')
           dfound = true;
-        else if (attribs['data-peepr'] && pfound && name === 'a' && attribs.href) {
-          let {path, hostname} = url.parse(attribs.href);
-          self.emit('post',{ 'host': hostname, 'path':path, 'type': ptype });
-          pfound = false;
-          ptype = null;
+        else if (pfound && attribs['data-peepr'] && name === 'a' && attribs.href) {
+          let {hostname, path} = url.parse(attribs.href);
+          if (hostname.indexOf(cache['blogname']) > -1){  // exists
+            //console.log(`post found ${hostname}${path}`);
+            self.emit('post',{ 'host': hostname, 'path':path, 'type':ptype });
+            pfound = false;
+            ptype = null;
+          }
         }
       },
       ontext: (t) => {
