@@ -5,7 +5,7 @@ const https = require('https');
 const ee = require('events');
 const pipeEvents = require('pipe-event');
 const {ArchiveParser} = require('./parser');
-const cache = require('../shared/loopcache.json');
+const cache = require('./loopcache.json');
 /*
   Errors depend on the this.runnning boolean variable. This variable can only be turned false
   if an error is encountered or the user stops the loop AND there is not already an error/stop being handled.
