@@ -3,17 +3,12 @@ import React from 'react';
 function Footer(props){
   return(
     <div className={props.isRunning ? 'footer-blue' : 'footer-normal'} id='footer'>
-      <Spinner isRunning={props.isRunning} />
+      {props.isRunning && props.requestDepth && <Spinner />}
       <div className='footer-request-status'>
         <p className='vertical-center-contents'>
-          {
-            props.requestDepth &&
-              'Requesting.. '+props.requestDepth+' '
-          }
-          {
-            props.dateDepth &&
-              '('+props.dateDepth+')'
-          }
+          {props.requestDepth && props.isRunning && 'Requesting.. '+props.requestDepth+' '}
+          {props.isRunning && !props.requestDepth && 'Loading...'}
+          {props.dateDepth && props.isRunning && '('+props.dateDepth+')'}
         </p>
       </div>
       <div className='footer-posts-status'>
@@ -21,7 +16,7 @@ function Footer(props){
           <p className='vertical-center-contents'>
             {
               props.isRunning && props.postCount &&
-                props.postCount+' Posts'
+                props.postCount+' Scraped Posts'
             }
           </p>
         </div>
@@ -30,9 +25,9 @@ function Footer(props){
   )
 }
 
-function Spinner(props){
+function Spinner(){
   return(
-    <div className={`sk-fading-circle vertical-center-contents ${props.isRunning ? '':'invisible'}`}>
+    <div className={`sk-fading-circle vertical-center-contents`}>
       <div className="sk-circle1 sk-circle"></div>
       <div className="sk-circle2 sk-circle"></div>
       <div className="sk-circle3 sk-circle"></div>
