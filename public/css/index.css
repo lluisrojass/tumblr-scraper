@@ -375,11 +375,13 @@ button:focus {
 	border-radius: 4px;
 	font-weight: 500;
 	border: 1px solid #D3201C;
-	background-color: inherit;
-	color: #D3201C;
+	background-color: #D3201C;
+	color: white;
 }
-.stop-button:hover{
-	background-color:#D3201C;
+.stop-button:active{
+	color: white;
+	background-color: #69100e;
+	border: 1px solid #69100e;
 }
 .resume-button {
 	margin-left: 20%;
@@ -421,6 +423,12 @@ a:hover{
 }
 .error-text{
 	color: #ff4c42;
+}
+.github-link{
+	color: #888888,
+}
+.github-link:hover:{
+	color: blue;
 }
 
 
