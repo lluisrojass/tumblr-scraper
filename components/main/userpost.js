@@ -33,7 +33,7 @@ module.exports = function(postData, callback){
   });
   const request = protocol.get(options, (res) => {
     if (res.statusCode !== 200) {
-      console.log('Error: '+options.host+options.path+' recieved  '+res.statusCode);
+      //console.log('Error: '+options.host+options.path+' recieved  '+res.statusCode);
       haltParse = true;
       callback({
         path:options.path,
