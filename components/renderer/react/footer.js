@@ -13,12 +13,6 @@ function Footer(props){
       </div>
       <div className='footer-posts-status'>
         <div>
-          <p className='vertical-center-contents'>
-            {
-              props.isRunning && props.postCount &&
-                props.postCount+' Scraped Posts'
-            }
-          </p>
         </div>
       </div>
     </div>
