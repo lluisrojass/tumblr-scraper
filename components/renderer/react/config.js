@@ -121,7 +121,7 @@ class Config extends React.Component {
           <div className='button-wrapper'>
             {
               this.props.isRunning ?
-                <button className='stop-button vertical-center-contents'>STOP</button>
+                <button className='stop-button vertical-center-contents'>PAUSE</button>
               :
                 <button className='go-button vertical-center-contents'>START</button>
             }
