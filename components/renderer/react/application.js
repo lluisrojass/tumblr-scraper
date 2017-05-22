@@ -11,6 +11,7 @@ import {Post}  from './post';
 import Viewer from './viewer';
 import Footer from './footer';
 
+
 class Application extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,6 @@ class Application extends React.Component {
     this.postsRendered = 0;
     this.state = {
       currentPost:null,
-      blogname:'',
       atStart:true,
       isRunning:false,
       isViewing:false,
@@ -29,8 +29,7 @@ class Application extends React.Component {
       },
       footer:{
         dateDepth:null,
-        requestDepth:null,
-        postCount:0
+        requestDepth:null
       }
     }
   }
@@ -59,17 +58,17 @@ class Application extends React.Component {
       this.setState({
         isRunning:false,
         notification:{
-          msg:'Stopped',
+          msg:`Paused, ${this.state.scrapedPosts.length} posts found.`,
           type:0
         }
       })
     })
-    .on('error', (event, data) => this.stop(`${data.msg} (${data.host}${data.path}).`))
     .on('end', (event) => {
       this.parseComplete = true;
       if (this.parseComplete && this.postsRendered === this.state.scrapedPosts.length)
-        this.success(`Finished Parsing "${this.state.blogname}".`);
+        this.success(`Finished Parsing (${this.state.scrapedPosts.length} Posts Found).`);
     })
+    .on('error', (event, data) => this.stop(`${data.msg} (${data.host}${data.path}).`))
     .on('warning', (event, data) => this.warn(`Error: ${data.msg} requesting ${data.path}.`))
     .on('timeout', (event) => this.stop('Timeout'))
 
@@ -116,7 +115,6 @@ class Application extends React.Component {
       }
     })
   }
-
   warn(msg){
     this.setState({
       notification:{
@@ -125,7 +123,6 @@ class Application extends React.Component {
       }
     });
   }
-
   success(msg){
     this.setState({
       atStart:true,
@@ -136,7 +133,6 @@ class Application extends React.Component {
       }
     })
   }
-
   continueRunning = (e) => {
     e.preventDefault();
     ipcRenderer.send('asynchronous-message', ipcTypes.CONT_REQUEST);
@@ -161,10 +157,6 @@ class Application extends React.Component {
     this.postsRendered = 0;
     this.parseComplete = false;
     // start
-    this.setState({
-      blogname:blogname
-    });
-
     ipcRenderer.send('asynchronous-message', ipcTypes.START_REQUEST, {
       blogname: blogname,
       types: types
@@ -195,7 +187,7 @@ class Application extends React.Component {
   onLoad = () => {
     this.postsRendered++;
     if (this.parseComplete && this.postsRendered === this.state.scrapedPosts.length)
-      this.success(`Finished Parsing "${this.state.blogname}". `);
+      this.success(`Finished Parsing (${this.state.scrapedPosts.length} Posts Found).`);
   }
   render(){
     return(
@@ -249,7 +241,6 @@ class Application extends React.Component {
       </div>
       <Footer
         isRunning={this.state.isRunning}
-        postCount={this.state.scrapedPosts.length}
         {...this.state.footer}
       />
     </div>
