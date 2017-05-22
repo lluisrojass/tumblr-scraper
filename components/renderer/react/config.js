@@ -47,7 +47,7 @@ class Config extends React.Component {
     if (this.props.isRunning){
       this.props.stopRunning();
     } else {
-      this.props.startRunning(this.state.blogname,this.state.returnTypes);
+      this.props.startRunning(this.state.blogname, this.state.returnTypes);
     }
   }
   handleCheckboxChange = (name, event) => {
@@ -126,7 +126,7 @@ class Config extends React.Component {
                 <button className='go-button vertical-center-contents'>START</button>
             }
             {
-              !this.props.defaultPosition && !this.props.isRunning && !this.props.finalPosition &&
+              !this.props.isRunning && !this.props.atStart &&
                 <button onClick={this.props.continueRunning} className='resume-button fbutton vertical-center-contents'>
                       RESUME
                 </button>
