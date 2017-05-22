@@ -5,15 +5,18 @@ const https = require('https');
 const ee = require('events');
 const pipeEvents = require('pipe-event');
 const {ArchiveParser} = require('./parser');
+const cache = require('./loopcache.json');
 /*
   Errors depend on the this.runnning boolean variable. This variable can only be turned false
   if an error is encountered or the user stops the loop AND there is not already an error/stop being handled.
 */
+
 module.exports = class RequestLoop extends ee {
   constructor() {
     super();
     const self = this;
     var protocol = http;
+    var page = '';
     const agentOptions = {
       keepAlive:true,
       maxSockets:1,
@@ -41,18 +44,18 @@ module.exports = class RequestLoop extends ee {
                                         self.emit('post', post);
                                       });
     pipeEvents(['page', 'date'], parser, self);
-    const cache = {
+    /*const cache = {
       blogname:'',
       path:'',
       types:[]
-    };
+    };*/
     var req = null; /* current request */
     var running = false;
     var redir = false;
     const newRequest = function(){
+      //console.log('new request! - '+options.host+options.path);
       return protocol.get(options, callback)
         .on('error', (e) => {
-          console.log('Error:(loop) '+options.host+options.path+' recieved msg '+e.code);
           if (running){
             running = false;
             req.once('abort',() => {
@@ -130,7 +133,7 @@ module.exports = class RequestLoop extends ee {
                       return `${c} ${http.STATUS_CODES[c]}`;
                   }
                 })(res.statusCode);
-                console.log('Error:(loop) '+options.host+options.path+' recieved msg '+res.statusCode);
+                //console.log('Error:(loop) '+options.host+options.path+' recieved msg '+res.statusCode);
                 self.emit('error', {
                   'host': options.host,
                   'path': options.path,
@@ -143,9 +146,14 @@ module.exports = class RequestLoop extends ee {
         return;
       } else if (redir) redir = false;
 
-      res.on('data', chunk => parser.write(chunk));
+      res.on('data', chunk => {
+        parser.write(chunk);
+        //page += chunk;
+      });
 
       res.on('end', () => {
+        //parser.write(page);
+        //page = '';
         if (running && '' === options.path){ /* no next page found, loop end */
           parser.end();
           self.emit('end');
