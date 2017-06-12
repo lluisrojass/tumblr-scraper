@@ -1,14 +1,16 @@
+'use strict';
+
 import React from 'react';
 
 function Footer(props){
   return(
-    <div className={props.isRunning ? 'footer-blue' : 'footer-normal'} id='footer'>
+    <div className={props.isRunning && props.requestDepth ? 'footer-blue' : 'footer-normal'} id='footer'>
       {props.isRunning && props.requestDepth && <Spinner />}
       <div className='footer-request-status'>
         <p className='vertical-center-contents'>
-          {props.requestDepth && props.isRunning && 'Requesting.. '+props.requestDepth+' '}
+          {props.requestDepth && props.isRunning && `Request Depth: ${props.requestDepth}`}
           {props.isRunning && !props.requestDepth && 'Loading...'}
-          {props.dateDepth && props.isRunning && '('+props.dateDepth+')'}
+          {props.dateDepth && props.isRunning && ` (${props.dateDepth} - Today)`}
         </p>
       </div>
       <div className='footer-posts-status'>

@@ -1,11 +1,11 @@
 'use strict';
-
-const reload = require('electron-reload')(__dirname);
+//const reload = require('electron-reload')(__dirname);
+require('./components/shared/stringutils'); 
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const url = require('url');
-const Loop = require('./components/main/loop');
 const getPostData = require('./components/main/userpost');
+const Loop = require('./components/main/loop');
 const ipcTypes = require('./components/shared/ipctypes.json');
 
 // prevent window being garbage collected
@@ -42,13 +42,14 @@ function createMainWindow() {
 					webContents.send('warning', err);
 				}
 				else {
-					let { datePublished=null, articleBody=null, headline=null, image, url='',video=null } = data.post;
+					let { datePublished=null, isVideo, articleBody=null, headline=null, image, url='',videoURL=null } = data.post;
 					webContents.send('post', {
 							type: data.type,
 							datePublished: datePublished,
-							articleBody: articleBody,
+							articleBody: articleBody ? articleBody.rmvMore() : null,
 							headline: headline,
-							video: video,
+							isVideo: isVideo,
+							videoURL: videoURL,
 							images: image ? image['@list'] || [image] : [],
 							url: url
 					});
@@ -57,7 +58,7 @@ function createMainWindow() {
 		});
 
 	/* pipe loop event emitted -> webContents.send */
-	['page','date','end','timeout','stopped','error'].forEach(function(e){
+	['page','date','end','timeout','error'].forEach(function(e){
 		loop.on(e, function() {
 			webContents.send.apply(webContents, [e].concat(Array.prototype.slice.call(arguments, 0)))
 		})
@@ -75,6 +76,7 @@ function createMainWindow() {
 				event.sender.send('asynchronous-reply', ipcTypes.CONT_RESP, { didContinue: didContinue });
 				break;
 			case ipcTypes.STOP_REQUEST: /* response send via loop.on("stopped") listener */
+				loop.once('stopped', () => event.sender.send('asynchronous-reply', ipcTypes.STOP_RESP))
 				loop.stop();
 				break;
 			case ipcTypes.OPEN_IN_BROWSER:
@@ -94,5 +96,5 @@ app.on('activate', () => {
 
 app.on('ready', () => {
 	mainWindow = createMainWindow();
-	mainWindow.webContents.openDevTools();
+	//mainWindow.webContents.openDevTools();
 });

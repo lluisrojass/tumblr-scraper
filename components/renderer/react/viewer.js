@@ -3,10 +3,8 @@ const date = require('datejs');
 import React from 'react';
 
 function Viewer(props){
-    if (!props.isViewing)
-      return(<div className='height100width100 notselected'> </div>);
-
-    const {headline, datePublished, articleBody, images, url, video} = props.post;
+    if (!props.isViewing) return(<div className='height100width100 notselected'> </div>);
+    const {headline, datePublished, articleBody, images, url, isVideo, videoURL} = props.post;
     return(
       <div id='right-panel' className='height100width100'>
           {
@@ -25,20 +23,26 @@ function Viewer(props){
             articleBody &&
             <p className='viewer-body'>
               {articleBody}
+
             </p>
           }
           {
-            video &&
-             <div id='video-wrapper'>
-              <iframe frameBorder='0' src={video} />
-             </div>
+            isVideo ?
+              videoURL ?
+                <div id='video-wrapper'>
+                 <iframe frameBorder='0' src={videoURL} />
+                </div>
+              :
+                <p> Video preview unavailable. </p>
+            :
+              null
           }
           {
             images.length > 0 &&
             <div id='viewer-image-wrapper'>
               {
                  images.map((url, index) =>
-                   <img className='viewer-image' key={index} src={url} />
+                    <img className='viewer-image' onLoad={props.onLoadViewer} key={index} src={url} />
                  )
               }
             </div>
@@ -52,9 +56,9 @@ function Viewer(props){
                     </a>
               </div>
           }
+          { images.length > 0 && <p id='load-text'>{props.loadText}</p> }
       </div>
     )
 }
-
 
 export default Viewer

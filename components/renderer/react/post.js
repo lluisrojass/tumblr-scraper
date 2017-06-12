@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 class Post extends React.Component {
@@ -34,7 +36,7 @@ class Post extends React.Component {
              this.props.headline ?
                this.props.headline.headlineShorten(this.doesStampExist)
              :
-               this.props.type + 'Post'
+               this.props.type + ' Post'
             ).capitalizeEach()
            }
           </h1>
@@ -59,4 +61,4 @@ class Post extends React.Component {
   }
 }
 
-export { Post };
+export default Post;

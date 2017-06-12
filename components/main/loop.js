@@ -1,21 +1,33 @@
 'use strict';
-
 const http = require('http');
 const https = require('https');
 const ee = require('events');
 const pipeEvents = require('pipe-event');
-const {ArchiveParser} = require('./parser');
+const {ArchiveParser} = require('./parsers');
 const cache = require('./loopcache.json');
-/*
-  Errors depend on the this.runnning boolean variable. This variable can only be turned false
-  if an error is encountered or the user stops the loop AND there is not already an error/stop being handled.
-*/
 
+/*
+ > Code for the requests loop traversing a blogs archive.
+                          +--------+
+                          | Events |
+                          +--------+
+error: Loop terminating error encountered.
+       arg is dict with props msg (error message), hostname, path.
+timeout: current request has timed out. Loop terminated.
+stopped: Loop successfully stopped by user call to :func: stop.
+end: Loop has finished parsing a blogs archive.
+ > Piped events from parser.
+page: Loop has encountered the path for the subsequent request.
+      arg is dict with prop page containing the path.
+post: Loop encountered a user uploaded post.
+      arg is dict with props hostname, pathname, ptype (post type), ishttps.
+*/
 module.exports = class RequestLoop extends ee {
   constructor() {
     super();
     const self = this;
     var protocol = http;
+    var ishttps = false;
     var page = '';
     const agentOptions = {
       keepAlive:true,
@@ -34,21 +46,24 @@ module.exports = class RequestLoop extends ee {
       }
     };
     const switchProtocol = function(){
-      protocol = (protocol == http) ? https : http;
+      protocol = (() => {
+        if (ishttps){
+          ishttps = false;
+          return http;
+        } else {
+          ishttps = true;
+          return https;
+        }
+      })();
       options.agent.destroy();
       options.agent = new protocol.Agent(agentOptions);
     }
     const parser = new ArchiveParser().on('page', page => options.path = page['path'])
                                       .on('post', post => {
-                                        post.ishttps = protocol == https;
+                                        post.ishttps = ishttps;
                                         self.emit('post', post);
                                       });
     pipeEvents(['page', 'date'], parser, self);
-    /*const cache = {
-      blogname:'',
-      path:'',
-      types:[]
-    };*/
     var req = null; /* current request */
     var running = false;
     var redir = false;
@@ -71,7 +86,7 @@ module.exports = class RequestLoop extends ee {
               self.emit('error', {
                 'host': options.host,
                 'path': options.path,
-                'message': msg
+                'msg': msg
               });
             });
             req.abort();
@@ -163,7 +178,12 @@ module.exports = class RequestLoop extends ee {
       });
     }
 
+    //-- -- -- -- --//
+    /* public funcs */
+    //-- -- -- -- --//
+
     this.go = function(types, blogname, path='/archive'){
+      running = true;
       if (cache['types'] !== types){
         cache.types = types;
         parser.setMediaTypes(types);
@@ -176,7 +196,6 @@ module.exports = class RequestLoop extends ee {
         cache.path = path;
         options.path = path;
       }
-      running = true;
       req = newRequest();
     }
 

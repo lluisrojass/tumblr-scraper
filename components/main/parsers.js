@@ -1,11 +1,10 @@
 'use strict';
-
 const htmlparser2 = require('htmlparser2');
 const ee = require('events');
-const videoSites = require('./supportedSites.json')['sites'];
 const url = require('url');
+const videoSites = require('./videoSites.json')['sites'];
 const cache = require('./loopcache.json');
-
+/* Parser for loop.js. Events info found in loop.js */
 class ArchiveParser extends ee {
   constructor() {
     super();
@@ -37,7 +36,12 @@ class ArchiveParser extends ee {
         else if (name === 'h2' && attribs.class && attribs.class === 'date')
           dfound = true;
         else if (pfound && attribs['data-peepr'] && name === 'a' && attribs.href) {
-          let {hostname, path} = url.parse(attribs.href);
+          try {
+            var {hostname, path} = url.parse(attribs.href);
+         }
+          catch (err){
+            if (err instanceof SyntaxError) console.log('error doing URL.parse on post data json')
+          }
           if (hostname.indexOf(cache['blogname']) > -1){  // exists
             //console.log(`post found ${hostname}${path}`);
             self.emit('post',{ 'host': hostname, 'path':path, 'type':ptype });
@@ -56,6 +60,9 @@ class ArchiveParser extends ee {
         }
       }
     },{decodeEntities: true});
+    //-- -- -- -- --//
+    /* public funcs */
+    //-- -- -- -- --//
     this.setMediaTypes = function(mtypes){
       types = mtypes;
     }
@@ -67,59 +74,64 @@ class ArchiveParser extends ee {
     }
   }
 }
-
+/* Parser for userpost.js. Emits 'post' event w/ dict arg with all necessary data. */
 class PostParser extends ee{
   constructor(type){
     super();
     const self = this;
     var jsonFound = false;
     var isVideo = type === 'is_video' ? true : false;
-    var videoURL = '';
-    var pdata = null;
     var emitted = false;
-    var isFinished = function(){
-      if (isVideo && pdata && videoURL){
-        emitted = true;
-        pdata.video = videoURL;
-        self.emit('post', pdata);
-      }
-      else if (!isVideo && pdata){
-        emitted = true;
-        self.emit('post', pdata);
-      }
-    }
+    var pseg = '';
+    var post = null;
     const parser = new htmlparser2.Parser({
       onopentag:(name, attribs) => {
         if (name === 'script' && attribs.type && attribs.type === 'application/ld+json')
           jsonFound = true;
-        else if (isVideo && name === 'iframe' && attribs['src']) {
+        else if (isVideo && name === 'section' && attribs['class'] && attribs['class'].includes('related-posts-wrapper')){
+          /* done with post info, no valid video link found */
+          post.isVideo = true;
+          post.videoURL = '';
+          self.emit('post', post);
+          emitted = true;
+        }
+        else if (isVideo && (name === 'iframe' || name === 'video') && attribs['src']) {
           var {src} = attribs;
           var i = 0;
           do {
             if (src.indexOf(videoSites[i++]) !== -1){
-              videoURL = src.substring(0,4) === 'http' ? src : 'http:'+src; // new variable.
-              isFinished();
+              post.isVideo = true;
+              post.videoURL = (src.substring(0,4) === 'http' ? src : 'http:'+src);
+              self.emit('post', post);
+              emitted = true;
               break;
             }
-          } while (!videoSites[i]);
+          } while (videoSites[i]);
         }
       },
       ontext:(text) => {
         if (jsonFound) {
-          jsonFound = false;
-          pdata = JSON.parse(text);
-          isFinished();
+          try {
+            pseg += text;
+            post = JSON.parse(pseg);
+            jsonFound = false;
+            if (!isVideo) { /* if not still looking for video */
+              post.isVideo = false;
+              self.emit('post', post);
+              emitted = true;
+            }
+          }
+          catch (err) {/* segmented, :bool: jsonFound not reset */}
         }
-        return;
       }
     },
     {decodeEntities: true});
-
+    //-- -- -- -- --//
+    /* public funcs */
+    //-- -- -- -- --//
     this.write = function(chunk){
-      if (!emitted)
-        parser.write(chunk);
+      if (!emitted) parser.write(chunk);
     }
-
     this.end = function(){
       parser.parseComplete();
     }

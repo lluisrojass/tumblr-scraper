@@ -1,6 +1,6 @@
 {
   "name": "tumblr-scraper",
-  "productName": "Tumblr User Scraper",
+  "productName": "Tumblr Scraper",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -10,19 +10,18 @@
   "main": "App.js",
   "scripts": {
     "start": "electron App.js",
-    "test": "watchify test3.js -t babelify -o test3.min.js --debug --verbose",
-    "watch": "watchify components/renderer/react/application.js -t babelify --noparse=$PWD/components/loop.js -o public/js/bundle.js --debug --verbose"
+    "min":"watchify components/renderer/loader.js -t babelify -p [minifyify --no-map] -o public/js/bundle.js --verbose",
+    "watch": "watchify components/renderer/loader.js -t babelify -o public/js/bundle.js --verbose",
+    "macbuild": "electron-packager . --icon=icon.icns --platform=darwin --arch=x64 --electron-version='1.4.15' --app-version='1.0.0' --overwrite --osx-sign --app-bundle-id='com.builtbyluis.lluisrojass.TScraper' ",
+    "linx64build":"electron-packager . --icon=icon.png --platform=linux --electron-version='1.4.15' --app-version='1.0.0' --overwrite",
+    "win32build":"electron-packager . --icon=icon.png --platform=win32 --electron-version='1.4.15' --app-version='1.0.0' --overwrite"
   },
   "author": "Luis Rojas",
   "license": "MIT",
   "dependencies": {
-    "colors": "^1.1.2",
     "datejs": "^1.0.0-rc3",
     "htmlparser2": "^3.9.2",
-    "jquery": "^3.1.1",
-    "pipe-event": "^0.1.0",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "pipe-event": "^0.1.0"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.23.0",
@@ -31,7 +30,11 @@
     "babelify": "^7.3.0",
     "browserify": "^14.0.0",
     "electron": "^1.4.15",
+    "electron-packager": "^8.7.1",
     "electron-reload": "^1.1.0",
+    "minifyify": "^7.3.5",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
     "stringify": "^5.1.0"
   }
 }

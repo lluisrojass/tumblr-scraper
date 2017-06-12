@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 function Notification(props) {
@@ -21,4 +23,4 @@ function Notification(props) {
   )
 }
 
-export { Notification };
+export default Notification;

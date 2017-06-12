@@ -1,10 +1,10 @@
 'use strict';
-
+const {PostParser} = require('./parsers');
 const http = require('http');
 const https = require('https');
-const {PostParser} = require('./parser');
-require('../shared/stringutils');
 
+/* Code to utility func which fetches a found posts information. Callback
+should be in error-first format. */
 module.exports = function(postData, callback){
   const {type, host, path, ishttps} = postData;
   const protocol = ishttps ? https : http;
@@ -33,7 +33,7 @@ module.exports = function(postData, callback){
   });
   const request = protocol.get(options, (res) => {
     if (res.statusCode !== 200) {
-      //console.log('Error: '+options.host+options.path+' recieved  '+res.statusCode);
+      console.log('Response Error - Host:'+options.host+' Path: '+options.path+' - recieved - ' + res.statusCode);
       haltParse = true;
       callback({
         path:options.path,
@@ -49,7 +49,7 @@ module.exports = function(postData, callback){
     });
   }).on('error', (e) => {
     haltParse = true;
-    console.log('Error: '+options.host+options.path+' recieved msg '+e.message);
+    console.log('Request Error - Host: '+options.host+' Path: '+options.path+' - recieved - '+e.message+ ' - options:'+JSON.stringify(options));
     request.abort();
     callback({
       path:options.path,

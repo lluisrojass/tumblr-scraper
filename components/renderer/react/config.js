@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 class Config extends React.Component {
@@ -13,7 +15,7 @@ class Config extends React.Component {
     };
     this.state = {
       blogname: '',
-      returnTypes: JSON.parse(JSON.stringify(this.defaultTypes)),
+      returnTypes: this.defaultTypes.slice(0) /* shallow copy */,
       sliders: {
         all: {
           isChecked: true,
@@ -44,11 +46,8 @@ class Config extends React.Component {
   }
   handleFormSubmit = e => {
     e.preventDefault();
-    if (this.props.isRunning){
-      this.props.stopRunning();
-    } else {
-      this.props.startRunning(this.state.blogname, this.state.returnTypes);
-    }
+    if (this.props.isRunning) this.props.stopRunning();
+    else this.props.startRunning(this.state.blogname, this.state.returnTypes);
   }
   handleCheckboxChange = (name, event) => {
     const isChecked = event.target.checked;
@@ -58,11 +57,11 @@ class Config extends React.Component {
       case 'all':
         if (isChecked) { /* select all */
           returnTypes = this.defaultTypes.slice(0); /* shallow copy */
-          sliders.all.isChecked = !0;
+          sliders.all.isChecked = true;
           for (var e in sliders) {
             if (e !== 'all') {
               sliders[e] = {
-                isChecked: !1,
+                isChecked: false,
                 foreground: false
               }
             }
@@ -71,7 +70,7 @@ class Config extends React.Component {
           returnTypes = [];
           for (var s in sliders){
             sliders[s] = {
-              isChecked: !1,
+              isChecked: false,
               foreground: true
             }
           }
@@ -83,10 +82,10 @@ class Config extends React.Component {
           return;
         }
         else if (isChecked) { /* add type */
-          sliders[name].isChecked = !0;
+          sliders[name].isChecked = true;
           returnTypes.push(this.typeMap[name]);
         } else { /* delete type */
-          sliders[name].isChecked = !1;
+          sliders[name].isChecked = false;
           returnTypes.splice(this.state.returnTypes.indexOf(this.typeMap[name]), 1);
         }
     }
@@ -159,7 +158,7 @@ function Slider(props){
 
 function Textbox(props){
   return(
-    <div className='blog-input-wrapper '>
+    <div className='blog-input-wrapper'>
       <div className='vertical-center-contents'>
         <p>
           {props.name}
@@ -170,4 +169,4 @@ function Textbox(props){
   );
 }
 
-export { Config };
+export default Config;
