@@ -1,6 +1,23 @@
-# Tumblr Archive Scraper
+# Tumblr Post Scraper <img src="/Resources/icon.png" width="45">  
+Desktop Application to scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rendered using Facebook's [React](https://facebook.github.io/react/). 
 
-## Description 
- Application which scrapes a Tumblr Blog for user uploaded posts (Tumblr provides no way to organically do this). Currently in Development. 
 
-![prototype](https://i.gyazo.com/1233c4e1b3707dad3d7d2fc516882bb5.gif)
+![](https://img.shields.io/badge/npm-v4.1.2-green.svg) ![](https://img.shields.io/badge/electron-v1.4.15-blue.svg) ![](https://img.shields.io/badge/react-v15.4.2-yellow.svg) ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
+
+<a href="https://gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb"><img src="https://i.gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb.gif" alt="https://gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb" width="1004"/></a>
+## Contribution 
+```
+git clone https://github.com/lluisrojass/Tumblr-Blog-Scraper.git
+cd Tumblr-Blog-Scraper
+npm install 
+```
+the npm install command downloads several Babel presets & plugins utilized by the renderer process. Further Reading on them: [Class Properties Transform](https://babeljs.io/docs/plugins/transform-class-properties/), [ES2015 Preset](https://babeljs.io/docs/plugins/preset-es2015/), [React Preset](https://babeljs.io/docs/plugins/preset-react/). 
+
+When developing, run `npm run start` to run and `npm run watch` to execute a [watchify](https://github.com/substack/watchify) script to monitor and update changes. Also change devmode to true in [config.json](./config.json) to enable [electron-reload](https://www.npmjs.com/package/electron-reload) and chrome devtools.
+
+
+
+## To-do list:
+- [ ] Option to export post links to a text file.
+- [ ] Proxy Support.
+- [ ] Gzip Response.
