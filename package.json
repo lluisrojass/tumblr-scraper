@@ -9,12 +9,12 @@
   "description": "A tool to scrape personal posts from a Tumblr profile",
   "main": "App.js",
   "scripts": {
-    "start": "electron App.js",
-    "min":"watchify components/renderer/loader.js -t babelify -p [minifyify --no-map] -o public/js/bundle.js --verbose",
+    "start": "electron app.js",
+    "min": "browserify components/renderer/loader.js -t babelify -p [minifyify --no-map] -o public/js/bundle.js --verbose",
     "watch": "watchify components/renderer/loader.js -t babelify -o public/js/bundle.js --verbose",
-    "macbuild": "electron-packager . --icon=icon.icns --platform=darwin --arch=x64 --electron-version='1.4.15' --app-version='1.0.0' --overwrite --osx-sign --app-bundle-id='com.builtbyluis.lluisrojass.TScraper' ",
-    "linx64build":"electron-packager . --icon=icon.png --platform=linux --electron-version='1.4.15' --app-version='1.0.0' --overwrite",
-    "win32build":"electron-packager . --icon=icon.png --platform=win32 --electron-version='1.4.15' --app-version='1.0.0' --overwrite"
+    "macbuild": "electron-packager . --icon='Resources/icon.icns' --platform=darwin --arch=x64 --electron-version='1.4.15' --app-version='1.0.0' --overwrite --osx-sign --app-bundle-id='com.builtbyluis.lluisrojass.TScraper' ",
+    "linx64build": "electron-packager . --icon=icon.png --platform=linux --electron-version='1.4.15' --app-version='1.0.0' --overwrite",
+    "win32build": "electron-packager . --icon=icon.png --platform=win32 --electron-version='1.4.15' --app-version='1.0.0' --overwrite"
   },
   "author": "Luis Rojas",
   "license": "MIT",
@@ -35,6 +35,7 @@
     "minifyify": "^7.3.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
-    "stringify": "^5.1.0"
+    "stringify": "^5.1.0",
+    "watchify": "^3.9.0"
   }
 }
