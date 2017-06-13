@@ -16,9 +16,8 @@ function Notification(props) {
   return (
     <div id='notification-wrapper'>
       <p className={ 'notif-label vertical-center-contents ' + type }>
-        {props.msg + ' '}
+        {props.msg}
       </p>
-
     </div>
   )
 }
