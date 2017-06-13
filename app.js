@@ -1,6 +1,7 @@
 'use strict';
-//const reload = require('electron-reload')(__dirname);
-require('./components/shared/stringutils'); 
+require('./components/shared/stringutils');
+const config = require('./config.json');
+if (config.devmode) require('electron-reload')(__dirname);
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const url = require('url');
@@ -96,5 +97,5 @@ app.on('activate', () => {
 
 app.on('ready', () => {
 	mainWindow = createMainWindow();
-	//mainWindow.webContents.openDevTools();
+	if (config.devmode) mainWindow.webContents.openDevTools();
 });
