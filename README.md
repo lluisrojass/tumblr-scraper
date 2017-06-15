@@ -6,7 +6,7 @@ Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rende
 
 ![](https://img.shields.io/badge/npm-v4.1.2-green.svg)  ![](https://img.shields.io/badge/electron-v1.4.15-blue.svg) ![](https://img.shields.io/badge/react-v15.4.2-yellow.svg) ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
-<a href="https://gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb"><img src="https://i.gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb.gif" alt="https://gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb" width="1004"/></a>
+<a href="https://gyazo.com/9eb0825ddca040f8467838ca519029e9"><img src="https://i.gyazo.com/9eb0825ddca040f8467838ca519029e9.gif" alt="https://gyazo.com/9eb0825ddca040f8467838ca519029e9" width="980"/></a>
 ## Contribution 
 ```
 git clone https://github.com/lluisrojass/Tumblr-Blog-Scraper.git
