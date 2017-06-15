@@ -1,8 +1,10 @@
 # Tumblr Post Scraper <img src="/Resources/icon.png" width="45">  
-Desktop Application to scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rendered using Facebook's [React](https://facebook.github.io/react/). 
+Desktop Application to scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no way to do this naturally and alternative apps are notoriously slow.
+
+Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rendered using Facebook's [React](https://facebook.github.io/react/). 
 
 
-![](https://img.shields.io/badge/npm-v4.1.2-green.svg) ![](https://img.shields.io/badge/electron-v1.4.15-blue.svg) ![](https://img.shields.io/badge/react-v15.4.2-yellow.svg) ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
+![](https://img.shields.io/badge/npm-v4.1.2-green.svg)  ![](https://img.shields.io/badge/electron-v1.4.15-blue.svg) ![](https://img.shields.io/badge/react-v15.4.2-yellow.svg) ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
 <a href="https://gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb"><img src="https://i.gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb.gif" alt="https://gyazo.com/f4e0219f01442ce605b8d9f4068f1ecb" width="1004"/></a>
 ## Contribution 
