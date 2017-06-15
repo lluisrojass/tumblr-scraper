@@ -6,7 +6,7 @@ Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rende
 
 ![](https://img.shields.io/badge/npm-v4.1.2-green.svg)  ![](https://img.shields.io/badge/electron-v1.4.15-blue.svg) ![](https://img.shields.io/badge/react-v15.4.2-yellow.svg) ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
-*example scrape for images on https://www.support.tumblr.com:*
+*example scrape for images on https://support.tumblr.com:*
 <a href="https://gyazo.com/9eb0825ddca040f8467838ca519029e9"><img src="https://i.gyazo.com/9eb0825ddca040f8467838ca519029e9.gif" alt="https://gyazo.com/9eb0825ddca040f8467838ca519029e9" width="980"/></a>
 ## Contribution 
 ```
