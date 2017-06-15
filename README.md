@@ -1,4 +1,4 @@
-# Tumblr Post Scraper <img src="/Resources/icon.png" width="5%" >  
+# Tumblr Post Scraper v1.0 <img src="/Resources/icon.png" width="5%">  
 Desktop Application to scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no way to do this naturally and alternative apps are notoriously slow.
 
 Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rendered using Facebook's [React](https://facebook.github.io/react/). 
