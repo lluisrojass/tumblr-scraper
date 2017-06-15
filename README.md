@@ -10,7 +10,7 @@ Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rende
 ## Contribution 
 ```
 git clone https://github.com/lluisrojass/Tumblr-Blog-Scraper.git
-cd Tumblr-Blog-Scraper
+cd Tumblr-Post-Scraper
 npm install 
 ```
 the npm install command downloads several Babel presets & plugins utilized by the renderer process. Further Reading on them: [Class Properties Transform](https://babeljs.io/docs/plugins/transform-class-properties/), [ES2015 Preset](https://babeljs.io/docs/plugins/preset-es2015/), [React Preset](https://babeljs.io/docs/plugins/preset-react/). 
