@@ -1,10 +1,11 @@
-# Tumblr Post Scraper 1.0
-Scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no way to do this naturally and alternative means are notoriously slow.
-
-Built utilizing Github's [Electron Framework](https://electron.atom.io/) & rendered using Facebook's [React](https://facebook.github.io/react/). 
-
+# Tumblr Personal Post Scraper
 
 ![](https://img.shields.io/badge/npm-v4.1.2-green.svg)  ![](https://img.shields.io/badge/electron-v1.4.15-blue.svg) ![](https://img.shields.io/badge/react-v15.4.2-yellow.svg) ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
+
+Scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Note that Tumblr provides no way to do this naturally and alternative means are notoriously slow. Currently only supports domestic Tumblr blogs, custom domains cannot be scraped.
+
+Utilizes: [Electron Framework](https://electron.atom.io/), [React](https://facebook.github.io/react/), [Browserify](https://github.com/substack/node-browserify) & [Babelify](https://github.com/babel/babelify), . 
+
 
 *example scrape for images on https://support.tumblr.com:*
 <a href="https://gyazo.com/9eb0825ddca040f8467838ca519029e9"><img src="https://i.gyazo.com/9eb0825ddca040f8467838ca519029e9.gif" alt="https://gyazo.com/9eb0825ddca040f8467838ca519029e9" width="980"/></a>
