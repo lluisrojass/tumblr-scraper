@@ -5,15 +5,22 @@ const url = require('url');
 const videoSites = require('./videoSites.json')['sites'];
 const cache = require('./loopcache.json');
 /* Parser for loop.js. Events info found in loop.js */
+
+
+
+
+
 class ArchiveParser extends ee {
   constructor() {
     super();
+
     var self = this;
     var ptype = null;
     var date = '';
     var pfound = false;
     var dfound = false;
     var types = []; /* 'is_photo' 'is_video' 'is_quote' 'is_regular'(text) 'is_chat' 'is_note'(ask) 'is_audio' */
+
     const validClass = function(classStr){
       var valid = false;
       if (classStr.includes('is_original')) {
@@ -27,28 +34,29 @@ class ArchiveParser extends ee {
       }
       return valid;
     }
+
+
     var parser = new htmlparser2.Parser({
       onopentag: (name, attribs) => {
         if (name === 'div' && attribs.class && validClass(attribs.class))
           pfound = true;
+
         else if (attribs.id && attribs.id === 'next_page_link')
-          self.emit('page',{ path: attribs.href });
+          self.emit('page', { path: attribs.href });
+
         else if (name === 'h2' && attribs.class && attribs.class === 'date')
           dfound = true;
+
         else if (pfound && attribs['data-peepr'] && name === 'a' && attribs.href) {
           try {
             var {hostname, path} = url.parse(attribs.href);
-         }
-          catch (err){
-            if (err instanceof SyntaxError) console.log('error doing URL.parse on post data json')
-          }
+          } catch (err) {/* syntax error */}
+
           if (hostname.indexOf(cache['blogname']) > -1){  // exists
-            //console.log(`post found ${hostname}${path}`);
-            self.emit('post',{ 'host': hostname, 'path':path, 'type':ptype });
-            pfound = false;
-            ptype = null;
+            (self.emit('post',{ 'host': hostname, 'path':path, 'type':ptype }), pfound = false, ptype = null);
           }
         }
+
       },
       ontext: (t) => {
         if (dfound) {
@@ -63,15 +71,11 @@ class ArchiveParser extends ee {
     //-- -- -- -- --//
     /* public funcs */
     //-- -- -- -- --//
-    this.setMediaTypes = function(mtypes){
-      types = mtypes;
-    }
-    this.end = function(){
-      parser.parseComplete();
-    }
-    this.write = function(chunk){
-      parser.write(chunk);
-    }
+    this.setMediaTypes = mtypes => { types = mtypes; }
+    this.write = chunk => {  parser.write(chunk); }
+    this.end = () => { parser.parseComplete(); }
+
+
   }
 }
 /* Parser for userpost.js. Emits 'post' event w/ dict arg with all necessary data. */

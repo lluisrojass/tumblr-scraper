@@ -50,9 +50,11 @@ class Config extends React.Component {
     else this.props.startRunning(this.state.blogname, this.state.returnTypes);
   }
   handleCheckboxChange = (name, event) => {
+
     const isChecked = event.target.checked;
     const { sliders } = this.state;
     var { returnTypes } = this.state;
+
     switch(name){
       case 'all':
         if (isChecked) { /* select all */
@@ -62,7 +64,7 @@ class Config extends React.Component {
             if (e !== 'all') {
               sliders[e] = {
                 isChecked: false,
-                foreground: false
+                foreground: true
               }
             }
           }

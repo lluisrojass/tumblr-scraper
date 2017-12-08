@@ -2,6 +2,7 @@
 
 const ipcTypes = require('../../shared/ipctypes.json');
 const {ipcRenderer} = electronRequire('electron');
+const {List} = require('immutable');
 
 import React from 'react';
 import Footer from './footer';
@@ -12,8 +13,10 @@ import LeftPanel from './leftpanel';
 class Application extends React.Component {
   constructor(props) {
     super(props);
+    /* non render related state */
     this.parseComplete = false;
     this.postsRendered = 0;
+
     this.state = {
       blogname:'',
       currentPost:null,
@@ -21,10 +24,6 @@ class Application extends React.Component {
       isRunning:false,
       isViewing:false,
       scrapedPosts:[],
-      notification:{
-        msg: 'Due to the large quantity of HTTP requests, users could experience high CPU usage.',
-        type: 0 /* 0 = warning, 1 = error, 2 = success */
-      },
       footer:{
         dateDepth:'',
         requestDepth:null
@@ -36,34 +35,41 @@ class Application extends React.Component {
     }
   }
 
+  bindIPCHandlers = () => {
+
+  }
+
   componentDidMount(){
+    /* ipc handler for new post found */
+
     ipcRenderer.on('post', (event, post) => {
       let {scrapedPosts} = this.state;
       const m = document.getElementById('keep-bottom');
       const keepBottom = m.scrollTop+1 >= m.scrollHeight - m.clientHeight;
       post.isClicked = false;
-      scrapedPosts.push(post);
+
+      if (this.state.scrapedPosts.length === 0){
+        scrapedPosts = List.of(post);
+      } else {
+        scrapedPosts = scrapedPosts.push(post);
+      }
+
       this.setState({ scrapedPosts: scrapedPosts });
       if (keepBottom) m.scrollTop = m.scrollHeight - m.clientHeight;
     })
+    /* ipc handler for new page data found */
     .on('page', (event, data) => {
       const f = this.state.footer;
       f.requestDepth = data.path;
       this.setState({ footer: f });
     })
+    /* ipc handler for new date info found */
     .on('date', (event, data) => {
       const f = this.state.footer;
       f.dateDepth = data.date;
       this.setState({ footer: f });
     })
-    .on('end', (event) => {
-      this.parseComplete = true;
-      if (this.parseComplete && this.postsRendered == this.state.scrapedPosts.length)
-        this.success(`Finished Parsing (${this.state.scrapedPosts.length} Posts Found).`);
-    })
-    .on('error', (event, data) => this.error(`${data.msg} (${data.host}${data.path}).`))
-    .on('warning', (event, data) => this.warn(`Error: ${data.msg} requesting ${data.path}.`))
-    .on('timeout', (event) => this.error('Response timeout'));
+
 
     ipcRenderer.on('asynchronous-reply', (event, types, data) => {
       switch(types) {
@@ -72,11 +78,7 @@ class Application extends React.Component {
             isViewing: false,
             atStart:false,
             isRunning: true,
-            scrapedPosts : [],
-            notification:{
-              msg:' ',
-              type:0
-            },
+            scrapedPosts :[],
             currentPost: null,
             footer: {
               dateDepth: null,
@@ -109,36 +111,6 @@ class Application extends React.Component {
     });
   }
 
-  error(msg){ /* called when the loop has finished with an error */
-    this.setState({
-      atStart:true,
-      isRunning:false,
-      notification:{
-        msg:msg,
-        type:1
-      }
-    })
-  }
-
-  warn(msg){ /* notification utility */
-    this.setState({
-      notification:{
-        msg:msg,
-        type:0
-      }
-    });
-  }
-
-  success(msg){ /* notification utility */
-    this.setState({
-      atStart:true,
-      isRunning:false,
-      notification:{
-        msg:msg,
-        type:2
-      }
-    })
-  }
 
   continueRunning = (e) => {
     e.preventDefault();
@@ -175,16 +147,19 @@ class Application extends React.Component {
   }
 
   handlePostClicked = (post, index) => {
-    const {scrapedPosts} = this.state;
+    let {scrapedPosts} = this.state;
+
     if (this.state.currentPost){ /* unclick */
       let {index} = this.state.currentPost;
-
-      let post = scrapedPosts[index];
-      post.isClicked = false;
-      scrapedPosts[index] = post;
+      let post = scrapedPosts.get(index);
+      post = post.set(isClicked, false);
+      scrapedPosts = scrapedPosts.set(index, post);
     }
+
     this.setState({ isViewing: false }, () => {
-      scrapedPosts[index].isClicked = true;
+      console.log("hey");
+      let post = scrapedPosts.get(index);
+      post = post.set(isClicked, true);
       this.setState({
         currentPost: post,
         scrapedPosts: scrapedPosts,
@@ -195,6 +170,7 @@ class Application extends React.Component {
         }
       });
     });
+
   }
 
   onLoad = () => {
@@ -230,6 +206,8 @@ class Application extends React.Component {
             stopRunning={this.stopRunning}
             continueRunning={this.continueRunning}
             notification={this.state.notification}
+            getDateDepth={() => this.state.footer.dateDepth}
+            getPostLength={() => this.state.scrapedPosts.size}
           />
           <MiddlePanel
             scrapedPosts={this.state.scrapedPosts}

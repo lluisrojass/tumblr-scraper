@@ -45,6 +45,7 @@ module.exports = class RequestLoop extends ee {
                      'Chrome/56.0.2924.87 Safari/537.36'
       }
     };
+
     const switchProtocol = function(){
       protocol = (() => {
         if (ishttps){
@@ -58,6 +59,7 @@ module.exports = class RequestLoop extends ee {
       options.agent.destroy();
       options.agent = new protocol.Agent(agentOptions);
     }
+
     const parser = new ArchiveParser().on('page', page => options.path = page['path'])
                                       .on('post', post => {
                                         post.ishttps = ishttps;
