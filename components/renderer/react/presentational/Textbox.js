@@ -2,7 +2,6 @@
 
 import React from "react";
 
-
 class Textbox extends React.PureComponent {
 
   constructor(props){
@@ -10,17 +9,20 @@ class Textbox extends React.PureComponent {
   }
 
   render(){
-    const props = this.props;
-
+    const {props} = this;
     return (
       <div className='blog-input-wrapper'>
         <div className='vertical-center-contents'>
           <p>
             {props.name}
           </p>
-          <input type='text' name={props.name} value={props.blogname} onChange={props.onChange} />
+          <input type='text'
+            name={props.name}
+            value={props.blogname}
+            onChange={props.onChange}
+          />
         </div>
       </div>);
   }
-
 }
+export default Textbox;

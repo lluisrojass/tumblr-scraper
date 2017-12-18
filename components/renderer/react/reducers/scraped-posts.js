@@ -2,6 +2,10 @@
 
 let scrapedPosts = (state=[], action) => {
   switch(action.type){
+
+    case "START_RUNNING":
+      return [];
+
     case "ADD_POST":
       return [...state, action.post];
 

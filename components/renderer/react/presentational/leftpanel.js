@@ -1,8 +1,9 @@
 'use strict';
 
 import React from 'react';
-import Config from './config';
+import Config from './presentational/visible-config';
 import Notification from './notification';
+import VisibleConfig from "../container/visible-config";
 
 class LeftPanel extends React.PureComponent {
 
@@ -18,13 +19,7 @@ class LeftPanel extends React.PureComponent {
            <h1 className='vertical-center-contents'>Config</h1>
          </div>
          <div id='config-wrapper'>
-            <Config
-              startRunning={this.props.startRunning}
-              atStart={this.props.atStart}
-              isRunning={this.props.isRunning}
-              stopRunning={this.props.stopRunning}
-              continueRunning={this.props.continueRunning}
-            />
+            <VisibleConfig />
          </div>
          <Notification
           getDateDepth={this.props.getDateDepth}

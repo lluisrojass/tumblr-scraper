@@ -13,7 +13,7 @@ class Slider extends React.PureComponent {
     return (
       <div className='input-row'>
         <div className='vertical-center-contents'>
-          <p className={`typename ${props.foreground ? '': 'grey' }`}>
+          <p className="typename">
             {props.name.capitalizeEach()}
           </p>
           <label className='switch'>
@@ -28,6 +28,7 @@ class Slider extends React.PureComponent {
         </div>
       </div>
     );
-
   }
 }
+
+export default Slider;

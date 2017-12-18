@@ -44,11 +44,13 @@ class Config extends React.Component {
       }
     };
   }
+
   handleFormSubmit = e => {
     e.preventDefault();
     if (this.props.isRunning) this.props.stopRunning();
     else this.props.startRunning(this.state.blogname, this.state.returnTypes);
   }
+
   handleCheckboxChange = (name, event) => {
 
     const isChecked = event.target.checked;
@@ -96,9 +98,11 @@ class Config extends React.Component {
       returnTypes: returnTypes
     });
   }
+
   addChar = event => {
     this.setState({ blogname: event.target.value });
   }
+
   render(){
     return(
       <div className='height100width100' id='form-wrapper'>
@@ -139,6 +143,7 @@ class Config extends React.Component {
   }
 }
 
+/*
 function Slider(props){
   return(
     <div className='input-row'>
@@ -170,5 +175,6 @@ function Textbox(props){
     </div>
   );
 }
+*/
 
 export default Config;

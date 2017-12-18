@@ -8,14 +8,9 @@ class Notification extends React.PureComponent {
 
   constructor(props){
     super(props);
-    this.state = {
-      message:"",
-      type:0 /* 0 = warning, 1 = error, 2 = success */
-    }
   }
-
+    /*
   componentDidMount(){
-    /* ipc handler for loop error */
     ipcRenderer.on("error", (info) => {
       let message = `${info.msg ? info.msg : "Unidentified Error"}`+
       ` ${info.path ? `(${info.path})` : ""}`;
@@ -24,7 +19,6 @@ class Notification extends React.PureComponent {
         type:1
       });
     })
-    /* ipc handler for loop warning */
     .on("warning", () => {
       let message = `Error: ${data.msg ? data.msg : "Unknown Error"} `+
       `@ ${data.path ? data.path : "Unknown Path"}`;
@@ -44,29 +38,10 @@ class Notification extends React.PureComponent {
         type:2
       });
     });
-
-    ipcRenderer.on('asynchronous-reply', (event, types, data) => {
-      let message="",type=0;
-      switch(types) {
-        /* loop continued */
-        case ipcTypes.CONT_RESP:
-          message = data.didContinue ? 'Continued' : 'Could not continue';
-          type = data.didContinue ? 0 : 1;
-          this.setState({ message:message, type:type });
-          break;
-
-        /* loop stopped */
-        case ipcTypes.STOP_RESP:
-          let dateDepth = this.props.getDateDepth();
-          message = `${this.props.getPostLength()} Posts (${dateDepth !== "" ? dateDepth : "start" } - now)`;
-          this.setState({ message:message, type:type });
-          break;
-      }
-    });
-  }
+  } */
 
   type(){
-    switch(this.state.type){
+    switch(this.props.type){
       case 0: return 'warning-text';
       case 1: return 'error-text';
       case 2: return 'success-text';
@@ -74,10 +49,12 @@ class Notification extends React.PureComponent {
   }
 
   render(){
+    const {props} = this;
+    let typeClass = this.type();
     return(
       <div id='notification-wrapper'>
-        <p className={'notif-label vertical-center-contents ' + this.type()}>
-          {this.state.message}
+        <p className={'notif-label vertical-center-contents ' + typeClass}>
+          {props.message}
         </p>
       </div>
     )

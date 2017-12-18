@@ -18,18 +18,18 @@ class Application extends React.Component {
     this.postsRendered = 0;
 
     this.state = {
-      blogname:'',
-      currentPost:null,
-      atStart:true,
-      isRunning:false,
-      isViewing:false,
-      scrapedPosts:[],
+      blogname:'', // done
+      currentPost:null, // depracated in redux version
+      atStart:true, // maybe depracated
+      isRunning:false, // done 
+      isViewing:false, // change to viewindex 
+      scrapedPosts:[], // done 
       footer:{
-        dateDepth:'',
-        requestDepth:null
+        dateDepth:'', // done 
+        requestDepth:null  // done
       },
       viewerMeta:{
-        loadText:'Loading Images..',
+        loadText:'Loading Images..', // loadimages if state.loadCount === 0
         loadCount:0
       }
     }
