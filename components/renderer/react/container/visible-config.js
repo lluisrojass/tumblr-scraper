@@ -3,11 +3,6 @@
 import React from "react";
 import {connect} from "react-redux";
 import Config from "../presentational/config";
-import {errorNotifAction} from "../action";
-
-const ipcTypes = require('../../../shared/ipctypes.json');
-const {ipcRenderer} = electronRequire('electron');
-
 import {
   startRunningAction,
   stopRunningAction,
@@ -16,6 +11,10 @@ import {
   errorNotifAction,
   warnNotifAction
 } from "../actions/index.js";
+
+const ipcTypes = require('../../../shared/ipctypes.json');
+const {ipcRenderer} = electronRequire('electron');
+
 
 let mapStateToProps = (state) => {
   return {

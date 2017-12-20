@@ -1,43 +1,62 @@
 'use strict';
 
 import React from 'react';
+import Spinner from "./spinner";
 
-function Footer(props){
-  return(
-    <div className={props.isRunning && props.requestDepth ? 'footer-blue' : 'footer-normal'} id='footer'>
-      {props.isRunning && props.requestDepth && <Spinner />}
+class Footer extends React.PureComponent {
+  constructor(props){
+    super(props);
+  }
+
+  text = () => {
+    const {props} = this;
+    if (props.isRunning) {
+      if (!props.path)
+        return "Loading...";
+      else {
+        if (props.dateDepth) {
+          return `${props.path} (${props.dateDepth - now})`;
+        } else {
+          return `${props.path}`;
+        }
+      } 
+    } else 
+      return "";
+  }
+
+  genSpinner = () => {
+    const {props} = this;
+    if (props.isRunning && props.path)
+      return <Spinner />
+    else 
+      return "";
+  }
+
+  getClass = () => {
+    const {props} = this;
+    if (props.isRunning)
+      return "footer-blue";
+    else 
+      return "footer-normal";
+  }
+
+  render(){
+    return (
+      <div className={this.getClass()} id='footer'>
+      {this.genSpinner()}
       <div className='footer-request-status'>
         <p className='vertical-center-contents'>
-          {props.requestDepth && props.isRunning && `Request Depth: ${props.requestDepth}`}
-          {props.isRunning && !props.requestDepth && 'Loading...'}
-          {props.dateDepth && props.isRunning && ` (${props.dateDepth} - Today)`}
+          {this.text()}
         </p>
       </div>
       <div className='footer-posts-status'>
-        <div>
-        </div>
+        <div></div>
       </div>
     </div>
-  )
+    );
+  }
 }
 
-function Spinner(){
-  return(
-    <div className={`sk-fading-circle vertical-center-contents`}>
-      <div className="sk-circle1 sk-circle"></div>
-      <div className="sk-circle2 sk-circle"></div>
-      <div className="sk-circle3 sk-circle"></div>
-      <div className="sk-circle4 sk-circle"></div>
-      <div className="sk-circle5 sk-circle"></div>
-      <div className="sk-circle6 sk-circle"></div>
-      <div className="sk-circle7 sk-circle"></div>
-      <div className="sk-circle8 sk-circle"></div>
-      <div className="sk-circle9 sk-circle"></div>
-      <div className="sk-circle10 sk-circle"></div>
-      <div className="sk-circle11 sk-circle"></div>
-      <div className="sk-circle12 sk-circle"></div>
-    </div>
-  )
-}
+
 
 export default Footer;

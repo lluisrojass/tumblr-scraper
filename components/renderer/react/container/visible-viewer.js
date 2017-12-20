@@ -1,8 +1,11 @@
 "use strict";
 
 import {connect} from "react-redux";
-import {Viewer} from "../presentational/viewer";
+import Viewer from "../presentational/viewer";
 import {imageLoadedAction} from "../actions/index";
+
+const {ipcRenderer} = electronRequire("electron");
+const ipcTypes = require("../../../shared/ipctypes.json");
 
 let mapStateToProps = (state) => {
     let clickedPost = state.clickedPost === -1  ? 
@@ -12,7 +15,7 @@ let mapStateToProps = (state) => {
 
     return {
         isViewing:state.clickedPost !== -1,
-        post:clickedPost,
+        post:clickedPost || {},
         imagesLoaded: clickedPost === null ? 
             true 
         : 
@@ -22,7 +25,14 @@ let mapStateToProps = (state) => {
 
 let mapDispatchToProps = (dispatch) => {
     return {
-        onImageLoad: () => imageLoadedAction()
+        onImageLoad: () => imageLoadedAction(),
+        openInBrowser: (url) => {
+            ipcRenderer.send(
+                "asynchronous-message", 
+                ipcTypes.OPEN_IN_BROWSER, 
+                { url: url }
+            );
+        }
     }
 }
 
@@ -30,3 +40,5 @@ let VisibleViewer = connect(
     mapStateToProps,
     mapDispatchToProps
 )(Viewer);
+
+export default VisibleViewer;

@@ -1,6 +1,6 @@
 "use strict";
 
-let notifType = (state=0, action){
+let notifType = (state=0, action) => {
     switch(action.type){
         case "NOTIF_NEW_ERROR_MESSAGE":
             return 1;

@@ -5,11 +5,11 @@ import React from "react";
 class Slider extends React.PureComponent {
 
   constructor(props){
-    super(props)
+    super(props);
   }
 
   render(){
-    const props = this.props;
+    const {props} = this;
     return (
       <div className='input-row'>
         <div className='vertical-center-contents'>

@@ -22,4 +22,4 @@ let scrapedPosts = (state=[], action) => {
   }
 }
 
-module.exports = scrapedPosts
+export default scrapedPosts;

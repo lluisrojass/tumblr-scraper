@@ -36,7 +36,37 @@ export const errorNotifAction = message => ({
   message
 });
 
+export const warningNotifAction = message => ({
+  type:"NOTIF_NEW_SUCCESS_MESSAGE",
+  message
+});
+
+export const successNotifAction = message => ({
+  type:"NOTIF_NEW_SUCCESS_MESSAGE",
+  message
+});
+
 export const imageLoadedAction = () => ({
   type:"IMAGE_LOADED"
 });
 
+export const postFoundAction = (post) => {
+  return {
+    type:"ADD_POST",
+    post
+  }
+}
+
+export const pathDepthAction = (path) => {
+  return {
+    type:"ADD_POST",
+    path
+  }
+}
+
+export const dateDepthAction = (date) => {
+  return {
+    type:"ADD_POST",
+    date
+  }
+}

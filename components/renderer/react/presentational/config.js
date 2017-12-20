@@ -1,28 +1,23 @@
 "use strict";
 
 import React from "react";
-import {VisibleSliderList} from "../visible-slider-list";
-import {Textbox} form "./textbox";
-
-// in container hook up to
-// isRunning dispatch -> props
-// addChar dispatch -> props
-// blogname state -> props
-// isAtStart state -> props
-// continueRunning dispatch -> props
-// stopRunning dispatch -> props
-// startRunning dispatch -> props
+import VisibleSliderList from "../container/visible-slider-list";
+import Textbox from "./textbox";
 
 class Config extends React.PureComponent {
+
   constructor(props){
     super(props);
+    console.log(props);
   }
 
   getResumeButton(){
     const {props} = this;
     if (props.isRunning && !props.atStart)
       return (
-        <button onClick={props.continueRunning} className="resume-button fbutton vertical-center-contents">
+        <button 
+          onClick={props.continueRunning} 
+          className="resume-button fbutton vertical-center-contents">
               RESUME
         </button>
       )
@@ -34,8 +29,7 @@ class Config extends React.PureComponent {
       return (
         <button 
           className='stop-button vertical-center-contents'
-          onClick = {props.stopRunning}
-        >
+          onClick = {props.stopRunning} >
           PAUSE
         </button>
       );

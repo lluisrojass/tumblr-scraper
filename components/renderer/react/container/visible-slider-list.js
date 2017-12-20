@@ -1,7 +1,7 @@
 "use strict";
 
 import React from "react";
-import SliderList from "../presentational/slider";
+import SliderList from "../presentational/slider-list";
 import {sliderToggleAction} from "../actions/index";
 import {connect} from "react-redux";
 
@@ -19,9 +19,9 @@ let mapDispatchToProps = (dispatch) => {
   }
 }
 
-let VisibleSlider = connect(
+let VisibleSliderList = connect(
   mapStateToProps,
   mapDispatchToProps
 )(SliderList);
 
-export default VisibileSlider;
+export default VisibleSliderList;

@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import Post from './post';
 import VisiblePostList from "../container/visible-post-list";
 
 class MiddlePanel extends React.PureComponent {

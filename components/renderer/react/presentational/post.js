@@ -65,7 +65,6 @@ class Post extends React.PureComponent {
            {this.getImage()}
         </div>
        </div>
-
        <div className='post-content'>
          <div className='post-headline'>
            {this.getStamp()}

@@ -27,4 +27,4 @@ let notification = (state=baseState, action) => {
   }
 }
 
-module.exports = notification;
+export default notification;

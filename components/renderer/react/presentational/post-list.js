@@ -4,9 +4,11 @@ import React from "react";
 import Post from "./post";
 
 class PostList extends React.PureComponent {
+    
     constructor(props){
         super(props);
     }
+
     render(){
         const {props} = this;
         return (

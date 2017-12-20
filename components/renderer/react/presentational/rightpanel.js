@@ -1,20 +1,19 @@
 'use strict';
 
 import React from 'react';
-import Viewer from './viewer';
+import VisibleViewer from '../container/visible-viewer';
 
-function RightPanel(props){
-  return (
-    <div id='right-panel-wrapper'>
-      <Viewer
-        post={props.currentPost}
-        openInBrowser={props.openInBrowser}
-        isViewing={props.isViewing}
-        onLoadViewer={props.onLoadViewer}
-        {...props.viewerMeta}
-      />
-    </div>
-  )
+class RightPanel extends React.PureComponent {
+  constructor(props){
+    super(props);
+  }
+  render(){
+    return (
+      <div id='right-panel-wrapper'>
+        <VisibleViewer />
+      </div>
+    );
+  }
 }
 
 export default RightPanel;

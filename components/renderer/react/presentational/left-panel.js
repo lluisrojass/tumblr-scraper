@@ -1,8 +1,7 @@
 'use strict';
 
 import React from 'react';
-import Config from './presentational/visible-config';
-import Notification from './notification';
+import VisibleNotification from '../container/visible-notification';
 import VisibleConfig from "../container/visible-config";
 
 class LeftPanel extends React.PureComponent {
@@ -21,10 +20,7 @@ class LeftPanel extends React.PureComponent {
          <div id='config-wrapper'>
             <VisibleConfig />
          </div>
-         <Notification
-          getDateDepth={this.props.getDateDepth}
-          getPostLength={this.props.getPostLength}
-         />
+         <VisibleNotification />
        </div>
      </div>);
   }
