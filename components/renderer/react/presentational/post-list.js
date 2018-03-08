@@ -13,10 +13,10 @@ class PostList extends React.PureComponent {
         const {props} = this;
         return (
             <div className='height100width100 scroll-box' id='keep-bottom'>
-                {props.posts.size > 0 ?
+                {props.posts.length > 0 ?
                     props.posts.map((post, index) =>
                         <Post
-                            onClick={() => props.handlePostClicked(index)}
+                            onClick={() => props.handlePostClick(index, props.clickedPostIndex)}
                             onLoad={props.onLoad}
                             key={index}
                             index={index}

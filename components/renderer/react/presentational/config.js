@@ -2,23 +2,24 @@
 
 import React from "react";
 import VisibleSliderList from "../container/visible-slider-list";
+import VisibleNotification from "../container/visible-notification";
 import Textbox from "./textbox";
+import VisibleThrottleSlider from "../container/visible-throttle-slider";
 
 class Config extends React.PureComponent {
 
   constructor(props){
     super(props);
-    console.log(props);
   }
 
   getResumeButton(){
     const {props} = this;
-    if (props.isRunning && !props.atStart)
+    if (!props.isRunning && !props.atStart)
       return (
         <button 
-          onClick={props.continueRunning} 
+          onClick={props.resumeRunning} 
           className="resume-button fbutton vertical-center-contents">
-              RESUME
+              Resume
         </button>
       )
   }
@@ -30,7 +31,7 @@ class Config extends React.PureComponent {
         <button 
           className='stop-button vertical-center-contents'
           onClick = {props.stopRunning} >
-          PAUSE
+          Pause
         </button>
       );
     } else {
@@ -38,7 +39,7 @@ class Config extends React.PureComponent {
         <button 
           onClick = {(event) => props.startRunning(props.blogname, props.sliders)}
           className='go-button vertical-center-contents'>
-          START
+          Start
         </button>
       );
     }
@@ -49,10 +50,12 @@ class Config extends React.PureComponent {
     return (
       <div className='height100width100' id='form-wrapper'>
         <form id='customform' action='' onSubmit={(e) => {e.preventDefault()}}>
+            
             <VisibleSliderList />
+            <VisibleThrottleSlider />
             <Textbox
               name='Blog Name'
-              addChar={props.onText}
+              onChange={props.onText}
               blogname={props.blogname}
             />
             <div className='button-wrapper'>
@@ -60,6 +63,8 @@ class Config extends React.PureComponent {
               {this.getResumeButton()}
             </div>
           </form>
+          <VisibleNotification />
+          
         </div>
       );
   }

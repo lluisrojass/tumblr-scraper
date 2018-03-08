@@ -2,12 +2,12 @@
 
 let notifType = (state=0, action) => {
     switch(action.type){
-        case "NOTIF_NEW_ERROR_MESSAGE":
+        case "NOTIF_ERROR":
             return 1;
-        case "NOTIF_BLANK_MESSAGE":
-        case "NOTIF_NEW_WARN_MESSAGE":
+        case "START_RUNNING":
+        case "NOTIF_WARNING":
             return 0;
-        case "NOTIF_NEW_SUCCESS_MESSAGE":
+        case "NOTIF_SUCCESS":
             return 2;
         default:
             return state;

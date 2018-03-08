@@ -1,8 +1,7 @@
 "use strict";
 
-let atStart = (state=true, action) => {
+let completed = (state=false, action) => {
     switch(action.type){
-        case "NOTIF_ERROR":
         case "PARSE_COMPLETED":
             return true;
         case "START_RUNNING":
@@ -12,4 +11,4 @@ let atStart = (state=true, action) => {
     }
 }
 
-export default atStart;
+export default completed;

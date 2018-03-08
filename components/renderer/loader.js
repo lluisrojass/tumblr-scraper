@@ -1,4 +1,5 @@
-/* add string utils to process */
+"use strict";
+
 require('../shared/stringutils');
 
 import React from 'react';
@@ -7,7 +8,6 @@ import {Provider} from "react-redux";
 import {createStore} from "redux";
 import {reducer} from "./react/reducers/index";
 import VisibleApplication from './react/container/visible-app';
-
 let store = createStore(reducer);
 
 render(

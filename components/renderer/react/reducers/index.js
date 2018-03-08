@@ -13,6 +13,8 @@ import loadCount from "./load-count";
 import atStart from "./at-start";
 import notifMessage from "./notif-message";
 import notifType from "./notif-type";
+import completed from "./completed";
+import throttleSlider from "./throttle-slider";
 
 export const reducer = combineReducers({
   notification,
@@ -23,7 +25,10 @@ export const reducer = combineReducers({
   isRunning,
   atStart,
   requestPath,
+  dateDepth,
   loadCount,
   notifMessage,
-  notifType
+  notifType,
+  completed,
+  throttleSlider
 });

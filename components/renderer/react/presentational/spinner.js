@@ -1,5 +1,7 @@
 "use strict";
 
+import React from "react";
+
 function Spinner(){
     return(
         <div className={`sk-fading-circle vertical-center-contents`}>

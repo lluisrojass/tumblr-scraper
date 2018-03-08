@@ -8,50 +8,64 @@ class Footer extends React.PureComponent {
     super(props);
   }
 
-  text = () => {
-    const {props} = this;
-    if (props.isRunning) {
-      if (!props.path)
-        return "Loading...";
-      else {
-        if (props.dateDepth) {
-          return `${props.path} (${props.dateDepth - now})`;
-        } else {
-          return `${props.path}`;
-        }
-      } 
-    } else 
-      return "";
-  }
-
   genSpinner = () => {
     const {props} = this;
-    if (props.isRunning && props.path)
+    if (props.isRunning && !props.completed && props.path)
       return <Spinner />
     else 
       return "";
   }
 
+  getStatus = () => {
+    const {props} = this;
+    if (props.completed)
+        return "Finished";
+    else if (props.isRunning && props.path)
+        return "Running...";
+
+    else return "Paused";
+  }
+
   getClass = () => {
     const {props} = this;
-    if (props.isRunning)
+    if (props.completed) 
+      return "footer-completed";
+    else if (props.isRunning)
       return "footer-blue";
-    else 
+    else if (!props.atStart)
+      return "footer-paused";
+    else
       return "footer-normal";
   }
 
   render(){
+    const {props} = this;
+
+    if (!props.completed && !props.isRunning && props.atStart)
+        return (
+            <div className={this.getClass()} id='footer'>
+                <div className='footer-request-status'>
+                </div>
+            </div>
+        );
+
     return (
       <div className={this.getClass()} id='footer'>
-      {this.genSpinner()}
-      <div className='footer-request-status'>
-        <p className='vertical-center-contents'>
-          {this.text()}
-        </p>
-      </div>
-      <div className='footer-posts-status'>
-        <div></div>
-      </div>
+        <div className='footer-request-status'>
+            <div className="footer-info-cell-20 vertical-center-contents">
+                <p>Status: {this.getStatus()}</p> 
+            </div>
+            <div className="footer-info-cell-30 vertical-center-contents">
+                <p>Requesting: {props.path}</p> 
+            </div>
+            <div className="footer-info-cell-20 vertical-center-contents">
+                <p>Depth: {props.dateDepth}</p>
+            </div>
+            <div className="footer-info-cell-20 vertical-center-contents">
+                <p>Posts Discovered: {props.numPosts}</p>
+            </div>
+            
+        </div>
     </div>
     );
   }

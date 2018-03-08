@@ -13,7 +13,7 @@ class Slider extends React.PureComponent {
     return (
       <div className='input-row'>
         <div className='vertical-center-contents'>
-          <p className="typename">
+          <p className={`${props.isPurple ? "purple-label" : "" } typename`}>
             {props.name.capitalizeEach()}
           </p>
           <label className='switch'>
@@ -23,7 +23,7 @@ class Slider extends React.PureComponent {
               checked={props.isChecked}
               name={props.name}
             />
-            <div className='slider round'></div>
+            <div className={`${props.isPurple ? "purple-slider" : "slider"} round`}></div>
           </label>
         </div>
       </div>

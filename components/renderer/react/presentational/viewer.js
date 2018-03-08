@@ -5,7 +5,6 @@ import React from 'react';
 class Viewer extends React.PureComponent {
   constructor(props){
     super(props);
-    console.log(props);
   }
 
   headline = () => {
@@ -49,12 +48,14 @@ class Viewer extends React.PureComponent {
   url = () => {
     const {props} = this;
     const {url} = props.post;
+
     if (!url)
       return "";
+    
     else
       return (
         <div id='viewer-url-wrapper'>
-          <a href='#' onClick={() => props.openInBrowser(url)} className='viewer-url'>
+          <a href='#' rel="noopener" onClick={() => props.openInBrowser(url)} className='viewer-url'>
             Open in Browser
           </a>
         </div>
@@ -64,7 +65,6 @@ class Viewer extends React.PureComponent {
   images = () => {
     const {props} = this;
     const {images} = props.post;
-    if (images )
     if (images == null || images.length === 0) 
       return "";
     else 
@@ -95,8 +95,8 @@ class Viewer extends React.PureComponent {
   }
 
   loadPreview = () => {
-    const {imagesLoaded} = this.props.post;
-    if (imagesLoaded) return "";
+    const {imagesLoaded, isViewing} = this.props.post;
+    if (imagesLoaded || !isViewing) return "";
     else 
       return (
         <p id='load-text'>loading images...</p>
@@ -104,6 +104,11 @@ class Viewer extends React.PureComponent {
   }
 
   render(){
+    if (!this.props.isViewing) 
+      return (
+        <div className='height100width100 notselected'> </div>
+      );
+    
     return (
       <div id='right-panel' className='height100width100'>
         {this.headline()}

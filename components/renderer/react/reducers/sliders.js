@@ -12,10 +12,17 @@ let baseSliderState = [
 let sliders = (state=baseSliderState, action) => {
   switch(action.type){
     case "SLIDER_TOGGLE":
-      let index = action.index;
+      let index = action.id;
+
+      if (index !== 0 && state[0].value === true && state[index].value === false) 
+        state = [{ name: "all", value: false }, ...state.slice(1)];
+
+      if (index === 0 && state[index].value === false)
+        return baseSliderState;
+
       let oldObject = state[index];
       let newObject = Object.assign({}, oldObject, { value: !oldObject.value });
-      return [...state.slice(0,index), newObject, state.slice(index+1)];
+      return [...state.slice(0, index), newObject, ...state.slice(index+1)];
 
     default:
       return state;

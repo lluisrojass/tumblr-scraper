@@ -9,10 +9,9 @@ import {
   resumeRunningAction,
   onBlogNameCharAction,
   errorNotifAction,
-  warnNotifAction
+  warningNotifAction
 } from "../actions/index.js";
 
-const ipcTypes = require('../../../shared/ipctypes.json');
 const {ipcRenderer} = electronRequire('electron');
 
 
@@ -26,74 +25,82 @@ let mapStateToProps = (state) => {
 }
 
 let mapDispatchToProps = (dispatch) => {
-  console.log("this should only show once");
-  ipcRenderer.on('asynchronous-reply', (event, types, data) => {
-    switch(types){
-      case ipcTypes.START_RESP:
-        dispatch(startRunningAction());
-        break;
-      case ipcTypes.CONT_RESP:
-        if (!data.didContinue) 
-          dispatch(errorNotifAction("unknown error, could not continue"));
-        else 
-          dispatch(resumeRunningAction());
-        break;
-      case ipcTypes.STOP_RESP:
-        dispatch(stopRunningAction());
-        dispatch(warnNotifAction("paused"));
-        break;
-    }
-  });
+    ipcRenderer.on('asynchronous-reply', (event, types, data) => {
+        switch(types) {
+            case "START_RESPONSE":
+                dispatch(startRunningAction());
+                break;
 
-  return {
-    stopRunning: () => {
-      ipcRenderer.send('asynchronous-message', ipcTypes.STOP_REQUEST);
-    },
-    startRunning: (blogname, sliders) => {
-      if (blogname.length === 0){
-        dispatch(errorNotifAction("Please enter a blogname"));
-        return;
-      }
-      else if (blogname.length > 32){
-        dispatch(errorNotifAction("blogname must be 32 characters or less"));
-        return;
-      }
-      else if (!blogname.exactMatch(/[a-zA-Z0-9]+(\-*[a-zA-Z0-9])*/)) {
-        dispatch(errorNotifAction("invalid blogname"));
-        return;
-      }
+            case "CONTINUE_RESPONSE":
+                if (!data.didContinue) 
+                    dispatch(errorNotifAction("unknown error, could not continue"));
+                else 
+                    dispatch(resumeRunningAction());
+                break;
 
-      let noSliderSelected = !sliders.reduce((accum, slider) => accum || slider.value, false);
+            case "STOP_RESPONSE":
+                dispatch(stopRunningAction());
+                break;
+        }
+    });
 
-      if (noSliderSelected) {
-        dispatch(errorNotifAction("no scrape types selected"));
-        return;
-      }
+    return {
+        stopRunning: () => {
+            ipcRenderer.send('asynchronous-message', "STOP_REQUEST");
+        },
+        startRunning: (blogname, sliders) => {
+            
+            if (blogname.length === 0) {
+                dispatch(errorNotifAction("Please enter a blogname"));
+                return;
+            }
 
-      let typeMap = {
-        photo: 'is_photo',
-        chat: 'is_chat',
-        ask: 'is_note',
-        video: 'is_video',
-        text: 'is_regular'
-      };
+            else if (blogname.length > 32) {
+                dispatch(errorNotifAction("blogname must be 32 characters or less"));
+                return;
+            }
 
-      let types = Object.keys(sliders).map((sliderKey) => {
-        if (sliders[sliderKey].value === true)
-          return typeMap[sliderKey];
-      });
+            else if (!blogname.exactMatch(/[a-zA-Z0-9]+(\-*[a-zA-Z0-9])*/)) {
+                dispatch(errorNotifAction("invalid blogname"));
+                return;
+            }
 
-      ipcRenderer.send('asynchronous-message', ipcTypes.START_REQUEST, {
-        blogname: blogname,
-        types: types
-      });
-      
-    },
-    resumeRunning: () => {
-      ipcRenderer.send('asynchronous-message', ipcTypes.CONT_REQUEST);
-    },
-    onText: (text) => dispatch(onBlogNameCharAction(text)),
-  };
+            let noSliderSelected = !sliders.reduce((accum, slider) => accum || slider.value, false);
+
+            if (noSliderSelected) {
+                dispatch(errorNotifAction("no scrape types selected"));
+                return;
+            }
+
+            let typeMap = {
+                photo: 'is_photo',
+                chat: 'is_chat',
+                ask: 'is_note',
+                video: 'is_video',
+                text: 'is_regular'
+            };
+
+            let types = [];
+            if (sliders[0].value === true) {
+                types = ['is_photo','is_chat','is_note','is_video','is_regular'];
+            } else {
+                for (var i  = 0 ; i < sliders.length ; ++i) {
+                    if (i === 0)
+                        continue;
+                    else if (sliders[i].value === true) 
+                        types.push(typeMap[sliders[i].name]);
+                }
+            }
+
+            ipcRenderer.send('asynchronous-message', "START_REQUEST", {
+                blogname: blogname,
+                types: types
+            });
+        
+        },
+        resumeRunning: () => ipcRenderer.send('asynchronous-message', "CONTINUE_REQUEST"),
+        onText: (text) => dispatch(onBlogNameCharAction(text)),
+    };
 }
 
 let VisibleConfig = connect(

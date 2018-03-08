@@ -5,6 +5,11 @@ export const sliderToggleAction = id => ({
   id
 });
 
+export const optSliderToggleAction = id => ({
+  type:"OPT_SLIDER_TOGGLE",
+  id
+});
+
 export const startRunningAction = () => ({
   type:"START_RUNNING"
 });
@@ -28,21 +33,22 @@ export const postClickedAction = index => ({
 });
 
 export const postUnclickAction = index => ({
-  type:"UNCLICK_POST"
+  type:"UNCLICK_POST",
+  index
 });
 
 export const errorNotifAction = message => ({
-  type:"NOTIF_NEW_ERROR_MESSAGE",
+  type:"NOTIF_ERROR",
   message
 });
 
 export const warningNotifAction = message => ({
-  type:"NOTIF_NEW_SUCCESS_MESSAGE",
+  type:"NOTIF_WARNING",
   message
 });
 
 export const successNotifAction = message => ({
-  type:"NOTIF_NEW_SUCCESS_MESSAGE",
+  type:"NOTIF_SUCCESS",
   message
 });
 
@@ -50,23 +56,34 @@ export const imageLoadedAction = () => ({
   type:"IMAGE_LOADED"
 });
 
-export const postFoundAction = (post) => {
-  return {
+export const postFoundAction = (post) => ({
     type:"ADD_POST",
     post
-  }
-}
+})
 
 export const pathDepthAction = (path) => {
   return {
-    type:"ADD_POST",
+    type:"NEW_PATH",
     path
   }
 }
 
 export const dateDepthAction = (date) => {
   return {
-    type:"ADD_POST",
+    type:"NEW_DATE",
     date
   }
 }
+
+export const parseCompleteAction= () => ({
+  type:"PARSE_COMPLETED"
+});
+
+export const throttleToggleAction = () => ({
+    type:"THROTTLE_TOGGLE"
+});
+
+export const throttleStartAction = (value) => ({
+    type:"THROTTLE_START",
+    value
+});

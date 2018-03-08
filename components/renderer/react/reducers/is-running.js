@@ -5,7 +5,9 @@ let isRunning = (state=false, action) => {
     case "RESUME_RUNNING":
     case "START_RUNNING":
       return true;
+    case "PARSE_COMPLETED":
     case "STOP_RUNNING":
+    case "NOTIF_ERROR":
       return false;
     default:
       return state;

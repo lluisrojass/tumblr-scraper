@@ -6,8 +6,11 @@ import Footer from "../presentational/footer";
 let mapStateToProps = (state) => {
     return {
         isRunning:state.isRunning,
+        atStart:state.atStart,
         dateDepth:state.dateDepth,
-        path:state.requestPath
+        path:state.requestPath,
+        completed:state.completed,
+        numPosts:state.scrapedPosts.length
     }
 }
 

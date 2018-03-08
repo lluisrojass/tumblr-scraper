@@ -8,10 +8,6 @@ class Post extends React.PureComponent {
     super(props);
   }
 
-  onClick = () => {
-    this.props.onClick(this.props, this.props.index);
-  }
-
   getPostClass = () => {
     let base = "post";
     if (this.props.isClicked) base += " clicked";
@@ -19,6 +15,7 @@ class Post extends React.PureComponent {
   }
 
   getImage = () => {
+
     return this.props.images.length > 0 ?
         <img
           src={this.props.images[0].downsizeResolution()}
@@ -28,7 +25,6 @@ class Post extends React.PureComponent {
     :
         <img
           src={`public/img/${this.props.type}_default.png`}
-          onLoad={this.props.onLoad}
           className='post-image'
         />
     ;
@@ -54,12 +50,13 @@ class Post extends React.PureComponent {
 
   getBody = () => {
     if (this.props.articleBody)
-      return this.props.articleBody;
+      return this.props.articleBody.bodyShorten();
   }
 
   render(){
+    let {props} = this;
     return(
-      <div className={this.getPostClass()} onClick={this.onClick}>
+      <div className={this.getPostClass()} onClick={props.onClick}>
        <div className='image-wrapper'>
         <div className='hide-overflow vertical-center-contents'>
            {this.getImage()}

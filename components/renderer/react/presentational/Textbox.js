@@ -19,7 +19,7 @@ class Textbox extends React.PureComponent {
           <input type='text'
             name={props.name}
             value={props.blogname}
-            onChange={props.onChange}
+            onChange={(e) => { e.preventDefault(); props.onChange(e.target.value); }}
           />
         </div>
       </div>);

@@ -11,7 +11,7 @@ class MiddlePanel extends React.PureComponent {
     return (
       <div id='mid-panel-wrapper'>
         <div id='middle-panel'>
-          <div className='height100width100 scroll-box' id='keep-bottom'>
+          <div className='height100width100 scroll-box'>
             <VisiblePostList />
           </div>
         </div>

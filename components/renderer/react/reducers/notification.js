@@ -1,27 +1,11 @@
 "use strict";
 
-let baseState = {
-  message:"",
-  type:0 /* 0 = warning, 1 = error, 2 = success */
-}
-
-let notification = (state=baseState, action) => {
+let notification = (state="", action) => {
   switch(action.type){
-    case "NOTIF_WARNING":
-      return {
-        message:action.message,
-        type:0
-      };
-    case "NOTIF_ERROR":
-      return {
-        message:action.message,
-        type:1
-      };
     case "NOTIF_SUCCESS":
-      return {
-        message:action.message,
-        type:2
-      };
+    case "NOTIF_ERROR":
+    case "NOTIF_WARNING":
+      return action.message
     default:
       return state;
   }

@@ -7,7 +7,6 @@ class SliderList extends React.PureComponent {
 
   constructor(props){
     super(props);
-    console.log(props);
   }
 
   render(){

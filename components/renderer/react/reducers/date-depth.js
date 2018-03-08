@@ -5,7 +5,7 @@ let dateDepth = (state="", action) => {
         case "START_RUNNING":
             return "";
         case "NEW_DATE":
-            return action.text;
+            return action.date;
         default:
             return state;
     }

@@ -15,12 +15,11 @@ class LeftPanel extends React.PureComponent {
       <div id='left-panel-wrapper'>
        <div id='left-panel'>
          <div id='title-wrapper'>
-           <h1 className='vertical-center-contents'>Config</h1>
+           <h1 className='vertical-center-contents'>Options</h1>
          </div>
          <div id='config-wrapper'>
             <VisibleConfig />
          </div>
-         <VisibleNotification />
        </div>
      </div>);
   }
