@@ -12,7 +12,7 @@ String.prototype.exactMatch = function(regex) {
 }
 
 String.prototype.bodyShorten = function() {
-  return (this.length > 130) ? this.substr(0,this.charAt(127) === ' ' ? 127 : 128) + '...' : this.toString();
+  return (this.length > 100) ? this.substr(0,this.charAt(77) === ' ' ? 107 : 108) + '...' : this.toString();
 }
 
 String.prototype.headlineShorten = function(doesStampExist=false){
