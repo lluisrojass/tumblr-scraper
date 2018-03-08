@@ -1,7 +1,7 @@
 {
   "name": "tumblr-scraper",
   "productName": "Tumblr Scraper",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/lluisrojass/Tumblr-Scraper"
@@ -9,22 +9,27 @@
   "description": "A tool to scrape personal posts from a Tumblr profile",
   "main": "App.js",
   "scripts": {
-    "start": "electron app.js",
-    "min": "browserify components/renderer/loader.js -t babelify -p [minifyify --no-map] -o public/js/bundle.js --verbose",
+    "start": "ELECTRON_ENABLE_STACK_DUMPING=1 NODE_ENV=production electron app.js",
+    "min": "browserify components/renderer/loader.js -t babelify -g [envify --NODE_ENV=production] -g uglifyify -o public/js/bundle.js --verbose",
+    "min_watch": "watchify components/renderer/loader.js -t babelify -g [envify --NODE_ENV=production] -g uglifyify -o public/js/bundle.js --verbose",
     "watch": "watchify components/renderer/loader.js -t babelify -o public/js/bundle.js --verbose",
-    "macbuild": "electron-packager . --icon='Resources/icon.icns' --platform=darwin --arch=x64 --electron-version='1.4.15' --app-version='1.0.0' --overwrite --osx-sign --app-bundle-id='com.builtbyluis.lluisrojass.TScraper' ",
-    "linx64build": "electron-packager . --icon=icon.png --platform=linux --electron-version='1.4.15' --app-version='1.0.0' --overwrite",
-    "win32build": "electron-packager . --icon=icon.png --platform=win32 --electron-version='1.4.15' --app-version='1.0.0' --overwrite"
+    "macbuild": "electron-packager . --icon='Resources/icon.icns' --platform=darwin --arch=x64 --electron-version='1.4.15' --app-version='1.0.0'  --ignore='(Tumblr Scraper-win32-.*|Tumblr Scraper-linux-.*)' --overwrite --osx-sign --app-bundle-id='com.builtbyluis.lluisrojass.TScraper' ",
+    "linx64build": "electron-packager . --icon=icon.png --platform=linux --electron-version='1.4.15' --app-version='1.0.0' --ignore='(Tumblr Scraper-win32-.*|Tumblr Scraper-linux-.*|Tumblr Scraper-darwin-.*)' --overwrite",
+    "win32build": "electron-packager . --icon=icon.png --platform=win32 --electron-version='1.4.15' --app-version='1.0.0' --ignore='(Tumblr Scraper-win32-.*|Tumblr Scraper-linux-.*|Tumblr Scraper-darwin-.*)' --overwrite"
   },
   "author": "Luis Rojas",
   "license": "MIT",
   "dependencies": {
-    "datejs": "^1.0.0-rc3",
     "htmlparser2": "^3.9.2",
-    "pipe-event": "^0.1.0"
+    "pipe-event": "^0.1.0",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
   },
   "devDependencies": {
+    "datejs": "^1.0.0-rc3",
     "babel-plugin-transform-class-properties": "^6.23.0",
+    "uglifyify": "^4.0.5",
+    "envify": "^4.1.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.22.0",
     "babelify": "^7.3.0",
@@ -32,9 +37,10 @@
     "electron": "^1.4.15",
     "electron-packager": "^8.7.1",
     "electron-reload": "^1.1.0",
+    "expect": "^21.2.1",
     "minifyify": "^7.3.5",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "stringify": "^5.1.0",
     "watchify": "^3.9.0"
   }
