@@ -6,7 +6,6 @@ const ee = require('events');
 const pipeEvents = require('pipe-event');
 const ArchiveParser = require('./archive-parser');
 const cache = require('./loopcache.json');
-
 const Throttle = require("./throttle.js");
 
 // utils 
@@ -14,22 +13,26 @@ const Throttle = require("./throttle.js");
 const genReqErrorMsg = code => {
     switch(code) {
         case "ENOTFOUND":
-            return "Unable to connect to Tumblr, possible internet connection issue";
+        return "Unable to connect to Tumblr, possible internet connection issue";
+        
         default:
-            return code;
+        return code;
     }
 };
 
 const genRespErrorMsg = code => {
     switch(code) {
         case 429:
-            return "Tumblr's request rate limit triggered";
+        return "Tumblr's request rate limit triggered";
+
         case 404:
-            return 'Potential invalid Blog Name';
+        return 'Potential invalid Blog Name';
+
         case 301:
-            return 'Blog redirects out of Tumblr, cannot scrape';
+        return 'Blog redirects out of Tumblr, cannot scrape';
+
         default:
-            return `${code} ${http.STATUS_CODES[c]}`;
+        return `${code} ${http.STATUS_CODES[c]}`;
     }
 
 }
@@ -102,7 +105,8 @@ class RequestLoop extends ee {
     
                 if (err.code === "ECONNRESET") 
                     return;  /* See: https://github.com/nodejs/node/issues/12047 */
-                let eErr = new Error(genReqErrorMsg(err.code));
+                let eErr = new Error();
+                eErr.message = genReqErrorMsg(err.code);
                 eErr.path = options.path || cache['path'];
                 eErr.host = options.host;
                 self.emit("error", eErr);
@@ -143,7 +147,8 @@ class RequestLoop extends ee {
                         running = false;
 
                         req.once('abort', () => {
-                            let err = new Error("redirect error");
+                            let err = Error();
+                            err.message = "redirect error";
                             err.host = options.host;
                             err.path = options.path;
                             err.rescode = res.statusCode;
@@ -165,8 +170,8 @@ class RequestLoop extends ee {
 
                     req.once('abort', () => {
                         const msg = genRespErrorMsg(res.statusCode);
-                        let err = new Error(msg);
-
+                        let err = new Error();
+                        err.message = msg;
                         err.host = options.host;
                         err.path = options.path || cache['path'];
                         err.code = res.statusCode;
@@ -181,9 +186,7 @@ class RequestLoop extends ee {
         if (redir) 
             redir = false;
 
-        res.on('data', chunk => {
-            parser.write(chunk);
-        });
+        res.on('data', chunk => parser.write(chunk));
 
         res.on('end', () => {
             if (running && '' === options.path){ /* no next page found, loop end */

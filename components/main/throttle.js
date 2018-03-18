@@ -1,23 +1,19 @@
 "use strict";
 
 class Throttle {
-    
-    constructor(){
-        var progress = 0;
-        var total = 0;
-        var percentDifference = 0;
-        const THROTTLE_TIME = 5000; // ms
+    constructor() {
+        const THROTTLE_TIME = 5000;
+        var rendered = 0;
+        var totalLoad = 0;
 
-        this.onLoad = () => {
-            progress += 1;
-            percentDifference = progress ? (total - progress) / ((total + progress) / 2) : .01;
-            return percentDifference;
-        }
-
-        this.onDiscovery = () => total += 1;
+        this.onLoad = () => (rendered += 1, true); 
+        this.onDiscovery = () => (totalLoad +=1, true);
+        this.reset = () => (totalLoad = rendered = 0, true);
         
-        this.reset = () => (progress = 0, total = 0, percentDifference = 0, true);
-        this.getMSTimeout = () => THROTTLE_TIME * percentDifference;
+        this.getMSTimeout = () => {
+            let currPercentIncrease = totalLoad == 0 ? 0 : (totalLoad - rendered) / totalLoad;
+            return THROTTLE_TIME * currPercentIncrease;
+        } 
     }
 }
 
