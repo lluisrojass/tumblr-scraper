@@ -57,8 +57,9 @@ body, html, #app-container {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	background-color: #CFCFCF;
-	font-family: Helvetica;
+    background-color: #CFCFCF;
+    font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 .notselected{
@@ -245,8 +246,7 @@ body, html, #app-container {
 	-webkit-app-region: drag;
 	display: flex;
 	font-size: 2vh;
-	letter-spacing: .8px;
-	font-weight: 300;
+	font-weight: 600;
 	width: 100%;
 	height: 4%;
 	text-align: left;
@@ -294,6 +294,14 @@ body, html, #app-container {
     max-width: 20%;
     width: 20%;
 }
+.t-cell {
+    justify-content: flex-end;
+    padding-right: 2px;
+}
+.footer-info-cell-25 {
+    max-width: 25%;
+    width: 25%;
+}
 
 .footer-info-cell-30 {
     max-width: 30%;
@@ -308,6 +316,11 @@ body, html, #app-container {
 .footer-info-cell-50 {
     max-width: 50%;
     width: 50%;
+}
+
+.footer-info-cell-90 {
+    max-width: 90%;
+    width: 90%;
 }
 
 
@@ -362,7 +375,7 @@ body, html, #app-container {
 }
 #title-wrapper{
 	width: 100%;
-	height: 15%;
+	height: 26%;
 	padding-bottom: 0%;
 }
 #title-wrapper h1{
@@ -417,56 +430,51 @@ button:focus {
 	border-radius: 4px;
 	color: white;
 	background-color: #4689eb;
-	font-weight: 100;
+	font-weight: 600;
 	font-size: 12px;
-	border: .2px solid #1b4583;
-	box-shadow: 0 2px 0 #104ba1, 0 0px #104ba1 inset;
-	letter-spacing: 1px;
+	border: 1px solid #1b4583;
 }
 .go-button:active{
-	margin-top:2px;
 	box-shadow: none;
 	background-color: #104ba1;
 	color: gray;
 }
 .stop-button {
-	border: none;
 	border-radius: 4px;
-	font-weight: 500;
-	letter-spacing: 1px;
+	font-weight: 600;
 	border: 1px solid rgb(123, 3, 1);
-	box-shadow: 0 2px 0 rgb(123, 3, 1), 0 0px rgb(123, 3, 1) inset;
 	background-color: #D3201C;
 	color: white;
 }
 .stop-button:active{
 	color: gray;
-	margin-top:2px;
 	box-shadow: none;
 	background-color: rgb(123, 3, 1);
 }
 .resume-button {
 	font-size: 12px;
-	letter-spacing: 1px;
 	margin-left: 10%;
-	font-weight: 100;
+	font-weight: 600;
 	color: white;
 	background-color: #40676d;
 	border: 1px solid #2e4a4f;
 	border-radius:4px;
-	box-shadow: 0 2px 0 #2e4a4f, 0 0px #2e4a4f inset;
 }
 .resume-button:active{
 	color: gray;
-	margin-top:2px;
 	box-shadow: none;
 }
 #notification-wrapper{
-    height: 10%;
-	padding: 5% 7%;
+    height: 14%;
+	padding: 5% 2%;
 	word-wrap: break-word;
 	text-align: center;
 }
+.scroll-div {
+    overflow-y: scroll;
+    overflow-wrap: break-word;
+} 
+
 .notif-label{
 	font-weight: 400;
 	color: #cfcfcf;
@@ -552,7 +560,7 @@ a:hover{
 .photoset-stamp{
 	height:100%;
 	line-height: 7px;
-  display: inline-block;
+    display: inline-block;
 	background-color: #2cbd45;
 	border-radius: 20px;
 	text-align:center;
@@ -561,7 +569,8 @@ a:hover{
 	position: relative;
 	top: -2px;
 	font-size: 10px;
-	color:white;
+    color:white;
+    font-weight: 600;
 }
 .post-title{
 	font-weight: 300;
@@ -620,8 +629,8 @@ a:hover{
 	color: grey;
 	font-weight: 500;
 	font-size: 11px;
-	position: absolute;
-	bottom: 3%;
+    position: fixed;
+    top:2%;
 	background-color: #F9F9F9;
 }
 .viewer-image{
@@ -718,59 +727,18 @@ input:checked + .slider:before {
 .slider.round {
   border-radius: 34px;
 }
-
 .slider.round:before {
   border-radius: 50%;
 }
-
-
-.purple-slider {
-	height: 100%;
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+#throttlelabel {
+    padding: 2px 10px;
+    margin-bottom:1px;
+    border-radius: 4px;
+	border: 1px solid #BABBBA;
+    color: rgb(130, 130, 130);
+    background-color: white;
 }
-
-.purple-slider:before {
-  position: absolute;
-  content: "";
-  height: 13px;
-  width: 13px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+#throttlelabel:hover {
+    cursor: pointer;
+    background-color: #E6E6E6;
 }
-
-input:checked + .purple-slider {
-  background-color: rgb(130, 69, 235);;
-}
-
-input:focus + .purple-slider {
-  box-shadow: 0 0 1px rgb(130, 69, 235);;
-}
-input:checked + .purple-slider:before {
-  -webkit-transform: translateX(15px);
-  -ms-transform: translateX(15px);
-  transform: translateX(13px);
-}
-/* Rounded sliders */
-.purple-slider.round {
-  border-radius: 34px;
-}
-
-.purple-slider.round:before {
-  border-radius: 50%;
-}
-
-.purple-label {
-    color: rgb(130, 69, 235);    
-}
-
