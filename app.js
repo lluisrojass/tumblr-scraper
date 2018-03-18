@@ -10,7 +10,9 @@ const getPostData = require('./components/main/user-post');
 const Loop = require('./components/main/loop');
 const Throttle = require("./components/main/throttle");
 
-if (config.devmode) require('electron-reload')(__dirname);
+if (process.env.NODE_ENV !== "production")  
+    require('electron-reload')(__dirname);
+
 
 // prevent window being garbage collected
 let mainWindow;
@@ -107,20 +109,17 @@ function createMainWindow() {
 		switch(type) {
 
             case "START_REQUEST":
-            
             const {blogname, types} = data;
             loop.go(types, blogname);
             event.sender.send('asynchronous-reply', "START_RESPONSE");
             break;
 
             case "CONTINUE_REQUEST":
-            
             const didContinue = loop.continue();
             event.sender.send('asynchronous-reply', "CONTINUE_RESPONSE", { didContinue: didContinue });
             break;
 
             case "STOP_REQUEST": 
-            
             loop.once('stopped', () => event.sender.send('asynchronous-reply', "STOP_RESPONSE"));
             loop.stop();
             break;
@@ -130,12 +129,10 @@ function createMainWindow() {
             break;
             
             case "IMAGE_LOADED":
-
             Throttle.onLoad();
             break;
             
             case "THROTTLE_TOGGLE":
-
             loop.toggleThrottle();
             event.sender.send("asynchronous-reply", "THROTTLE_RESPONSE");
             break;
@@ -195,6 +192,7 @@ app.on('activate', () => {
 });
 
 app.on('ready', () => {
-	mainWindow = createMainWindow();
-	if (config.devmode) mainWindow.webContents.openDevTools();
+    mainWindow = createMainWindow();
+    if (process.env.NODE_ENV !== "production") 
+        mainWindow.webContents.openDevTools();
 });
