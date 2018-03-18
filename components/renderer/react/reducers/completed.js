@@ -1,14 +1,13 @@
 "use strict";
-
-let completed = (state=false, action) => {
+export default (state=false, action) => {
     switch(action.type){
         case "PARSE_COMPLETED":
-            return true;
+        return true;
+
         case "START_RUNNING":
-            return false;
+        return false;
+        
         default:
-            return state;
+        return state;
     }
 }
-
-export default completed;

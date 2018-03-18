@@ -1,17 +1,18 @@
 "use strict";
 
-let notifType = (state=0, action) => {
+export default (state=0, action) => {
     switch(action.type){
         case "NOTIF_ERROR":
-            return 1;
+        return 1;
+        
         case "START_RUNNING":
         case "NOTIF_WARNING":
-            return 0;
+        return 0;
+        
         case "NOTIF_SUCCESS":
-            return 2;
+        return 2;
+        
         default:
-            return state;
+        return state;
     }
 }
-
-export default notifType;

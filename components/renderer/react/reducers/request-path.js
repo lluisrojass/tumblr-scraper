@@ -1,16 +1,13 @@
-import { request } from "http";
-
 "use strict";
-
-let requestPath = (state="", action) => {
+export default  (state="", action) => {
     switch(action.type) {
         case "START_RUNNING":
-            return "";
+        return "";
+        
         case "NEW_PATH":
-            return action.path;
+        return action.path;
+        
         default:
-            return state;
+        return state;
     }
 }
-
-export default requestPath;

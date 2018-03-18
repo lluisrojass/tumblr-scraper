@@ -1,17 +1,16 @@
 "use strict";
-
-let isRunning = (state=false, action) => {
+export default (state=false, action) => {
   switch(action.type) {
     case "RESUME_RUNNING":
     case "START_RUNNING":
-      return true;
+    return true;
+
     case "PARSE_COMPLETED":
     case "STOP_RUNNING":
     case "NOTIF_ERROR":
-      return false;
+    return false;
+    
     default:
-      return state;
+    return state;
   }
 }
-
-export default isRunning;

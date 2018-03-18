@@ -1,17 +1,16 @@
 "use strict";
-
-let notifMessage = (state="", action) => {
+export default (state="", action) => {
     switch(action.type){
         case "PARSE_COMPLETED":
         case "START_RUNNING":
-            return "";    
+        return "";    
+        
         case "NOTIF_SUCCESS":
         case "NOTIF_WARNING":
         case "NOTIF_ERROR":
-            return action.message;
+        return action.message;
+        
         default:
-            return state;
+        return state;
     }
 }
-
-export default notifMessage;

@@ -1,16 +1,14 @@
 "use strict";
-
-let clickedPost = (state=-1, action) => {
+export default (state=-1, action) => {
     switch(action.type) {
-            
         case "CLICK_POST":
-            return action.index;
+        return action.index;
+
         case "START_RUNNING":
         case "UNCLICK_POST":
-            return -1;
+        return -1;
+        
         default:
-            return state;
+        return state;
     }
 }
-
-export default clickedPost;

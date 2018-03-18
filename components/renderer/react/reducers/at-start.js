@@ -1,15 +1,14 @@
 "use strict";
-
-let atStart = (state=true, action) => {
+export default (state=true, action) => {
     switch(action.type){
         case "NOTIF_ERROR":
         case "PARSE_COMPLETED":
-            return true;
+        return true;
+
         case "START_RUNNING":
-            return false;
+        return false;
+        
         default:
-            return state;
+        return state;
     }
 }
-
-export default atStart;

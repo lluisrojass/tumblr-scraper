@@ -1,14 +1,10 @@
 "use strict";
-
-let blogname = (state="", action) => {
+export default (state="", action) => {
   switch(action.type) {
     case "BLOGNAME_TEXT":
-      state = action.text;
-      return state;
-
+    return action.text;
+    
     default:
-      return state;
+    return state;
   }
 }
-
-export default blogname

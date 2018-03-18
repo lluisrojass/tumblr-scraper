@@ -14,7 +14,7 @@ import atStart from "./at-start";
 import notifMessage from "./notif-message";
 import notifType from "./notif-type";
 import completed from "./completed";
-import throttleSlider from "./throttle-slider";
+import throttle from "./throttle-state";
 
 export const reducer = combineReducers({
   notification,
@@ -30,5 +30,5 @@ export const reducer = combineReducers({
   notifMessage,
   notifType,
   completed,
-  throttleSlider
+  throttle
 });
