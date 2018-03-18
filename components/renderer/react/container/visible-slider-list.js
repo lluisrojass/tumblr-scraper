@@ -5,23 +5,10 @@ import SliderList from "../presentational/slider-list";
 import {sliderToggleAction} from "../actions/index";
 import {connect} from "react-redux";
 
-let mapStateToProps = (state) => {
-  return {
-    sliders: state.sliders
-  }
-}
+const mapStateToProps = (state) => ({ sliders: state.sliders });
 
-let mapDispatchToProps = (dispatch) => {
-  return {
-    onToggle: id => {
-      dispatch(sliderToggleAction(id))
-    }
-  }
-}
+const mapDispatchToProps = (dispatch) => ({ onToggle: id => dispatch(sliderToggleAction(id)) });
 
-let VisibleSliderList = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SliderList);
+const VisibleSliderList = connect(mapStateToProps, mapDispatchToProps)(SliderList);
 
 export default VisibleSliderList;
