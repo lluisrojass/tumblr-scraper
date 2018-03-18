@@ -20,9 +20,10 @@ class Notification extends React.PureComponent {
     const {props} = this;
     let typeClass = this.type();
     return(
-      <div id='notification-wrapper'>
+      <div id='notification-wrapper' className="scroll-div">
         <p className={'notif-label vertical-center-contents ' + typeClass}>
           {props.message}
+          
         </p>
       </div>
     )

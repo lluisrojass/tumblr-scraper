@@ -23,7 +23,11 @@ class Footer extends React.PureComponent {
     else if (props.isRunning && props.path)
         return "Running...";
 
-    else return "Paused";
+    else if (props.isRunning) {
+        return "Loading..."
+    }
+    else
+        return "Paused";
   }
 
   getClass = () => {
@@ -40,11 +44,18 @@ class Footer extends React.PureComponent {
 
   render(){
     const {props} = this;
-
+    
     if (!props.completed && !props.isRunning && props.atStart)
         return (
             <div className={this.getClass()} id='footer'>
                 <div className='footer-request-status'>
+                    <div className="footer-info-cell-90 vertical-center-contents">
+                    </div>
+                    <div className="footer-info-cell-10 vertical-center-contents t-cell">
+                        <label id="throttlelabel" onClick={props.onThrottleChange} className={props.isThrottle ? "throttle-on" : "throttle-off"}>
+                            Throttle: {props.isThrottle ? "on" : "off"}
+                        </label>
+                    </div>
                 </div>
             </div>
         );
@@ -52,17 +63,24 @@ class Footer extends React.PureComponent {
     return (
       <div className={this.getClass()} id='footer'>
         <div className='footer-request-status'>
-            <div className="footer-info-cell-20 vertical-center-contents">
+            
+            <div className="footer-info-cell-10 vertical-center-contents">
                 <p>Status: {this.getStatus()}</p> 
             </div>
+            
             <div className="footer-info-cell-30 vertical-center-contents">
                 <p>Requesting: {props.path}</p> 
             </div>
             <div className="footer-info-cell-20 vertical-center-contents">
+                <p>Posts Discovered: {props.numPosts}</p>
+            </div>
+            <div className="footer-info-cell-30 vertical-center-contents">
                 <p>Depth: {props.dateDepth}</p>
             </div>
-            <div className="footer-info-cell-20 vertical-center-contents">
-                <p>Posts Discovered: {props.numPosts}</p>
+            <div className="footer-info-cell-10 vertical-center-contents t-cell">
+                <label id="throttlelabel" onClick={props.onThrottleChange} className={props.isThrottle ? "throttle-on" : "throttle-off"}>
+                    Throttle: {props.isThrottle ? "on" : "off"}
+                </label>
             </div>
             
         </div>

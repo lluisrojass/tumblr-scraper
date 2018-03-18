@@ -95,7 +95,7 @@ class Viewer extends React.PureComponent {
   }
 
   loadPreview = () => {
-    const {imagesLoaded, isViewing} = this.props.post;
+    const {imagesLoaded, isViewing} = this.props;
     if (imagesLoaded || !isViewing) return "";
     else 
       return (

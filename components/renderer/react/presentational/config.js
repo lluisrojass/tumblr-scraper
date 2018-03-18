@@ -4,7 +4,6 @@ import React from "react";
 import VisibleSliderList from "../container/visible-slider-list";
 import VisibleNotification from "../container/visible-notification";
 import Textbox from "./textbox";
-import VisibleThrottleSlider from "../container/visible-throttle-slider";
 
 class Config extends React.PureComponent {
 
@@ -49,10 +48,8 @@ class Config extends React.PureComponent {
     const {props} = this;
     return (
       <div className='height100width100' id='form-wrapper'>
-        <form id='customform' action='' onSubmit={(e) => {e.preventDefault()}}>
-            
+        <form id='customform' onSubmit={(e) => {e.preventDefault()}}>
             <VisibleSliderList />
-            <VisibleThrottleSlider />
             <Textbox
               name='Blog Name'
               onChange={props.onText}

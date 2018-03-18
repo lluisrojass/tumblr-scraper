@@ -13,17 +13,17 @@ class Slider extends React.PureComponent {
     return (
       <div className='input-row'>
         <div className='vertical-center-contents'>
-          <p className={`${props.isPurple ? "purple-label" : "" } typename`}>
+          <p className="typename">
             {props.name.capitalizeEach()}
           </p>
           <label className='switch'>
             <input
               type='checkbox'
-              onChange={props.onChange} // function(e){props.handleChange(props.name,e)
+              onChange={props.onChange} 
               checked={props.isChecked}
               name={props.name}
             />
-            <div className={`${props.isPurple ? "purple-slider" : "slider"} round`}></div>
+            <div className="slider round"></div>
           </label>
         </div>
       </div>
