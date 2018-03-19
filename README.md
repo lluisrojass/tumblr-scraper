@@ -1,6 +1,6 @@
 # Tumblr Personal Post Scraper
 
-![](https://img.shields.io/badge/npm-v4.1.2-green.svg)  ![](https://img.shields.io/badge/electron-v1.4.15-blue.svg) ![](https://img.shields.io/badge/react-v15.4.2-yellow.svg) ![](https://img.shields.io/badge/build-passing-brightgreen.svg)
+![](https://img.shields.io/badge/npm-4.1.2-red.svg)  ![](https://img.shields.io/badge/electron-1.4.15-brightgreen.svg) ![](https://img.shields.io/badge/react-15.4.2-blue.svg) ![](https://img.shields.io/badge/redux-3.7.2-yellow.svg)  
 
 Scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no natural mechanism for viewing user uploaded content on their website nor do they have any plans to integrate such a feature.
 
@@ -47,7 +47,11 @@ Run `npm run watch` to execute a development watchify script which monitors file
 
 
 ## What is Request Throttling?
-When scraping blogs with large frequency and density of original posts the application could become unresponsive or a large CPU burden. To help aleviate this, throttling was introduced. When turned on (default behaviour) the application will keep track of the pending image load the application has to yet to fulfil and could temporaily dely the continuation of the requests loop. This provides breathing time between page requests to prevent overwhelmight rush of front-end workload. Throttling can also be toggled while scrapes are executing.
+When scraping blogs with large frequency and density of original posts the application could become unresponsive or a significant CPU burden. To help alleviate this possibility, throttling was introduced. When turned on (default behavior) the application will keep track of the pending image load which the application has yet to fulfill and could temporarily delay the continuation of the requests loop. This provides breathing time between page requests which prevent a potentially overwhelming rush of front-end workload. Throttling can also be toggled while scrapes are mid executing.
 
 
+*Like what you see? consider  favoriting or following the project :)*
+
+## License 
+MIT
 
