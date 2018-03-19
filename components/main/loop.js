@@ -14,7 +14,7 @@ const genReqErrorMsg = code => {
     switch(code) {
         case "ENOTFOUND":
         return "Unable to connect to Tumblr, possible internet connection issue";
-        
+
         default:
         return code;
     }
@@ -158,6 +158,7 @@ class RequestLoop extends ee {
                         req.abort();
                         
                     } else {
+                        /* switch protocol and try again */
                         redir = true;
                         switchProtocol();
                         self.continue();
