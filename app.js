@@ -10,23 +10,16 @@ const getPostData = require('./components/main/user-post');
 const Loop = require('./components/main/loop');
 const Throttle = require("./components/main/throttle");
 
-if (process.env.NODE_ENV !== "production")  
+if (process.env.NODE_ENV === "development")  
     require('electron-reload')(__dirname);
-
 
 // prevent window being garbage collected
 let mainWindow;
-let helpWindow;
 let loop;
 
 function onClosed() {
     mainWindow = null;
     loop = null;
-    helpWindow = null;
-}
-
-function onSettingsClosed() {
-    helpWindow = null;
 }
 
 function createMainWindow() {
@@ -55,10 +48,9 @@ function createMainWindow() {
     win.on('closed', onClosed);
     let webContents = win.webContents;
 
-    webContents.on("dom-ready", () => {
+    webContents.once("dom-ready", () => {
         webContents.send("asynchronous-reply", "THROTTLE_START", loop.getThrottle());
     });
-
 
 	loop = new Loop().on('post', pData => {
 
@@ -193,6 +185,6 @@ app.on('activate', () => {
 
 app.on('ready', () => {
     mainWindow = createMainWindow();
-    if (process.env.NODE_ENV !== "production") 
+    if (process.env.NODE_ENV === "development") 
         mainWindow.webContents.openDevTools();
 });
