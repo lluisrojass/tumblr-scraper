@@ -1,22 +1,47 @@
 {
   "name": "tumblr-scraper",
   "productName": "Tumblr Scraper",
-  "version": "2.0.0",
+  "version": "1.2.0",
+  "main": "./app.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/lluisrojass/Tumblr-Scraper"
   },
   "description": "a utility to scrape a Tumblr profile for user uploadede posts",
-  "main": "app.js",
   "scripts": {
-    "min":"browserify ./components/renderer/loader.js -t babelify -g [envify --NODE_ENV=production] -g uglifyify -o ./public/js/bundle.js --verbose",
+    "min": "browserify ./components/renderer/loader.js -t babelify -g [envify --NODE_ENV=production] -g uglifyify -o ./public/js/bundle.js --verbose",
     "watch": "watchify components/renderer/loader.js -t babelify -o public/js/bundle.js --verbose",
-    "simulate": "ELECTRON_ENABLE_STACK_DUMPING=1 electron app.js",
-    "macbuild": "electron-packager . --icon='Resources/icon.icns' --platform=darwin --arch=x64 --electron-version='1.4.15' --app-version='1.0.0'  --ignore='(Tumblr Scraper-win32-.*|Tumblr Scraper-linux-.*)' --overwrite --osx-sign --app-bundle-id='com.builtbyluis.lluisrojass.TScraper' ",
-    "linx64build": "electron-packager . --icon=icon.png --platform=linux --electron-version='1.4.15' --app-version='1.0.0' --ignore='(Tumblr Scraper-win32-.*|Tumblr Scraper-linux-.*|Tumblr Scraper-darwin-.*)' --overwrite",
-    "win32build": "electron-packager . --icon=icon.png --platform=win32 --electron-version='1.4.15' --app-version='1.0.0' --ignore='(Tumblr Scraper-win32-.*|Tumblr Scraper-linux-.*|Tumblr Scraper-darwin-.*)' --overwrite"
+    "simulate": "NODE_ENV=development ELECTRON_ENABLE_STACK_DUMPING=1 electron ./app.js",
+    "build-osx": "NODE_ENV=production electron-packager ./ --icon='./Resources/icon.icns' --platform=darwin --arch=x64 --electron-version='1.4.15' --app-version='1.2.0'  --ignore='(dist|README.md)' --overwrite --osx-sign --out ./dist --app-bundle-id='com.builtbyluis.lluisrojass.TScraper' ",
+    "build-linux": "NODE_ENV=production electron-packager . --icon=icon.png --platform=linux --electron-version='1.4.15' --app-version='1.2.0' --ignore='(dist|README.md)' --overwrite",
+    "buid-win": "electron-packager . --icon=icon.png --platform=win32 --electron-version='1.4.15' --app-version='1.0.0' --ignore='(Tumblr Scraper-win32-.*|Tumblr Scraper-linux-.*|Tumblr Scraper-darwin-.*)' --overwrite",
+    "build": "build --linux"
   },
-  "author": "Luis Rojas",
+  "build": {
+        "electronVersion":"1.4.15",
+        "appId":"com.electron.tumblrscraper",
+        "productName":"Tumblr Scraper",
+        "mac":{
+            "category":"public.app-category.utilities",
+            "icon":"Resources/icon.icns",
+            "type":"distribution"
+        },
+        "dmg": {  
+            "backgroundColor":"#89c657"
+        },
+        "win": {
+            "target": "NSIS",
+            "icon": "Resources/icon.ico"
+        },
+        "linux":{
+            "icon":"Resources/icon.png",
+            "target": [
+                "AppImage",
+                "deb"
+            ]
+        }
+  },
+  "author": "Luis Rojas <lluisrojass@aol.com>",
   "license": "MIT",
   "dependencies": {
     "htmlparser2": "^3.9.2",
@@ -32,6 +57,7 @@
     "browserify": "^14.0.0",
     "datejs": "^1.0.0-rc3",
     "electron": "^1.4.15",
+    "electron-builder": "^20.5.1",
     "electron-packager": "^8.7.1",
     "electron-reload": "^1.1.0",
     "envify": "^4.1.0",
