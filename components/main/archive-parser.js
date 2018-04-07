@@ -3,7 +3,6 @@
 const htmlparser2 = require('htmlparser2');
 const ee = require('events');
 const url = require('url');
-const cache = require('./loopcache.json');
 
 class ArchiveParser extends ee {
     
@@ -21,9 +20,11 @@ class ArchiveParser extends ee {
         var currTypeIndex = -1; 
         /* 'is_photo' 'is_video' 'is_quote' 'is_regular' (text) 'is_chat' 'is_note' (ask) 'is_audio' */
         var types = []; 
+        /* blog name cache */
+        var blogName = "";
 
         /* utility to validate a class string, also to cache type index, if one found */
-        const validClass = (classStr) => {
+        const validClassAndSaveIndex = (classStr) => {
             if (classStr.includes('is_original')) {
                 for (let i = 0 ; i < types.length ; ++i) {
                     if (classStr.includes(types[i])) {
@@ -37,7 +38,7 @@ class ArchiveParser extends ee {
 
         const onOpenTag = (name, attribs) => {
 
-            if (name === 'div' && attribs.class && validClass(attribs.class))
+            if (name === 'div' && attribs.class && validClassAndSaveIndex(attribs.class))
                 pfound = true;
             
             else if (attribs.id && attribs.id === 'next_page_link')
@@ -47,20 +48,24 @@ class ArchiveParser extends ee {
                 dfound = true;
 
             else if (pfound && attribs['data-peepr'] && name === 'a' && attribs.href) {
-                try {
-                    var {hostname, path=""} = url.parse(attribs.href);
-                } catch (err) {/* syntax error */}
-  
-                if (hostname.indexOf(cache['blogname']) > -1) {  // exists
-                    (self.emit('post', { 
-                            'host': hostname, 
-                            'path': path, 
-                            'type': types[currTypeIndex] 
-                        }), 
-                        pfound = false, 
+                try { 
+                    var {hostname, path=""} = url.parse(attribs.href); 
+                } 
+                catch (err) {/* incorrect attribs.href error */}
+
+                if (hostname.indexOf(blogName) != -1) {
+                
+                    (
+                        self.emit("post", {
+                            "host": hostname,
+                            path,
+                            "type": types[currTypeIndex]
+                        }),
+                        pfound = false,
                         currTypeIndex = -1
                     );
                 }
+                
             }
         }
 
@@ -75,10 +80,9 @@ class ArchiveParser extends ee {
 
         var parser = new htmlparser2.Parser({ onopentag: onOpenTag, ontext: onText }, { decodeEntities: true });
   
-        /* public funcs */
-        this.setMediaTypes = mtypes => (types = mtypes, true);
-        this.write = chunk => (parser.write(chunk), true);
-        this.end = () => (parser.parseComplete(), true);
+        self.configure = (mtypes, currBlogName) => (types = mtypes, blogName = currBlogName, true);
+        self.write = chunk => (parser.write(chunk), true);
+        self.end = () => (parser.parseComplete(), true);
     }
 }
 

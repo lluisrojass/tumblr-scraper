@@ -4,6 +4,7 @@ const http = require("http");
 const https = require("https");
 const PostParser = require("./post-parser");
 const url = require("url");
+const config = require("./config");
 /**
  * fetches all relevent post information 
  * 
@@ -12,23 +13,20 @@ const url = require("url");
  */
 module.exports = function(postData, callback) {
 
-    const {type, host, path, ishttps=false} = postData;
-    const protocol = ishttps ? https : http;
+    const {type, host, path, isHttps=false} = postData;
+    const protocol = isHttps ? https : http;
     const parser = new PostParser(postData.type);
     var request; 
-    
+    /* halt feeding to parser */
     var haltParse = false;
+    /* was redirected */
     var redir = false;
 
     const options = {
         host: host,
-        path: type === 'is_video' ? path : path + "/mobile", // request simple page when 
-        timeout: 8000,
-        headers: {
-        'user-agent':'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) ' +
-            'AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 ' +
-            'Safari/601.1'
-        }
+        path: type === "is_video" ? encodeURI(path) : encodeURI(path) + "/mobile", // request simple page when 
+        timeout: config["responseTimeoutMS"],
+        headers: { "user-agent": config["mobileUserAgent"] }
     };
 
     const pData = {
@@ -75,7 +73,7 @@ module.exports = function(postData, callback) {
                 err.code = "ER_BAD_RESP";
                 err.path = options.path;
                 err.message = `${res.statusCode} received`;
-
+                
                 callback(err, null); 
             }
         }

@@ -1,15 +1,16 @@
-'use strict';
+"use strict";
 
-const http = require('http');
-const https = require('https');
-const ee = require('events');
-const pipeEvents = require('pipe-event');
-const ArchiveParser = require('./archive-parser');
-const cache = require('./loopcache.json');
+const http = require("http");
+const https = require("https");
+const ee = require("events");
+const pipeEvents = require("pipe-event");
+const ArchiveParser = require("./archive-parser");
 const Throttle = require("./throttle.js");
-
-// utils 
-
+const config = require("./config");
+/**
+ * @param {String} code - error code (usually from error.code)
+ * @api private
+ */
 const genReqErrorMsg = code => {
     switch(code) {
         case "ENOTFOUND":
@@ -19,25 +20,48 @@ const genReqErrorMsg = code => {
         return code;
     }
 };
-
+/**
+ * @desc gen readable error message from response error code
+ * @param {Number} code 
+ */
 const genRespErrorMsg = code => {
     switch(code) {
         case 429:
-        return "Tumblr's request rate limit triggered";
+        return "request rate limit hit";
 
         case 404:
-        return 'Potential invalid Blog Name';
+        return "blog not found";
 
         case 301:
-        return 'Blog redirects out of Tumblr, cannot scrape';
+        return "blog redirects out of tumblr";
+
+        case 302:
+        case 303:
+        case 307:
+        return "redirect error";
 
         default:
         return `${code} ${http.STATUS_CODES[c]}`;
     }
 
 }
-
-// loop
+/**
+ * 
+ * @param {Object} self 
+ * @param {String} host 
+ * @param {String} path 
+ * @param {String} message 
+ * @api private
+ */
+function emitStandardError(self, host, path, message) {
+    return () => {
+        let err = Error();
+        err.message = message;
+        err.host = host;
+        err.path = path;
+        self.emit("error", err);
+    }
+}
 
 class RequestLoop extends ee {
   constructor() {
@@ -45,210 +69,189 @@ class RequestLoop extends ee {
 
     const self = this;
 
+    const state = {
+        running: false, 
+        wasRedirected: false,
+        isHttps: false,
+        throttling: config["beginWithThrottle"],
+        prevPath: "",
+        blogName: ""
+    }
+    
+    var blogname = "";
     var protocol = http;
-    var ishttps = false;
-    var page = '';
-
-    var throttling = true;
-
+    /* current request */
+    var req = null; 
+    /* request agent config */
     const agentOptions = {
         keepAlive: true,
         maxSockets: 1,
         maxFreeSockets: 0
     };
 
-    const options = {
-        host: '',
-        path: '',
+    const requestOptions = {
+        host: "",
+        path: "",
         agent: new protocol.Agent(agentOptions),
-        timeout: 9000,
-        headers: {
-            'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) ' +
-                'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-                'Chrome/56.0.2924.87 Safari/537.36'
-        }
+        timeout: config["responseTimeoutMS"],
+        headers: { "user-agent": config["userAgent"] }
     };
 
-    const switchProtocol = () => {
-        if (ishttps) 
-            protocol = (ishttps = false, http);
-        else 
-            protocol = (ishttps = true, https);
-
-        options.agent.destroy();
-        options.agent = new protocol.Agent(agentOptions);
-    }
-
-    
-
     const parser = new ArchiveParser()
-    .on('page', page => { 
-        options.path = page['path']; 
-    })
-    .on('post', post => {
-        post.ishttps = ishttps;
-        self.emit('post', post);
-    });
+    .on("page", page => requestOptions.path = page["path"])
+    .on("post", post => (post.isHttps = state.isHttps, self.emit("post", post)));
 
-    pipeEvents(['page', 'date'], parser, self);
+    pipeEvents(["page", "date"], parser, self);
 
-    var req = null; 
-    var running = false;
-    var redir = false;
+    const newRequest = () => (
+        protocol.get(requestOptions, callback)
+        .on("error", (err) => {
 
-    const newRequest = () => {
+            if (!state["running"]) return;
+            state["running"] = false;
 
-        let onError = (err) => {
-            if (!running) return;
-            running = false;
-            req.once("abort", () => {
-    
-                if (err.code === "ECONNRESET") 
-                    return;  /* See: https://github.com/nodejs/node/issues/12047 */
-                let eErr = new Error();
-                eErr.message = genReqErrorMsg(err.code);
-                eErr.path = options.path || cache['path'];
-                eErr.host = options.host;
-                self.emit("error", eErr);
+            if (err.code === "ECONNRESET") return;  /* See: https://github.com/nodejs/node/issues/12047 */
 
-            });
+            req.once(
+                "abort", 
+                emitStandardError(
+                    self,
+                    requestOptions.host,
+                    requestOptions.path || state["prevPath"],
+                    genReqErrorMsg(err.code)
+                )
+            );
+                
             req.abort();
-        }
-
-        let onResponse = () => {
-            cache["path"] = options.path;
-            options.path = ""; // blank path
-        }
-
-        let onTimeout = () => {
-            if (!running) return;
-            running = false;
+        })
+        .on("response", () => {
+            state["prevPath"] = requestOptions.path;
+            requestOptions.path = ""; // blank path
+        })
+        .setTimeout(config["responseTimeoutMS"] || 7000, () => {
+            if (!state["running"]) return;
+            state["running"] = false;
             req.once("abort", () => self.emit("timeout"));
             req.abort();
-        } 
-
-        return protocol.get(options, callback)
-        .on('error', onError)
-        .on('response', onResponse)
-        .setTimeout(7000, onTimeout);
-    }
+        })
+    );
 
     const callback = (res) => {
-      
         res.setEncoding();
 
         if (res.statusCode !== 200) {
+
             switch(res.statusCode) {
                 case 302:
                 case 303:
                 case 307:
-                    if (redir) { /* end with redirect error */
-                        if (!running) return;
-                        running = false;
+                if (state["wasRedirected"]) { 
+                    if (!state["running"]) return;
+                    state["running"] = false;
 
-                        req.once('abort', () => {
-                            let err = Error();
-                            err.message = "redirect error";
-                            err.host = options.host;
-                            err.path = options.path;
-                            err.rescode = res.statusCode;
-                            self.emit('error', err);
-                        });
-
-                        req.abort();
-                        
-                    } else {
-                        /* switch protocol and try again */
-                        redir = true;
-                        switchProtocol();
-                        self.continue();
-                    }
-                    break;
+                    req.once(
+                        "abort", 
+                        emitStandardError(
+                            self, 
+                            requestOptions.host, 
+                            requestOptions.path, 
+                            genRespErrorMsg(res.statusCode)
+                        )
+                    );
+                
+                    req.abort();
+                    
+                } else {
+                    /* switch protocol and try again */
+                    state["wasRedirected"] = true;
+                    protocol = (state["isHttps"]) ? (state["isHttps"] = false, http) : (state["isHttps"] = true, https);
+                    requestOptions.agent.destroy();
+                    requestOptions.agent = new protocol.Agent(agentOptions);
+                    self.continue();
+                }
+                break;
 
                 default:
-                    if (!running) return;
-                    running = false;
+                if (!state["running"]) return;
+                state["running"] = false;
+            
+                req.once(
+                    "abort", 
+                    emitStandardError(
+                        self, 
+                        requestOptions.host, 
+                        requestOptions.path || state["prevPath"], 
+                        genRespErrorMsg(res.statusCode)
+                    )
+                );
 
-                    req.once('abort', () => {
-                        const msg = genRespErrorMsg(res.statusCode);
-                        let err = new Error();
-                        err.message = msg;
-                        err.host = options.host;
-                        err.path = options.path || cache['path'];
-                        err.code = res.statusCode;
-                        self.emit('error', err);
-                    });
-                    req.abort();
+                req.abort();
+                break;
                     
             }
             return;
         }
+        /* clear redirect */
+        if (state["wasRedirected"]) state["wasRedirected"] = false;
 
-        if (redir) 
-            redir = false;
+        res.on("data", chunk => parser.write(chunk));
 
-        res.on('data', chunk => parser.write(chunk));
-
-        res.on('end', () => {
-            if (running && '' === options.path){ /* no next page found, loop end */
-                parser.end();
-                self.emit('end');
-            }
-            else if (running) {
-                if (throttling) {
-                    let to = Throttle.getMSTimeout();
-                    if (to < 100) 
-                        req = newRequest();
-                    else 
-                        setTimeout(() => req = newRequest(), to);
+        res.on("end", () => {
+            if (state["running"]) {
+                /* no next page found, loop end */
+                if ("" === requestOptions.path) {
+                    parser.end();
+                    self.emit("end");
                 }
+
+                else if (state["throttling"]) {
+                    let timeout = Throttle.getMSTimeout();
+                    if (timeout < 100) req = newRequest();
+                    else setTimeout(() => req = newRequest(), timeout);
+                }
+                
                 else 
                     req = newRequest();
+
             }
         });
     }
 
-    /* public funcs */
-
-    this.go = function(types, blogname, path='/archive'){
+    self.go = (types, blogName, path="/archive") => {
         Throttle.reset();
-        cache.types = types;
-        parser.setMediaTypes(types);
-      
-        cache.blogname = blogname;
-        options.host = `${blogname}.tumblr.com`;
-      
-        cache.path = path;
-        options.path = path;
-        
-        running = true;
+        parser.configure(types, blogName);
+        requestOptions.host = `${blogName}.tumblr.com`;
+        requestOptions.path = path;
+        state["running"] = true;
+        state["blogName"] = blogName;
+        state["types"] = types;
+        state["wasRedirected"] = false;
+        state["prevPath"] = path;
         req = newRequest();
     }
 
-    this.stop = function(){
-        if (running){
-            running = false;
-            req.once('abort', () => self.emit('stopped'));
+    self.stop = () => {
+        if (state["running"]) {
+            state["running"] = false;
+            req.once("abort", () => self.emit("stopped"));
             req.abort();
-        } else 
-            self.emit("stopped");
+        } 
+        else self.emit("stopped");
     }
 
-    this.continue = function(){
-        if (cache['blogname'] && cache['path'] && cache['types']) {
-            options.path = options.path || cache['path']; 
-            running = true;
+    self.continue = () => {
+        if (state["blogName"] && state["prevPath"] && state["types"]) {
+            /* regen path */
+            requestOptions.path = requestOptions.path || state["prevPath"];
+            state["running"] = true;
             req = newRequest();
             return true;
         }
         return false;
     }
 
-    this.toggleThrottle = function() {
-        throttling = !throttling;
-    }
-
-    this.getThrottle = () => throttling;
+    self.toggleThrottle = () => (state["throttling"] = !state["throttling"], true);
+    self.getThrottle = () => state["throttling"];
 
   }
 }
