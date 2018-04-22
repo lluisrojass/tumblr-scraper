@@ -2,9 +2,9 @@
 
 ![](https://img.shields.io/badge/npm-4.1.2-red.svg)  ![](https://img.shields.io/badge/electron-1.4.15-brightgreen.svg) ![](https://img.shields.io/badge/react-15.4.2-blue.svg) ![](https://img.shields.io/badge/redux-3.7.2-yellow.svg)  
 
-Scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no natural mechanism for viewing user uploaded content on their website nor do they have any plans to integrate such a feature.
+Scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no natural mechanism for viewing user uploaded content on their website.
 
-example scrape for photo, ask and text posts in <https://support.tumblr.com>:
+example scrape <https://support.tumblr.com>:
 <img src="https://i.gyazo.com/0700e8ee70bdaa1517f2cd4cb01d4c23.gif" alt="https://gyazo.com/9eb0825ddca040f8467838ca519029e9" width="980"/>
 
 
