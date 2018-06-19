@@ -47,7 +47,8 @@ Run `npm run watch` to execute a development watchify script which monitors file
 
 
 ## What is Request Throttling?
-When scraping blogs with large frequency and density of original posts the application could become unresponsive or a significant CPU burden. To help alleviate this possibility, throttling was introduced. When turned on (default behavior) the application will keep track of the pending image load which the application has yet to fulfill and could temporarily delay the continuation of the requests loop. This provides breathing time between page requests which prevent a potentially overwhelming rush of front-end workload. Throttling can also be toggled while scrapes are mid executing.
+When scraping blogs with large frequency and density of original posts the application could become unresponsive or a significant CPU burden. To help alleviate this possibility, throttling was introduced. When turned on (which is the default behavior) the application will keep track of the pending image load which the application has yet to fulfill and could temporarily delay the continuation of the requests loop. This provides breathing time between page requests which prevent a potentially overwhelming rush of front-end workload. While all other application state (blogname, post types) has to be pre-set before a scrape can begin, throttling can be turned on/off anytime. 
+
 
 
 *Like what you see? consider  favoriting or following the project :)*
