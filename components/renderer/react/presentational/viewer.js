@@ -1,5 +1,3 @@
-const date = require('datejs');
-
 import React from 'react';
 
 class Viewer extends React.PureComponent {
