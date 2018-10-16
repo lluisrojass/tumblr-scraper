@@ -1,0 +1,56 @@
+@import "../../../styles/mixins";
+
+:root {
+    --color-background: #ccc;
+    --color-foreground: #559Df8;
+    --color-accent: #2196F3;
+    --color-white: #fff;
+
+    --transition-time: .4s;
+    
+    --slider-height: 1rem;
+    --slider-width: 1rem;
+    --slider-length: 1rem;
+    /* for adjusting placement to fit into design */
+    --corrector: 2px;
+    --circle-radius: 50%;
+}
+
+.switch .input {
+    display: none;
+}
+
+.slider {
+    height: 100%;
+    position: absolute 0 0 0 0;
+    background-color: var(--color-background);
+    transition: var(--transition-time);
+
+    &:before {
+        position: absolute;
+        content: "";
+        height: var(--slider-height);
+        background-color: var(--color-white);
+        transition: var(--transition-time);
+        left: var(--corrector);
+        bottom: var(--corrector);
+    }
+}
+
+.input {
+    &:checked + .slider {
+        background-color: var(--color-foreground);
+    }
+
+    &:focus + .slider {
+        box-shadow: 0 0 1px var(--color-accent);
+    }
+
+    &:checked + .slider:before {
+        transform: translateX(1rem);
+    }
+}
+
+.round {
+    border-radius: var(--circle-radius);
+}

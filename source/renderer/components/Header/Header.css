@@ -1,0 +1,18 @@
+@import "../../styles/global.css";
+
+:root {
+    --margin-y: 1rem;
+}
+
+.wrapper {
+    composes: skinny;
+    width: 100%;
+    padding-top: var(--margin-y);
+    padding-bottom: var(--margin-y);
+}
+
+.header {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 18px;
+    /* TODO: look into advanced font styles */
+}

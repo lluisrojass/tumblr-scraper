@@ -1,0 +1,64 @@
+@import "./variables.css";
+
+:global(*) {
+    box-sizing: border-box;
+}
+
+:global(ol, ul) {
+    list-style: none;
+}
+
+:global(body) {
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+:global(body, html, .appContainer) {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+:global(.appContainer) {
+    background-color: var(--color-background);
+}
+
+:global(.full) {
+    height: 100%;
+    width: 100%;
+}
+
+:global(.skinny) {
+    margin: 0;
+    padding: 0;
+}
+
+:global(.columns) {
+    display: flex;
+    flex-direction: column;
+}
+
+:global(.container) {
+    composes: full skinny;
+}
+ 
+:global(.draggable) {
+    -webkit-app-region: drag;
+}
+
+:global(.scrollable) {
+    overflow: auto;
+}
+
+:global(.rows) {
+    display: flex;
+    flex-direction: row;
+}

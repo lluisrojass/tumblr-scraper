@@ -1,0 +1,12 @@
+@import "../../styles/global.css";
+@import "../../styles/variables.css";
+
+.appWrapper {
+    composes: container rows;
+}
+
+.panelWrapper {
+    composes: container;
+    background-color: var(--color-background);
+    height: auto;
+}

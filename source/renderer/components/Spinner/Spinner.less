@@ -1,0 +1,82 @@
+@import "../../styles/global.css";
+
+:root {
+    --circle-width: 15%;
+    --circle-height: 15%;
+    
+    --total-height: /* TODO: implement */;
+    --total-width: /* TODO: implement */;
+
+    --min-degree: 30deg;
+    --max-delay: -1.1s;
+    --spin-length: 1.2s;
+    --interval-delay: 0.1s; 
+}
+
+.fadingCircle {
+    position: relative;
+    /* TODO: margin-left: .6vh; (??) */
+    width: var(--total-width);
+    height: var(--total-height);
+}
+
+.circle {
+    composes: full;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    &:before {
+        content: "";
+        display: block;
+        margin: 0 auto;
+        height: var(--circle-height);
+        width: var(--circle-width);
+        background-color: var(--color-white);
+        border-radius: 100%;
+        animation: spin var(--spin-length) infinite ease-in-out both;
+    }
+}
+
+.calcDelay(@index, @interval, @base) {
+    /* TODO: add other browsers */
+    animation-delay: calc(@base - (@interval * (@index - 1)));
+}
+
+.calcAngle(@index, @base) {
+    /* TODO: add other browsers */
+    -webkit-transform: rotate(@index * @base);
+            transform: rotate(@index * @base);
+    
+}
+
+.animate(@index) {
+    .calcAngle(@index, var(--min-degree));
+
+    &:before {
+        .calcDelay(@index, var(--interval-delay), var(--max-delay));
+    }
+}
+
+.circle1  { .animate(1); }
+.circle2  { .animate(2); }
+.circle3  { .animate(3); }
+.circle4  { .animate(4); }
+.circle5  { .animate(5); }
+.circle6  { .animate(6); }
+.circle7  { .animate(7); }
+.circle8  { .animate(8); }
+.circle9  { .animate(9); }
+.circle10 { .animate(10); }
+.circle11 { .animate(11); }
+
+
+@-webkit-keyframes sk-circleFadeDelay {
+  0%, 39%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+
+@keyframes sk-circleFadeDelay {
+  0%, 39%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}

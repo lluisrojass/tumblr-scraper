@@ -1,0 +1,15 @@
+:root {
+    --text-weight: 300;
+}
+
+.text {
+    font-weight: var(--text-weight);
+    display: inline;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
