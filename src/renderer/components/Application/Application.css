@@ -1,0 +1,23 @@
+.appWrapper {
+    composes: container from global;
+    background-color: var(--color-background);
+    /*TODO: needs to also compose 'rows */
+}
+
+.panelWrapper {
+    composes: container from global;
+    background-color: var(--color-background);
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.backgroundPanel {
+    composes: draggable from global;
+    background-color: var(--color-background);
+    border-right: 1px solid var(--color-dark-border);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.foregroundPanel {
+    border-right: 1px solid var(--color-dark-border);
+}

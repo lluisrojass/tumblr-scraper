@@ -1,0 +1,31 @@
+
+:root {
+    /* base CSS values */
+    --button-font-size: 13px;
+    --button-font-weight: 600;
+    --button-border-size: 1px;
+    --button-border-radius: 6px;
+    --button-border-color: #aaa;
+    --button-background-active-color: #666;
+    --button-font-active-color: #555;
+}
+
+.button {
+    letter-spacing: 1px;
+    border-radius: var(--button-border-radius);
+    padding: 0rem .5rem;
+    line-height: 1rem;
+    font-family: var(--font-paragraph);
+    font-weight: var(--button-font-weight);
+    font-size: var(--button-font-size);
+
+    &:focus {
+        outline: none;
+    }
+    
+    &:active {
+        box-shadow: none;
+        color: var(--button-font-active-color);
+        background-color: var(--button-background-active-color);
+    }
+}

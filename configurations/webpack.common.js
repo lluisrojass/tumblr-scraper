@@ -4,16 +4,22 @@ const { resolve } = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = { 
-    entry: resolve(__dirname, '../components/renderer/loader.js'),
+    entry: ['@babel/polyfill', resolve(__dirname, '../src/renderer/Loader.jsx')],
     output: {
         path: resolve(__dirname, '../public/js'),
         filename: 'bundle.js'
     },
     resolve: {
-        constants: resolve(__dirname, '../source/shared/constants.js'),
-        library: resolve(__dirname, '../source/renderer/library/'),
-        utilities: resolve(__dirname, '../source/shared/utilities.js'),
-        state: resolve(__dirname, '../source/renderer/state/') 
+        alias: {
+            constants: resolve(__dirname, '../src/shared/constants.js'),
+            library: resolve(__dirname, '../src/renderer/library/'),
+            utilities: resolve(__dirname, '../src/shared/utilities.js'),
+            components: resolve(__dirname, '../src/renderer/components'),
+            state: resolve(__dirname, '../src/renderer/state/'),
+            IPCLibrary: resolve(__dirname, '../src/renderer/library/IPC/index.js'),
+            globalCSS: resolve(__dirname, '../src/renderer/styles/global.less')
+        },
+        extensions: ['.js', '.jsx', '.json']
     },
     module: {
         rules: [

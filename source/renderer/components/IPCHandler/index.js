@@ -1,1 +1,0 @@
-export { IPCSubscribe as default } from './IPC.jsx';

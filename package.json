@@ -45,13 +45,13 @@
   "author": "lluisrojass@aol.com",
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
     "classnames": "^2.2.6",
     "htmlparser2": "^3.9.2",
     "pipe-event": "^0.1.0",
     "react-redux": "^5.0.6",
     "recompose": "^0.30.0",
-    "redux": "^3.7.2",
-    "redux-thunk": "^2.3.0"
+    "unstated": "^2.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

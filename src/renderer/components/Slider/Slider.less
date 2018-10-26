@@ -1,0 +1,46 @@
+.input {
+    display: none;
+}
+
+.input:checked + .label:before {
+    left: 17px;
+}
+
+.label {
+    cursor: pointer;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background-color: #f2f2f2;
+    height: 15px;
+    width: 40px;
+    position: relative;
+    transition: background-color .6s ease, box-shadow .6s ease, border .6s ease;
+}
+
+.label:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    height: 21px;
+    width: 15px;
+    border: 1px solid #bfbfbf;
+    border-radius: 2px;
+    margin-top: -4px;
+    margin-left: 3px;
+    margin-right: 3px;
+    box-sizing: border-box;
+    background-color: white;
+    transition: left 0.4s ease;
+}
+
+.input:checked + .green:before {
+    border: 1px solid #9f9f9f;
+}
+
+.input:checked + .green {
+    background-color:  rgba(130,200,160,1);
+    border: 1px solid #68a080;
+}
+  
