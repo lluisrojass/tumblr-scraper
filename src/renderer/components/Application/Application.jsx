@@ -9,12 +9,10 @@ import Header from 'components/Header/';
 import IPCHandler from 'components/IPCHandler';
 
 import Options from 'components/Options';
-import Footer from 'components/Footer';
 import Blogname from 'components/Blogname';
 import ButtonComposer from 'components/ButtonComposer';
 import Viewer from 'components/Viewer';
 import PostList from 'components/PostList';
-import Notification from 'components/Notification';
 import attachButtons from 'library/attachButtons';
 
 const Application = () => (
@@ -22,11 +20,10 @@ const Application = () => (
         <IPCHandler />
         <div className={classnames(styles.panelWrapper)}>
             <Panel width={25} className={styles.backgroundPanel}>
-                <Header> Options </Header>
+                <Header> Settings </Header>
                 <Options />
                 <Blogname />
                 {attachButtons(ButtonComposer)}
-                <Notification />
             </Panel>
             <Panel width={37.5} className={styles.foregroundPanel}>
                 <PostList />
@@ -35,7 +32,6 @@ const Application = () => (
                 <Viewer />
             </Panel>
         </div>
-        <Footer />
     </div>
 );
 

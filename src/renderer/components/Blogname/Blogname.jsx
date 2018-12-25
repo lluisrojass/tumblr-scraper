@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Subscribe } from 'unstated';
-import BlognameState from 'state/Blogname';
+import BlognameState from 'containers/Blogname';
 import Textbox from '../Textbox/';
 
 class BlognameComponent extends React.PureComponent {

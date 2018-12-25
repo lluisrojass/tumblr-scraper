@@ -1,4 +1,3 @@
-@import "../../styles/global.css";
 
 :root {
     --circle-width: 15%;
@@ -38,17 +37,17 @@
     }
 }
 
+/*
 .calcDelay(@index, @interval, @base) {
-    /* TODO: add other browsers */
     animation-delay: calc(@base - (@interval * (@index - 1)));
 }
 
 .calcAngle(@index, @base) {
-    /* TODO: add other browsers */
     -webkit-transform: rotate(@index * @base);
             transform: rotate(@index * @base);
     
 }
+
 
 .animate(@index) {
     .calcAngle(@index, var(--min-degree));
@@ -69,7 +68,7 @@
 .circle9  { .animate(9); }
 .circle10 { .animate(10); }
 .circle11 { .animate(11); }
-
+*/
 
 @-webkit-keyframes sk-circleFadeDelay {
   0%, 39%, 100% { opacity: 0; }

@@ -15,9 +15,9 @@ module.exports = {
             library: resolve(__dirname, '../src/renderer/library/'),
             utilities: resolve(__dirname, '../src/shared/utilities.js'),
             components: resolve(__dirname, '../src/renderer/components'),
-            state: resolve(__dirname, '../src/renderer/state/'),
+            containers: resolve(__dirname, '../src/renderer/containers/'),
             IPCLibrary: resolve(__dirname, '../src/renderer/library/IPC/index.js'),
-            globalCSS: resolve(__dirname, '../src/renderer/styles/global.less')
+            globalCSS: resolve(__dirname, '../src/library/css/global.css')
         },
         extensions: ['.js', '.jsx', '.json']
     },
@@ -33,7 +33,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(css|less)$/i,
+                test: /\.(css|pcss)$/i,
                 use: [
                     { 
                         loader: 'style-loader' 
@@ -46,7 +46,14 @@ module.exports = {
                             camelCase: true
                         }
                     },
-                    { loader: 'less-loader' }
+                    { 
+                        loader: 'postcss-loader',
+                        options: {
+                            config: {
+                                path: __dirname
+                            } 
+                        } 
+                    }
                 ]
             }
         ]

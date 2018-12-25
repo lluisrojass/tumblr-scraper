@@ -5,9 +5,9 @@ import values from 'lodash/values';
 import styles from './StartButton.css';
 import Button from '../Button/';
 import { Subscribe } from 'unstated';
-import BlognameState from 'state/Blogname/';
-import NotificationState from 'state/Notification';
-import SlidersState from 'state/Sliders';
+import BlognameState from 'containers/Blogname/';
+import NotificationState from 'containers/Notification';
+import SlidersState from 'containers/Sliders';
 import { LABELS, NOTIFICATION_TYPES, TUMBLR } from 'constants';
 import { sliderTumblrTypeMap } from './utils';
 import { exactMatch } from 'utilities';
@@ -36,13 +36,13 @@ class StyledButton extends React.PureComponent {
         if (blogname.length <= 0) {
             notify(
                 NOTIFICATION_TYPES.ERROR, 
-                LABELS.BLOGNAME.MISSING 
+                LABELS.ERRORS.BLOGNAME.MISSING 
             );   
         }
         else if (blogname.length > 32) {
             notify(
                 NOTIFICATION_TYPES.ERROR,
-                LABELS.BLOGNAME.TOO_LONG  
+                LABELS.ERRORS.BLOGNAME.TOO_LONG  
             );
         }
         else if (
@@ -53,7 +53,7 @@ class StyledButton extends React.PureComponent {
         ) {
             notify(
                 NOTIFICATION_TYPES.ERROR,
-                LABELS.BLOGNAME.INVALID
+                LABELS.ERRORS.BLOGNAME.INVALID
             );
         }
         else {
@@ -106,7 +106,7 @@ const StartButton = () => (
             sliderState
         ) => (
             <StyledButton 
-                blogname={ blognameState.state }
+                blogname={ blognameState.state.blogname }
                 notify={ notificationState.notify }
                 sliders={ sliderState.state.sliders }
             />

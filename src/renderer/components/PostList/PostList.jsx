@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Subscribe } from 'unstated';
-import PostsState from 'state/Posts/';
-import ViewerState from 'state/Viewer/';
+import PostsState from 'containers/Posts/';
+import ViewerState from 'containers/Viewer/';
 import classnames from 'classnames';
 import styles from './PostList.css';
 import Post from '../Post/';

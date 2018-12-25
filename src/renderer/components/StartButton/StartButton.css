@@ -1,15 +1,16 @@
 
-:root {
-    --color-button-positive: #4689eb;
-    --color-button-positive-border: #1b4583;
-    --color-button-positive-active: #104ba1;
-}
-
 .button {
-    display: none;
-    background-color: transparent;
-    border: var(--border-dashed);
-    padding: 0 1rem;
-    line-height: 2rem;
-    border-color: var(--color-button-positive);
+    width: 100%;
+    background-color: var(--color-accent-bright);
+    font-family: var(--font-paragraph);
+    border-radius: 4px;
+    border: 1px solid #68a080;
+    color: white;
+    font-size: 12px;
+    padding: 0 1.5rem;
+    line-height: 1.5rem;
+
+    &:active {
+        background-color: #68a080;
+    }
 }

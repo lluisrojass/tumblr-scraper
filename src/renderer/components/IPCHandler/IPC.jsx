@@ -6,12 +6,12 @@ import { IPCController } from 'IPCLibrary';
 import { IPC, LABELS, NOTIFICATION_TYPES } from 'constants';
 import { attachPathToLabel } from 'utilities';
 
-import DepthState  from 'state/Depth/';
-import StatusState from 'state/Status/';
-import NotificationState from 'state/Notification/';
-import PostsState from 'state/Posts/';
-import ViewerState from 'state/Viewer/';
-import ThrottleState from 'state/Throttle/';
+import DepthState  from 'containers/Depth/';
+import StatusState from 'containers/Status/';
+import NotificationState from 'containers/Notification/';
+import PostsState from 'containers/Posts/';
+import ViewerState from 'containers/Viewer/';
+import ThrottleState from 'containers/Throttle/';
 
 const Component = compose(
     lifecycle({

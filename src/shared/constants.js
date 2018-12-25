@@ -9,10 +9,10 @@ const IPC = {
         LOOP_WARNING: 'WARNING',
         IMAGE_LOADED: 'IMAGE_LOADED',
         RESPONSE: {
-            START: 'START_ACK',
-            CONTINUE: 'CONTINUE_ACK',
-            STOP: 'STOP_ACK',
-            THROTTLE: 'THROTTLE_ACK'
+            START: 'STARTED',
+            CONTINUE: 'CONTINUED',
+            STOP: 'STOPPED',
+            THROTTLE: 'THROTTLE_SET'
         }
     },
     REQUESTS: {
@@ -73,6 +73,10 @@ const TUMBLR = {
         ASK: 'is_note',
         VIDEO: 'is_video',
         TEXT: 'is_regular'
+    },
+    PARSE_FLAGS: {
+        NEXT_PAGE: 'next_page_link',
+        DATE: 'date'
     }
 };
 
@@ -83,10 +87,35 @@ const NOTIFICATION_TYPES = {
     SUCCESS: 2
 };
 
+const MAIN_EVENTS = {
+    PARSER: {
+        PAGE: 'page',
+        POST: 'post',
+        DATE: 'date'
+    },
+    LOOP: {
+        STOPPED: 'stopped'
+    }
+    
+};
+
+
+if (typeof exports === 'object') {
+    module.exports = {
+        IPC,
+        LABELS,
+        SYSTEM,
+        TUMBLR,
+        NOTIFICATION_TYPES,
+        MAIN_EVENTS
+    };
+}
+
 export {
     IPC,
     LABELS,
     SYSTEM,
     TUMBLR,
-    NOTIFICATION_TYPES
+    NOTIFICATION_TYPES,
+    MAIN_EVENTS
 };

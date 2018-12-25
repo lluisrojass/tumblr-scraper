@@ -1,15 +1,17 @@
-const config = require('./config.json');
-const {app, BrowserWindow, ipcMain, shell, Menu} = require('electron');
-const path = require('path');
-const url = require('url');
+'use strict';
+
+const { join } = require('path');
+const { format } = require('url');
+const { app, BrowserWindow, ipcMain, shell, Menu } = require('electron');
 const getPostData = require('./src/main/user-post');
 const Loop = require('./src/main/loop');
 const Throttle = require('./src/main/throttle');
+const { IPC, MAIN_EVENTS } = require('./src/shared/constants');
 
-if (process.env.NODE_ENV === 'development')  
+if (process.env.NODE_ENV === 'development') {
     require('electron-reload')(__dirname);
+}
 
-// prevent window being garbage collected
 let mainWindow;
 let loop;
 
@@ -19,7 +21,6 @@ function onClosed() {
 }
 
 function createMainWindow() {
-    
     const win = new BrowserWindow({
         width: 1000,
         height: 500,
@@ -30,22 +31,26 @@ function createMainWindow() {
         title: 'Tumblr Scraper',
         scrollBounce: true,
         darkTheme: true,
-        scrollBounce: true,
         movable: true
     });
 	
-    win.loadURL(url.format({
-    	pathname: path.join(__dirname, 'index.html'),
-    	protocol: 'file:',
-    	slashes: true
+    win.loadURL(format({
+        pathname: join(__dirname, 'index.html'),
+        protocol: 'file:',
+        slashes: true
     }));
 
-    // dereference everything
     win.on('closed', onClosed);
+
     let webContents = win.webContents;
 
-    webContents.once('dom-ready', () => {
-        webContents.send('asynchronous-reply', 'THROTTLE_START', loop.getThrottle());
+    webContents.once('dom-ready', () => { 
+        /* throttle init */
+        webContents.send(
+            IPC.PACKAGE.ASYNC_REPLY,
+            IPC.EVENTS.RESPONSE.THROTTLE,
+            loop.getThrottle()
+        );
     });
 
     loop = new Loop().on('post', pData => {
@@ -88,34 +93,52 @@ function createMainWindow() {
     /* pipe: loop event emitted -> webContents.send */
     ['page','date','end','timeout','error'].forEach(function(e) { 
         loop.on(e, function() {
-            webContents.send.apply(webContents, [e].concat(Array.prototype.slice.call(arguments, 0)));
+            webContents.send.apply(
+                webContents, 
+                [e].concat(Array.prototype.slice.call(arguments, 0))
+            );
         });
     });
 
-    /* ipc requests */
-    ipcMain.on('asynchronous-message', (event, type, data) => {
+    /* handle ipc requests */
+    ipcMain.on(IPC.PACKAGE.ASYNC_REQUEST, (event, type, data) => {
         switch(type) {
-
-            case 'START_REQUEST':
-                const {blogname, types} = data;
-                loop.go(types, blogname);
-                event.sender.send('asynchronous-reply', 'START_RESPONSE');
+            case IPC.REQUESTS.START: {
+                const { blogName, types } = data;
+                loop.go(blogName, types);
+                event.sender.send(
+                    IPC.PACKAGE.ASYNC_REPLY, 
+                    IPC.EVENTS.RESPONSE.START
+                );
                 break;
+            }                
 
-            case 'CONTINUE_REQUEST':
+            case IPC.REQUESTS.CONTINUE: {
                 const didContinue = loop.continue();
-                event.sender.send('asynchronous-reply', 'CONTINUE_RESPONSE', { didContinue: didContinue });
+                event.sender.send(
+                    IPC.PACKAGE.ASYNC_REPLY, 
+                    IPC.EVENTS.RESPONSE.CONTINUE,
+                    { didContinue }
+                );
                 break;
+            }
 
-            case 'STOP_REQUEST': 
-                loop.once('stopped', () => event.sender.send('asynchronous-reply', 'STOP_RESPONSE'));
-                loop.stop();
+            case IPC.REQUESTS.STOP: {
+                loop.once(MAIN_EVENTS.STOPPED, () => (
+                    event.sender.send(
+                        IPC.PACKAGE.ASYNC_REPLY, 
+                        IPC.EVENTS.RESPONSE.STOP
+                    )
+                )).stop();
                 break;
+            }
 
-            case 'OPEN_IN_BROWSER':
+            case IPC.REQUESTS.OPEN_IN_BROWSER: {
                 shell.openExternal(data.url);
                 break;
-            
+            }
+
+            /*
             case 'IMAGE_LOADED':
                 Throttle.onLoad();
                 break;
@@ -124,7 +147,7 @@ function createMainWindow() {
                 loop.toggleThrottle();
                 event.sender.send('asynchronous-reply', 'THROTTLE_RESPONSE');
                 break;
-
+            */
 
         }
     });

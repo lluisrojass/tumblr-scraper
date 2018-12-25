@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import styles from './ButtonComposer.css';
 import { Subscribe } from 'unstated';
-import StatusState from 'state/Status';
+import StatusState from 'containers/Status';
 
 class ButtonsComponent extends React.PureComponent {
 

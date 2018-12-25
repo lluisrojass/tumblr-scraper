@@ -1,89 +1,103 @@
-"use strict";
+'use strict';
 
-const htmlparser2 = require('htmlparser2');
-const ee = require('events');
-const url = require('url');
+const HtmlParser = require('htmlparser2');
+const Emitter = require('events');
+const { parse } = require('url');
+const { TUMBLR, MAIN_EVENTS } = require('../shared/constants');
 
-class ArchiveParser extends ee {
-    
-    constructor() {
+function matchType(types, classString) {
+    for (let index in types) {
+        const type = types[index];
+
+        if (classString.includes(type)) {
+            return type;
+        }
+    }
+
+    return false;
+}
+
+class Parser extends Emitter {
+
+    constructor(types, blogName) {
         super();
 
-        var self = this;
-        /* last encountered date string */
-        var date = '';
-        /* boolean denoting if a post has been found */
-        var pfound = false; 
-        /* boolean denoting if date has been found */
-        var dfound = false;
-        /* index for current post type in types array */
-        var currTypeIndex = -1; 
-        /* 'is_photo' 'is_video' 'is_quote' 'is_regular' (text) 'is_chat' 'is_note' (ask) 'is_audio' */
-        var types = []; 
-        /* blog name cache */
-        var blogName = "";
-
-        /* utility to validate a class string, also to cache type index, if one found */
-        const validClassAndSaveIndex = (classStr) => {
-            if (classStr.includes('is_original')) {
-                for (let i = 0 ; i < types.length ; ++i) {
-                    if (classStr.includes(types[i])) {
-                        currTypeIndex = i; // identify post type
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        let postType = null;
 
         const onOpenTag = (name, attribs) => {
 
-            if (name === 'div' && attribs.class && validClassAndSaveIndex(attribs.class))
-                pfound = true;
-            
-            else if (attribs.id && attribs.id === 'next_page_link')
-                self.emit('page', { path: attribs.href });
-  
-            else if (name === 'h2' && attribs.class && attribs.class === 'date')
-                dfound = true;
+            if (
+                name === 'div' && 
+                attribs.class && 
+                typeof attribs.class === 'string' && 
+                attribs.class.match(/is_original/)
+            ) {
+                const type = matchType(types, attribs.class);
 
-            else if (pfound && attribs['data-peepr'] && name === 'a' && attribs.href) {
-                try { 
-                    var {hostname, path=""} = url.parse(attribs.href); 
-                } 
-                catch (err) {/* incorrect attribs.href error */}
-
-                if (hostname.indexOf(blogName) != -1) {
-                
-                    (
-                        self.emit("post", {
-                            "host": hostname,
-                            path,
-                            "type": types[currTypeIndex]
-                        }),
-                        pfound = false,
-                        currTypeIndex = -1
-                    );
+                if (type) {
+                    postType = type;
                 }
-                
-            }
-        }
 
-        const onText = (text) => {
-            if (dfound) {
-                if (text !== date) 
-                    (date = text, self.emit('date', { date }))
-                
-                dfound = false;
             }
-        }
 
-        var parser = new htmlparser2.Parser({ onopentag: onOpenTag, ontext: onText }, { decodeEntities: true });
-  
-        self.configure = (mtypes, currBlogName) => (types = mtypes, blogName = currBlogName, true);
-        self.write = chunk => (parser.write(chunk), true);
-        self.end = () => (parser.parseComplete(), true);
+            else if (name === 'a') {
+                if (
+                    attribs.id && 
+                    attribs.id === TUMBLR.PARSE_FLAGS.NEXT_PAGE
+                ) {
+                    const safeHref = attribs.href || '';
+                    const match = safeHref.match(/^\/archive\?before_time=(\d+)$/i);
+                    const [,stamp] = match || [];
+                    
+                    if (!stamp) {
+                        return;
+                    }
+
+                    const s = Number(stamp);
+
+                    if (isNaN(s)) {
+                        return;
+                    }
+         
+                    const date = new Date(s).toLocaleDateString('en-US', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+
+                    this.emit(MAIN_EVENTS.LOOP.DATE,{ date });
+                }
+                else if (postType && attribs.href) {
+                    try {
+                        const { pathname } = parse(attribs.href);
+
+                        this.emit(MAIN_EVENTS.LOOP.POST, {
+                            pathname,
+                            type: postType,
+                            blogName: blogName
+                        });
+
+                        postType = null;
+
+                    } catch (err) {
+                        /* could not prase href SETUP LOG */
+                        console.log(`error, could not parse href for ${attribs.href}`);
+                    }
+                }
+            }
+        };
+
+        const parser = new HtmlParser.Parser({
+            onopentag: onOpenTag
+        }, { decodeEntities: true });
+
+        this.write = parser.write;
+        this.end = () => {
+            parser.parseComplete();
+        };
+
     }
+	
 }
 
-module.exports = ArchiveParser;
+module.exports = Parser;

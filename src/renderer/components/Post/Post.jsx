@@ -5,7 +5,7 @@ import pathOr from 'lodash/fp/pathOr';
 import truncate from 'lodash/truncate';
 import capitalize from 'lodash/capitalize';
 import constants from './constants';
-import styles from './Post.less';
+import styles from './Post.css';
 import { 
     placeholderImageSrc, 
     downsizeResolution, 

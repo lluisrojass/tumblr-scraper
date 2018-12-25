@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import styles from './Button.less';
+import styles from './Button.css';
 
 const Button = (props) => (
     <button 

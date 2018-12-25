@@ -1,17 +1,18 @@
-@import "./variables.css";
 
-:global {
-
-    * {
+    :global(*) {
         box-sizing: border-box;
     }
-    
-    ol, ul {
+
+    :global(ol),
+    :global(ul) {
         list-style: none;
     }
 
-    body, html, .appContainer {
+    :global(body),
+    :global(html),
+    :global(.appContainer) {
         height: 100%;
+        border: 1px solid red;
         width: 100%;
         margin: 0;
         padding: 0;
@@ -19,7 +20,7 @@
         -webkit-font-smoothing: antialiased;
     }
 
-    body {
+    :global(body) {
         line-height: 1;
         margin: 0;
         padding: 0;
@@ -29,23 +30,23 @@
         vertical-align: baseline;
     }
 
-    .appContainer {
+    :global(.appContainer) {
         height: 100%;
         width: 100%;
         background-color: var(--color-background);
     }
-    
-    .full {
+
+    :global(.full) {
         height: 100%;
         width: 100%;
     }
-    
-    .skinny {
+
+    :global(.skinny) {
         margin: 0;
         padding: 0;
     }
 
-    .container {
+    :global(.container) {
         /* should just compose: skinny full */
         /* but throwing error */
         margin: 0;
@@ -53,24 +54,29 @@
         height: 100%;
         width: 100%;
     }
-    
-    .columns {
+
+    :global(.columns) {
         display: flex;
         flex-direction: column;
     }
-    
-     
-    .draggable {
+
+    :global(.draggable) {
         -webkit-app-region: drag;
     }
-    
-    .scrollable {
+
+    :global(.scrollable) {
         overflow: auto;
     }
-    
-    .rows {
+
+    :global(.rows) {
         display: flex;
         flex-direction: row;
     }
 
-}
+    :global(.shadow-hoverable) {
+        transition: box-shadow .2s;
+
+        &:hover {
+            box-shadow: 0 4px 14px 0 var(--color-shadow);
+        } 
+    }

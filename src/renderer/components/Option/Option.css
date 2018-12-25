@@ -1,3 +1,4 @@
+
 :root {
     --text-weight: 500;
 }
@@ -12,9 +13,10 @@
 
 .wrapper {
     composes: rows from global;
+    border: 2px solid transparent;
     justify-content: space-between;
     margin: 1rem 0;
     width: 100%;
     padding-bottom: 5px;
-    border-bottom: var(--border-dashed);
 }
+

@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import styles from './Options.css';
 import Option from '../Option/';
 import { Subscribe } from 'unstated';
-import SlidersState from 'state/Sliders';
+import SlidersState from 'containers/Sliders';
 
 class OptionsComponent extends React.PureComponent {
 

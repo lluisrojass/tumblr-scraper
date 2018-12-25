@@ -5,7 +5,7 @@ import styles from './Viewer.css';
 import { LABELS } from 'constants';
 import { actions as IPCActions } from 'IPCLibrary';
 import { Subscribe } from 'unstated';
-import ViewerState from 'state/Viewer';
+import ViewerState from 'containers/Viewer';
 import { SYSTEM } from 'constants';
 
 function ViewerComponent(props) {

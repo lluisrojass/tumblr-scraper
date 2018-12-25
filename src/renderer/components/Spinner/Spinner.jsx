@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import styles from './Spinnner.less';
+import styles from './Spinnner.css';
 
 function Spinner() {
     return (
