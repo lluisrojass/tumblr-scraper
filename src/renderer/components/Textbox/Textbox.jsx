@@ -1,50 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
-import styles from './Textbox.css';
+import Input from 'components/InputBase/';
 import BlognameState from 'containers/Blogname';
-import { Subscribe } from 'unstated';
+import styles from './Textbox.css';
+import { withPreventDefault, withSubscribe } from 'rlib/utils';
 
-class TextboxComponent extends React.PureComponent {
+const BLOGNAME_STATE = 'blognameState';
 
-    static propTypes = {
-        onChange: PropTypes.func.isRequired,
-        name: PropTypes.string.isRequired,
-        value: PropTypes.string.isRequired
-    };
-
-    onChange = (e) => {
-        e.preventDefault();
-        this.props.onChange(e.target.value);
-    }
-
-    render() {
-
-        const { name, value } = this.props;
-        
-        return (
-            <div className={classnames(styles.wrapper)}>
-                <input 
-                    type="text"
-                    name={name}
-                    value={value}
-                    onChange={this.onChange}
-                    className={classnames(styles.input)}
-                />
-                <div className={classnames(styles.addon)}>
-                    <span>{ '.tumblr.com' }</span>
-                </div>
-            </div>
-        );
-    }
-}
-
-const Textbox = () => (
-    <Subscribe to={[ BlognameState ]}>
-        { (blognameState) => (
-            <TextboxComponent onChange={ blognameState.setBlogname } value={ blognameState.blogname } />
-        ) }
-    </Subscribe>
+const Addon = () => (
+    <div className={classnames(styles.addon)}>
+        <span>.tumblr.com</span>
+    </div>
 );
 
-export { Textbox }; 
+const Textbox = (props) => (
+    <div className={classnames(styles.wrapper)}>
+        <Input
+            type='text'
+            name='blogname'
+            className={classnames(styles.input)}
+            value={props[BLOGNAME_STATE].state.blogname}
+            onChange={withPreventDefault((e) => props[BLOGNAME_STATE].setBlogname(e.target.value))}
+        />
+        <Addon />
+    </div>
+);
+
+Textbox.propTypes = {
+    [BLOGNAME_STATE]: PropTypes.obj
+}
+
+export default withSubscribe([
+    {
+        name: BLOGNAME_STATE,
+        container: BlognameState
+    }
+], Textbox);

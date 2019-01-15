@@ -1,6 +1,4 @@
-
 :root {
-    /* base CSS values */
     --button-font-size: 16px;
     --button-font-weight: 400;
     --button-border-width: 1px;
@@ -10,18 +8,13 @@
 
 .button {
     composes: shadow-hoverable from global;
-    font-size: var(--font-size-sm);
+    transition: box-shadow .2s;
     cursor: pointer;
+    font-size: var(--font-size-sm);
     font-weight: var(--button-font-weight);
     border-width: var(--button-border-width);
-    transition: box-shadow .2s;
     letter-spacing: var(--button-letter-spacing);
     text-transform: capitalize;
-
-    &:focus {
-        outline: none;
-    }
-
     &:active {
         box-shadow: none;
     }

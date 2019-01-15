@@ -1,1 +1,0 @@
-export { Blogname as default } from './Blogname.jsx';

@@ -1,1 +1,1 @@
-export { Textbox as default } from './Textbox.jsx';
+export { default } from './Textbox';

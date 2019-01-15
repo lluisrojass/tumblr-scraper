@@ -1,16 +1,23 @@
-'use strict';
 
 const { resolve } = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = { 
-    entry: ['@babel/polyfill', resolve(__dirname, '../src/renderer/Loader.jsx')],
+    entry: [ 
+        '@babel/polyfill', 
+        resolve(__dirname, '../src/renderer/Loader.jsx')
+    ],
     output: {
         path: resolve(__dirname, '../public/js'),
         filename: 'bundle.js'
     },
     resolve: {
         alias: {
+            'lib/constants': resolve(__dirname, '../src/shared/constants'),
+            'lib/utils': resolve(__dirname, '../src/shared/utils'),
+            'rlib/constants': resolve(__dirname, '../src/renderer/library/constants'),
+            'rlib/utils': resolve(__dirname, '../src/renderer/library/utils'),
+            config: resolve(__dirname, '../ui.config.json'),
             constants: resolve(__dirname, '../src/shared/constants.js'),
             library: resolve(__dirname, '../src/renderer/library/'),
             utilities: resolve(__dirname, '../src/shared/utilities.js'),
@@ -19,7 +26,11 @@ module.exports = {
             IPCLibrary: resolve(__dirname, '../src/renderer/library/IPC/index.js'),
             globalCSS: resolve(__dirname, '../src/library/css/global.css')
         },
-        extensions: ['.js', '.jsx', '.json']
+        extensions: [
+            '.js', 
+            '.jsx', 
+            '.json'
+        ]
     },
     module: {
         rules: [
@@ -28,8 +39,13 @@ module.exports = {
                 loader: 'babel-loader',
                 exclude: /node_modules/,
                 options: {
-                    presets: ['@babel/preset-env', '@babel/preset-react'],
-                    plugins: ['@babel/plugin-proposal-class-properties']
+                    presets: [
+                        '@babel/preset-env', 
+                        '@babel/preset-react'
+                    ],
+                    plugins: [
+                        '@babel/plugin-proposal-class-properties'
+                    ]
                 }
             },
             {

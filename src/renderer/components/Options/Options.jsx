@@ -2,49 +2,46 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import styles from './Options.css';
-import Option from '../Option/';
-import { Subscribe } from 'unstated';
-import SlidersState from 'containers/Sliders';
+import Option from 'components/Option';
+import SlidersContainer from 'containers/Sliders';
+import { withSubscribe } from 'rlib/utils';
 
-class OptionsComponent extends React.PureComponent {
+const SLIDERS_STATE_KEY = 'slidersContainer';
 
-    static propTypes = {
-        sliders: PropTypes.array.isRequired,
-        toggleSlider: PropTypes.func.isRequired
-    };
-
-    static defaultProps = {
-        sliders: []
-    }
-
-    toggle = index => () => this.props.toggleSlider(index);
-
-    render() {
-        const { sliders } = this.props;
-        return (
-            <div className={classnames(styles.wrapper)}>
-                {sliders.map((slider, index) => (
-                    <Option
-                        key={index}
-                        name={slider.name}
-                        isChecked={slider.value}
-                        onChange={this.toggle(index)}
-                    />
-                ))}
-            </div>
-        );
-    }
+const decorateWithIndex = (func, index) => () => {
+    func(index);
 }
 
-const Options = () => (
-    <Subscribe to={[ SlidersState ]}>
-        {(slidersState) => (
-            <OptionsComponent 
-                toggleSlider={slidersState.toggleSlider}
-                sliders={slidersState.state.sliders}
-            />
-        )}
-    </Subscribe>
+const Options = (props) => (
+    <div className={classnames(styles.wrapper)}>
+        {
+            props[SLIDERS_STATE_KEY].state.sliders.map((slider, index) => (
+                <Option
+                    key={index}
+                    name={slider.name}
+                    isChecked={slider.value}
+                    onChange={decorateWithIndex(
+                        props[SLIDERS_STATE_KEY].toggleSlider,
+                        index
+                    )}
+                />
+            ))
+        }
+    </div>
 );
 
-export { Options };
+Options.propTypes = {
+    [SLIDERS_STATE_KEY]: PropTypes.shape({
+        state: PropTypes.shape({
+            sliders: PropTypes.array
+        }),
+        toggleSlider: PropTypes.func
+    })
+};
+
+export default withSubscribe([
+    {
+        name: SLIDERS_STATE_KEY,
+        container: SlidersContainer
+    }
+], Options);

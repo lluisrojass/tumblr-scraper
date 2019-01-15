@@ -1,1 +1,1 @@
-export { Panel as default } from './Panel.jsx';
+export { default } from './Panel';

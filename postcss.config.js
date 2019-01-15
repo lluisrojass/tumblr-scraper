@@ -7,7 +7,11 @@ module.exports = {
                 './src/library/css/global.css',
                 './src/library/css/variables.css'
             ],
-            preserve: false
+            features: {
+                'custom-properties': {
+                    preserve: false
+                }
+            }
         }
     }
 };

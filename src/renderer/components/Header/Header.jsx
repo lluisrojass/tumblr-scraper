@@ -15,4 +15,4 @@ Header.propTypes = {
     children: PropTypes.any
 };
 
-export { Header }; 
+export default Header;

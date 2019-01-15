@@ -1,20 +1,21 @@
 import React from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import { capitalize } from 'lodash';
-import Slider from '../Slider/';
+import capitalize from 'lodash/capitalize';
 import styles from './Option.css';
+import Slider from 'components/Slider';
 
-function Option(props) {
-    return (
-        <div className={classnames(styles.wrapper)}>
+const Option = (props) => (
+    <div className={classnames(styles.wrapper)}>
             <p className={classnames(styles.text)}>
                 {capitalize(props.name)}
             </p>
-            <Slider isChecked={props.isChecked} onChange={props.onChange} />
-        </div>   
-    );
-}
+        <Slider 
+            isChecked={props.isChecked} 
+            onChange={props.onChange} 
+        />
+    </div> 
+);
 
 Option.propTypes = {
     name: PropTypes.string.isRequired,
@@ -22,4 +23,4 @@ Option.propTypes = {
     isChecked: PropTypes.bool.isRequired
 };
 
-export { Option };
+export default Option;

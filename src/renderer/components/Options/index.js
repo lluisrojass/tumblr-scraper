@@ -1,1 +1,1 @@
-export { Options as default } from './Options.jsx';
+export { default } from './Options';
