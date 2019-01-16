@@ -1,26 +1,65 @@
-'use strict';
-
-const { join } = require('path');
+const { BrowserWindow, app } = require('electron');
+const { resolve } = require('path');
 const { format } = require('url');
-const { app, BrowserWindow, ipcMain, shell, Menu } = require('electron');
-const getPostData = require('./src/main/user-post');
-const Loop = require('./src/main/loop');
-const Throttle = require('./src/main/throttle');
-const { IPC, MAIN_EVENTS } = require('./src/shared/constants');
+const log = require('electron-log');
+const getPort = require('get-port');
+
+log.transports.file.file = __dirname + '/logs/app.log';
+log.transports.file.level = 'info';
 
 if (process.env.NODE_ENV === 'development') {
     require('electron-reload')(__dirname);
 }
 
-let mainWindow;
-let loop;
+let clientWindow;
+let serverWindow;
 
-function onClosed() {
-    mainWindow = null;
-    loop = null;
+function onServerClosed() {
+    serverWindow = null;
+    log.info('application server closed');
+    if (clientWindow && !clientWindow.isDestroyed()) {
+        clientWindow.destroy();
+    }
 }
 
-function createMainWindow() {
+function onClientClosed() {
+    clientWindow = null;
+    log.info('application client closed');
+    if (serverWindow && !serverWindow.isDestroyed()) {
+        serverWindow.destroy();
+    }
+}
+
+function destroyAllWindows() {
+    if (clientWindow && !clientWindow.isDestroyed()) {
+        clientWindow.destroy();
+    }
+    if (serverWindow && !serverWindow.isDestroyed()) {
+        serverWindow.destroy();
+    }
+}
+
+function createServerWindow(port, callback) {
+    const win = new BrowserWindow({
+        show: false,
+        webPreferences: {
+            additionalArguments: [`PORT:${port}`]
+        }
+    });
+
+    win.loadURL(format({
+        pathname: resolve(__dirname, `./server/_index.html`),
+        protocol: 'file:',
+        slashes: true,
+    }));
+    
+    win.on('closed', onServerClosed);
+    win.webContents.on('crashed', destroyAllWindows);
+
+    return win;
+}
+
+function createClientWindow(port) {
     const win = new BrowserWindow({
         width: 1000,
         height: 500,
@@ -31,179 +70,33 @@ function createMainWindow() {
         title: 'Tumblr Scraper',
         scrollBounce: true,
         darkTheme: true,
-        movable: true
+        movable: true,
+        webPreferences: {
+            additionalArguments: [ `PORT:${port}` ]
+        }
     });
-	
+
     win.loadURL(format({
-        pathname: join(__dirname, 'index.html'),
-        protocol: 'file:',
+        pathname: resolve(__dirname, `./index.html`),
+        protocol: 'file',
         slashes: true
     }));
 
-    win.on('closed', onClosed);
+    if (process.env.NODE_ENV === 'development')
+        win.webContents.openDevTools();
 
-    let webContents = win.webContents;
-
-    webContents.once('dom-ready', () => { 
-        /* throttle init */
-        webContents.send(
-            IPC.PACKAGE.ASYNC_REPLY,
-            IPC.EVENTS.RESPONSE.THROTTLE,
-            loop.getThrottle()
-        );
-    });
-
-    loop = new Loop().on('post', pData => {
-
-        getPostData(pData, (err, data) => {
-
-            if (err !== null)
-                webContents.send('warning', err);
-            
-            else {
-				
-                let {
-                    datePublished = null, 
-                    isVideo, 
-                    articleBody= null, 
-                    headline = null, 
-                    image, 
-                    url = '',
-                    videoURL = null 
-                } = data.post;
-
-                webContents.send('post', {
-                    type: data.type,
-                    datePublished,
-                    articleBody: articleBody ? articleBody.rmvMore() : null,
-                    headline,
-                    isVideo,
-                    videoURL,
-                    images: image ? image['@list'] || [image] : [],
-                    url
-                });
-                
-                if (image != null) {
-                    Throttle.onDiscovery();
-                }
-            }
-        });
-    });
-
-    /* pipe: loop event emitted -> webContents.send */
-    ['page','date','end','timeout','error'].forEach(function(e) { 
-        loop.on(e, function() {
-            webContents.send.apply(
-                webContents, 
-                [e].concat(Array.prototype.slice.call(arguments, 0))
-            );
-        });
-    });
-
-    /* handle ipc requests */
-    ipcMain.on(IPC.PACKAGE.ASYNC_REQUEST, (event, type, data) => {
-        switch(type) {
-            case IPC.REQUESTS.START: {
-                const { blogName, types } = data;
-                loop.go(blogName, types);
-                event.sender.send(
-                    IPC.PACKAGE.ASYNC_REPLY, 
-                    IPC.EVENTS.RESPONSE.START
-                );
-                break;
-            }                
-
-            case IPC.REQUESTS.CONTINUE: {
-                const didContinue = loop.continue();
-                event.sender.send(
-                    IPC.PACKAGE.ASYNC_REPLY, 
-                    IPC.EVENTS.RESPONSE.CONTINUE,
-                    { didContinue }
-                );
-                break;
-            }
-
-            case IPC.REQUESTS.STOP: {
-                loop.once(MAIN_EVENTS.STOPPED, () => (
-                    event.sender.send(
-                        IPC.PACKAGE.ASYNC_REPLY, 
-                        IPC.EVENTS.RESPONSE.STOP
-                    )
-                )).stop();
-                break;
-            }
-
-            case IPC.REQUESTS.OPEN_IN_BROWSER: {
-                shell.openExternal(data.url);
-                break;
-            }
-
-            /*
-            case 'IMAGE_LOADED':
-                Throttle.onLoad();
-                break;
-            
-            case 'THROTTLE_TOGGLE':
-                loop.toggleThrottle();
-                event.sender.send('asynchronous-reply', 'THROTTLE_RESPONSE');
-                break;
-            */
-
-        }
-    });
+    win.webContents.on('crashed', destroyAllWindows);
+    win.on('closed', onClientClosed);
     
-    addMenu();
-	
     return win;
 }
 
-function addMenu() {
-
-    const template = [
-        {
-            label:'Edit',
-            submenu: [
-                { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
-                { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
-                { type: 'separator' },
-                { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-                { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-                { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-                { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' } ]
-        },
-        {
-            role: 'window',
-            submenu: [
-                { role: 'minimize' },
-                { role: 'close' }
-            ]
-        },
-        {
-            role: 'help',
-            submenu: [
-                {
-                    label: 'Learn More',
-                    click () { shell.openExternal('https://github.com/lluisrojass/tumblr-scraper'); }
-                }
-            ]
-        }
-    ];
-
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
-}
-
-
-app.on('window-all-closed', () => app.quit());
-
-
-app.on('activate', () => {
-    if (!mainWindow)
-        mainWindow = createMainWindow();
-});
-
-app.on('ready', () => {
-    mainWindow = createMainWindow();
-    if (process.env.NODE_ENV === 'development') 
-        mainWindow.webContents.openDevTools();
+app.on('ready', async () => {
+    const port = await getPort({ port: 3000 });
+    log.info(`application startup, on port ${port}`);
+    serverWindow = createServerWindow(port);
+    serverWindow.once('ready-to-show', () => {
+        /* server successfully started up */
+        clientWindow = createClientWindow(port);
+    });
 });

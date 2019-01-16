@@ -6,10 +6,15 @@ const getPostData = require('./lib/post');
 const log = require('electron-log');
 const { removeMORE, pipeEmit } = require('./utils');
 
+process.on('uncaughtException', (e) => {
+    log.error(e);
+    process.exit(1);
+});
+
 let port;
 
 try {
-    port = getPort();
+    port = extractPort();
 } catch (e) {
     log.error(e.message);
     process.exit(1);
@@ -55,8 +60,12 @@ ioServer.on('connection', socket => {
         });
 });
 
-function getPort() {
-    const p = process.env.PORT >>> 0;
-    assert(p >= 0x400 && p <= 0xFFFF, 'invalid port value');
-    return p;
+function extractPort() {
+    const possiblePortArg = process.argv[process.argv.length - 1] || "";
+    let [,port] = possiblePortArg.match(/^PORT:(\d+)$/) || [];
+    assert(!!port, 'server startup error, invalid argv port argument recieved ');
+    port = port >>> 0;
+    assert(port >= 0x400 && port <= 0xFFFF, 'server startup error, '+
+    'incorrectly formatted port argument recieved');
+    return port;
 }
