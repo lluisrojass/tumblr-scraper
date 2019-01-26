@@ -72,7 +72,7 @@ function createClientWindow(port) {
         darkTheme: true,
         movable: true,
         webPreferences: {
-            additionalArguments: [ `PORT:${port}` ]
+            additionalArguments: [`PORT:${port}`]
         }
     });
 

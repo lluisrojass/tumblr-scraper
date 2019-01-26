@@ -1,11 +1,13 @@
 
 const { resolve } = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = { 
+    target: 'electron-renderer',
     entry: [ 
         '@babel/polyfill', 
-        resolve(__dirname, '../src/renderer/Loader.jsx')
+        resolve(__dirname, '../client/loader.jsx')
     ],
     output: {
         path: resolve(__dirname, '../public/js'),
