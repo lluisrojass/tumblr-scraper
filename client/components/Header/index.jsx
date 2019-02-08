@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import styles from './Header.css';
 
-const Header = (props) => (
+const Header = props => (
     <div className={classnames(styles.wrapper)}>
         <h1 className={classnames(styles.header)}>
             { props.children }

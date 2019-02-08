@@ -3,7 +3,7 @@ const { EventEmitter } = require('events');
 const log = require('electron-log');
 const { postData, videoData } = require('./markup');
 const stateUtils = require('./stateUtils');
-const { video: videoType } = require('../../tumblrTypes');
+const { tumblrTypes: { video: videoType } } = require('../../../config');
 /**
  * Parsers an individual post's html
  * content for post information.
@@ -22,7 +22,6 @@ class PostParser extends EventEmitter {
             stateUtils.isPostFound(state) && 
             (IS_VIDEO ? stateUtils.isVideoFound(state) : true);
 
-        
         const post = {
             isVideo: IS_VIDEO
         };

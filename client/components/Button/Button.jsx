@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import styles from './Button.css';
 import { noop } from 'lib/utils';
 
-const Button = (props) => (
+const Button = props => (
     <button 
         className={classnames(styles.button, props.className)} 
         onClick={props.onClick}
-        children={ props.children }
-    />
+    >
+        { props.children }
+    </button>
 );
 
 Button.propTypes = {
@@ -20,6 +21,6 @@ Button.propTypes = {
 
 Button.defaultProps = {
     onClick: noop
-}
+};
 
 export { Button };

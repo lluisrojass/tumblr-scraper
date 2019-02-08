@@ -4,35 +4,38 @@ import { Provider } from 'unstated';
 import log from 'electron-log';
 import assert from 'assert';
 import FatalError from 'components/FatalError';
-// import Application from './components/Application/';
+import Application from './components/Application/';
 
-let port;
-try {
-    port = extractPort();
-    renderApp(port);
-} catch(e) {
-    log.error(e.message);
-    renderStartupError(e.message);
-}
+loader();
 
-function renderStartupError(message) {
-    render(
-        <FatalError message={message} />,
-        document.getElementById('app')
-    );
-}
+function loader() {
+    const renderFatalError = message => {
+        render(
+            <FatalError message={message} />,
+            document.getElementById('app')
+        );
+    };
+    
+    const renderApp = port => {
+        render(
+            <Provider>
+                <Application port={port} />
+            </Provider>,
+            document.getElementById('app')
+        );
+    };
 
-function renderApp(port) {
-    render(
-        <Provider>
-            <Application port={port} />
-        </Provider>,
-        document.getElementById('app')
-    );
+    try {
+        let port = extractPort();
+        renderApp(port);
+    } catch (e) {
+        log.error(e);
+        renderFatalError(e.message);
+    }
 }
 
 function extractPort() {
-    const possiblePortArg = process.argv[process.argv.length - 1] || "";
+    const possiblePortArg = process.argv[process.argv.length - 1] || '';
     let [,port] = possiblePortArg.match(/^PORT:(\d+)$/) || [];
     assert(!!port, 'client startup error, invalid argv port argument recieved ');
     port = port >>> 0;
