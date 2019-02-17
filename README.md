@@ -2,9 +2,9 @@
 
 ![](https://img.shields.io/badge/npm-4.1.2-red.svg)  ![](https://img.shields.io/badge/electron-1.4.15-brightgreen.svg) ![](https://img.shields.io/badge/react-15.4.2-blue.svg) ![](https://img.shields.io/badge/redux-3.7.2-yellow.svg)  
 
-Scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no natural mechanism for viewing user uploaded content on their website nor do they have any plans to integrate such a feature.
+Scrape user uploaded content from a [Tumblr](www.tumblr.com) blog. Tumblr provides no natural mechanism for viewing user uploaded content on their website.
 
-example scrape for photo, ask and text posts in <https://support.tumblr.com>:
+example scrape <https://support.tumblr.com>:
 <img src="https://i.gyazo.com/0700e8ee70bdaa1517f2cd4cb01d4c23.gif" alt="https://gyazo.com/9eb0825ddca040f8467838ca519029e9" width="980"/>
 
 
@@ -47,7 +47,8 @@ Run `npm run watch` to execute a development watchify script which monitors file
 
 
 ## What is Request Throttling?
-When scraping blogs with large frequency and density of original posts the application could become unresponsive or a significant CPU burden. To help alleviate this possibility, throttling was introduced. When turned on (default behavior) the application will keep track of the pending image load which the application has yet to fulfill and could temporarily delay the continuation of the requests loop. This provides breathing time between page requests which prevent a potentially overwhelming rush of front-end workload. Throttling can also be toggled while scrapes are mid executing.
+When scraping blogs with large frequency and density of original posts the application could become unresponsive or a significant CPU burden. To help alleviate this possibility, throttling was introduced. When turned on (which is the default behavior) the application will keep track of the pending image load which the application has yet to fulfill and could temporarily delay the continuation of the requests loop. This provides breathing time between page requests which prevent a potentially overwhelming rush of front-end workload. While all other application state (blogname, post types) has to be pre-set before a scrape can begin, throttling can be turned on/off anytime. 
+
 
 
 *Like what you see? consider  favoriting or following the project :)*
