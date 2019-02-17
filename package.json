@@ -48,6 +48,7 @@
     "@babel/polyfill": "^7.0.0",
     "classnames": "^2.2.6",
     "electron-log": "^2.2.17",
+    "flow": "^0.2.3",
     "get-port": "^4.1.0",
     "htmlparser2": "^3.9.2",
     "nmsp": "^1.1.0",

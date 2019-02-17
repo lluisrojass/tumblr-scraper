@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import styles from './Options.css';
-import Option from 'components/Option';
-import SlidersContainer from 'containers/Sliders';
-import { withSubscribe } from 'rlib/utils';
+import styles from './index.css';
+import Option from '@ts/components/Option';
+import SlidersContainer from '@ts/containers/Sliders';
+import { withSubscribe } from '@ts/utils';
 
 const SLIDERS_STATE_KEY = 'slidersContainer';
 
 const decorateWithIndex = (func, index) => () => {
     func(index);
-}
+};
 
 const Options = (props) => (
     <div className={classnames(styles.wrapper)}>

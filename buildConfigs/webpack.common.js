@@ -1,7 +1,6 @@
-
+'use strict';
 const { resolve } = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const webpack = require('webpack');
 
 module.exports = { 
     target: 'electron-renderer',
@@ -15,18 +14,13 @@ module.exports = {
     },
     resolve: {
         alias: {
-            'lib/constants': resolve(__dirname, '../src/shared/constants'),
-            'lib/utils': resolve(__dirname, '../src/shared/utils'),
-            'rlib/constants': resolve(__dirname, '../src/renderer/library/constants'),
-            'rlib/utils': resolve(__dirname, '../src/renderer/library/utils'),
-            config: resolve(__dirname, '../ui.config.json'),
-            constants: resolve(__dirname, '../src/shared/constants.js'),
-            library: resolve(__dirname, '../src/renderer/library/'),
-            utilities: resolve(__dirname, '../src/shared/utilities.js'),
-            components: resolve(__dirname, '../src/renderer/components'),
-            containers: resolve(__dirname, '../src/renderer/containers/'),
-            IPCLibrary: resolve(__dirname, '../src/renderer/library/IPC/index.js'),
-            globalCSS: resolve(__dirname, '../src/library/css/global.css')
+            '@ts/utils': resolve(__dirname, '../client/library/utils'),
+            '@ts/constants': resolve(__dirname, '../client/library/constants'),
+            '@ts/config': resolve(__dirname, '../ui.config.json'),
+            '@ts/lib': resolve(__dirname, '../client/library/'),
+            '@ts/components': resolve(__dirname, '../client/components'),
+            '@ts/containers': resolve(__dirname, '../client/containers/'),
+            '@ts/global-styles': resolve(__dirname, '../src/library/css/global.css')
         },
         extensions: [
             '.js', 
@@ -51,7 +45,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.(css|pcss)$/i,
+                test: /\.css$/i,
                 use: [
                     { 
                         loader: 'style-loader' 
@@ -60,7 +54,7 @@ module.exports = {
                         loader:'css-loader',
                         options: {
                             modules: true,
-                            localIdentName: '[name]__[local]_[hash:base64:5]',
+                            localIdentName: '[name]_[local]-[hash:base64:5]',
                             camelCase: true
                         }
                     },
