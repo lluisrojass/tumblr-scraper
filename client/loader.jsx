@@ -3,36 +3,29 @@ import { render } from 'react-dom';
 import { Provider } from 'unstated';
 import log from 'electron-log';
 import assert from 'assert';
-import FatalError from 'components/FatalError';
-// import Application from './components/Application/';
+import FatalError from '@ts/components/FatalError';
+import Application from '@ts/components/Application';
+import S from '@ts/lib/css/global.css';
 
-let port;
 try {
-    port = extractPort();
-    renderApp(port);
-} catch(e) {
-    log.error(e.message);
-    renderStartupError(e.message);
-}
-
-function renderStartupError(message) {
-    render(
-        <FatalError message={message} />,
-        document.getElementById('app')
-    );
-}
-
-function renderApp(port) {
+    let port = extractPort();
     render(
         <Provider>
             <Application port={port} />
         </Provider>,
         document.getElementById('app')
     );
+} catch (e) {
+    log.error(e);
+    render(
+        <FatalError message={e.message} />,
+        document.getElementById('app')
+    );
 }
 
+
 function extractPort() {
-    const possiblePortArg = process.argv[process.argv.length - 1] || "";
+    const possiblePortArg = process.argv[process.argv.length - 1] || '';
     let [,port] = possiblePortArg.match(/^PORT:(\d+)$/) || [];
     assert(!!port, 'client startup error, invalid argv port argument recieved ');
     port = port >>> 0;

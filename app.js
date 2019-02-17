@@ -4,7 +4,7 @@ const { format } = require('url');
 const log = require('electron-log');
 const getPort = require('get-port');
 
-log.transports.file.file = __dirname + '/logs/app.log';
+log.transports.file.file = __dirname + '/app.log';
 log.transports.file.level = 'info';
 
 if (process.env.NODE_ENV === 'development') {
@@ -39,7 +39,7 @@ function destroyAllWindows() {
     }
 }
 
-function createServerWindow(port, callback) {
+function createServerWindow(port) {
     const win = new BrowserWindow({
         show: false,
         webPreferences: {
@@ -48,7 +48,7 @@ function createServerWindow(port, callback) {
     });
 
     win.loadURL(format({
-        pathname: resolve(__dirname, `./server/_index.html`),
+        pathname: resolve(__dirname, './server/_index.html'),
         protocol: 'file:',
         slashes: true,
     }));
@@ -77,7 +77,7 @@ function createClientWindow(port) {
     });
 
     win.loadURL(format({
-        pathname: resolve(__dirname, `./index.html`),
+        pathname: resolve(__dirname, './index.html'),
         protocol: 'file',
         slashes: true
     }));

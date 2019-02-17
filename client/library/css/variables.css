@@ -7,12 +7,9 @@
     --color-photoset-stamp: #2cbd45;
     --color-highlight: #298cda;
     --color-shadow: rgba(0,0,0,0.2);
-
     --border-radius-button: 4px;
     --border-radius-round: 20px;
-
     --border-dashed: 1.5px dashed #cfcfdf;
-
     --font-heading:  'Poppins', sans-serif;
     --font-paragraph: 'Source Code Pro', monospace;
 }

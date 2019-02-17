@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
-import styles from './Panel.css';
+import styles from './index.css';
 
 const Panel = (props) => (
     <div 
-        className={classnames(styles.base, className)} 
-        style={{ width: `${width}%` }}
-        children={props.children}
-    />
+        className={classnames(styles.base, props.className)} 
+        style={{ width: `${props.width}%` }}
+    >
+        { props.children }
+    </div>
 );
 
 Panel.propTypes = {
@@ -18,7 +19,8 @@ Panel.propTypes = {
 };
 
 Panel.defaultProps = {
-    width: 33
+    width: 33,
+    children: null
 };
 
 export default Panel;

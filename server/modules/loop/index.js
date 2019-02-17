@@ -1,7 +1,7 @@
 const Parser = require('./parser');
 const { EventEmitter } = require('events');
 const config = require('../../config');
-const tumblrTypes = require('../tumblrTypes');
+const { tumblrTypes } = require('../../config');
 const stateUtils = require('./stateUtils');
 const log = require('electron-log');
 const { 
