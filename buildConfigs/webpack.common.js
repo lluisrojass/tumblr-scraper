@@ -15,8 +15,8 @@ module.exports = {
     resolve: {
         alias: {
             '@ts/utils': resolve(__dirname, '../client/library/utils'),
-            '@ts/constants': resolve(__dirname, '../client/library/constants'),
             '@ts/config': resolve(__dirname, '../ui.config.json'),
+            '@ts/typemap': resolve(__dirname, '../types.json'),
             '@ts/lib': resolve(__dirname, '../client/library/'),
             '@ts/components': resolve(__dirname, '../client/components'),
             '@ts/containers': resolve(__dirname, '../client/containers/'),
@@ -37,7 +37,8 @@ module.exports = {
                 options: {
                     presets: [
                         '@babel/preset-env', 
-                        '@babel/preset-react'
+                        '@babel/preset-react',
+                        '@babel/preset-flow'
                     ],
                     plugins: [
                         '@babel/plugin-proposal-class-properties'

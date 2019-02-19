@@ -1,42 +1,29 @@
-import { Container } from 'unstated';
+import { Container, type ContainerType } from 'unstated';
 
-class DepthState extends Container {
-    constructor() {
-        super();
-        Object.defineProperty(this, '_state', {
-            enumerable: false, /* hide */
-            writable: false,
-            value: {
-                date: '',
-                path: ''
-            }
-        });
+type State = {
+    date: string,
+    path: string
+}
 
-        this.state = this._state;
+class DepthState<ContainerType> extends Container {
+    state: State = {
+        date: '',
+        path: ''
     }
 
-    setDateDepth = async (date) => {
-        if (!typeof date === 'string') {
-            return false;
-        }
-
-        await this.setState({
-            date
-        });
+    setDate = async (date: string): Promise<void> => {
+        await this.setState({ date });
     }
 
-    setPathDepth = async (path) => {
-        if (!typeof path === 'string') {
-            return false;
-        }
-
-        await this.setState({
-            path
-        });
+    setPath = async (path: string): Promise<void> => {
+        await this.setState({ path });
     };
 
-    reset = async () => {
-        this.setState(this._state);
+    reset = async (): Promise<void> => {
+        await this.setState({
+            date: '',
+            path: ''
+        });
     };
 
 }

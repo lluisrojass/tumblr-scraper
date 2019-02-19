@@ -1,6 +1,6 @@
 const getPostData = require('../post');
 const log = require('electron-log');
-const { pipeEmit, removeMORE } = require('./utils');
+const { pipeEmit, craftPost } = require('./utils');
 
 const actionHandlers = loop => socket => {
   log.info(`socket connected with id ${socket.id}`);
@@ -14,17 +14,6 @@ const actionHandlers = loop => socket => {
     loop.resume(ack);
   })
 }
-
-const craftPost = rawPost => ({
-  type: rawPost.type,
-  datePublished: rawPost.datePublished || '',
-  articleBody: !!rawPost.articleBody ? removeMORE(post.articleBody) : '',
-  headline: rawPost.headline || '',
-  images: [].concat(!rawPost.image ? null : rawPost.image['@list'] || rawPost.image),
-  url: rawPost.url || '',
-  isVideo: rawPost.isVideo,
-  videoURL: post.videoURL || ''
-});
 
 module.exports = (server, loop) => {
   /* attach client action handlers */

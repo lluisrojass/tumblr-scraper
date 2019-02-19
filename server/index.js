@@ -28,6 +28,6 @@ function extractPort() {
     assert(!!port, 'server startup error, invalid argv port argument recieved');
     port = port >>> 0;
     assert(port >= 0x400 && port <= 0xFFFF, 'server startup error, '+
-    'incorrectly formatted port argument recieved');
+    'incorrectly formatted port recieved');
     return port;
 }

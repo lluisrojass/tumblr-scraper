@@ -10,3 +10,5 @@ class FatalError extends React.Component {
         )
     }
 }
+
+export default FatalError;

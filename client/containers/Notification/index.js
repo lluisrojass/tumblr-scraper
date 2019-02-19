@@ -1,28 +1,28 @@
-import { Container } from 'unstated';
-import { NOTIFICATION_TYPES } from 'constants';
+/* @flow */
+import { Container, type ContainerType } from 'unstated';
+import { notificationTypes, type NotifType } from '@ts/lib/constants';
 
-class NotificationState extends Container {
-    constructor() {
-        super();
-        Object.defineProperty(this, '_state', {
-            enumerable: false, /* hide */
-            writable: false,
-            value: {
-                type: NOTIFICATION_TYPES._INVALID,
-                notification: ''
-            }
+type State = {
+    type: NotifType,
+    notification: string
+}
+
+class NotificationState<ContainerType> extends Container {
+    state: State = {
+        type: notificationTypes._invalid,
+        notification: ''
+    }
+
+    reset = async (): Promise<void> => {
+        this.setState({
+            type: notificationTypes._invalid,
+            notification: ''
         });
-
-        this.state = this._state;
     }
 
-    reset = async () => {
-        this.setState(this._state);
-    }
-
-    notify = async (TYPE, message) => {
+    notify = async (type: NotifType, message: string): Promise<void> => {
         await this.setState({
-            type: TYPE,
+            type,
             notification: message
         });
     }

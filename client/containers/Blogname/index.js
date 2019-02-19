@@ -1,27 +1,21 @@
-import { Container } from 'unstated';
+/* @flow */
+import { Container, type ContainerType } from 'unstated';
 
-class BlognameState extends Container {
-    constructor() {
-        super();
-        Object.defineProperty(this, '_state', {
-            enumerable: false, /* hide */
-            writable: false,
-            value: {
-                blogname: ''
-            }
-        });
+type State = {
+    blogname: string
+};
 
-        this.state = this._state;
-    }
-
-    setBlogname = async ( text ) => {
-        await this.setState({
-            blogname: text
-        });
+class BlognameState<ContainerType> extends Container {
+    state: State = {
+        blogname: ''
     };
 
-    reset = async () => {
-        this.setState(this._state);
+    set = async (text: string): Promise<void> => {
+        await this.setState({ blogname: text });
+    };
+
+    reset = async (): Promise<void> => {
+        await this.setState({ blogname: '' });
     };
 }
 

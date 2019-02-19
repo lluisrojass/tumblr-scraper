@@ -1,27 +1,39 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classnames from 'classnames';
+/* @flow */
+import * as React from 'react';
 import styles from './index.css';
-import Option from '@ts/components/Option';
-import SlidersContainer from '@ts/containers/Sliders';
+import Option from '@ts/components/Option/';
+import OptionsContainer from '@ts/containers/Options';
 import { withSubscribe } from '@ts/utils';
 
-const SLIDERS_STATE_KEY = 'slidersContainer';
+const SLIDERS_STATE_KEY: string = 'optionsContainer';
 
-const decorateWithIndex = (func, index) => () => {
+const decorateWithIndex = (func: (index: number) => void, index: number) => (): void => {
     func(index);
 };
 
-const Options = (props) => (
-    <div className={classnames(styles.wrapper)}>
+type Props = {
+    'optionsContainer': {
+        state: {
+            sliders: Array<{|
+                value: any,
+                name: string
+            |}>
+        },
+        toggle: () => void
+    }
+}
+
+const Options = (props: Props): React.Element<'div'> => (
+    <div className={styles.wrapper}>
         {
             props[SLIDERS_STATE_KEY].state.sliders.map((slider, index) => (
                 <Option
                     key={index}
-                    name={slider.name}
+                    name={slider.label}
                     isChecked={slider.value}
+                    value={slider.value}
                     onChange={decorateWithIndex(
-                        props[SLIDERS_STATE_KEY].toggleSlider,
+                        props[SLIDERS_STATE_KEY].toggle,
                         index
                     )}
                 />
@@ -30,18 +42,9 @@ const Options = (props) => (
     </div>
 );
 
-Options.propTypes = {
-    [SLIDERS_STATE_KEY]: PropTypes.shape({
-        state: PropTypes.shape({
-            sliders: PropTypes.array
-        }),
-        toggleSlider: PropTypes.func
-    })
-};
-
 export default withSubscribe([
     {
         name: SLIDERS_STATE_KEY,
-        container: SlidersContainer
+        container: OptionsContainer
     }
 ], Options);

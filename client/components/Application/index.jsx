@@ -1,4 +1,6 @@
-import React from 'react';
+/* @flow */
+
+import * as React from 'react';
 import classnames from 'classnames';
 import styles from './index.css';
 import Panel from '@ts/components/PanelWrapper';
@@ -28,13 +30,19 @@ import Options from '@ts/components/Options';
 
 */
 
-const Application = () => (
-    <div className={classnames(styles.appWrapper)}>
-        <Panel width={30} className={styles.foregroundPanel}></Panel>
-        <Panel width={34.95} className={styles.backgroundPanel}></Panel>
-        <Panel width={34.95} className={styles.backgroundPanel}></Panel>
-    </div>
-);
+type Props = {
+    port: number
+}
+
+const Application = (props: Props): React.Element<'div'> => {
+    return (
+        <div className={classnames(styles.appWrapper)}>
+            <Panel width={30} className={styles.foregroundPanel}></Panel>
+            <Panel width={34.95} className={styles.backgroundPanel}></Panel>
+            <Panel width={34.95} className={styles.backgroundPanel}></Panel>
+        </div>
+    )
+}
 
 
 export default Application;
