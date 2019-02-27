@@ -26,9 +26,10 @@
     "rules": {
         "indent": [
             "error",
-            4, 
+            2, 
             {"SwitchCase": 1}
         ],
+        "react/display-name": "off",
         "linebreak-style": [
             "error",
             "unix"

@@ -1,0 +1,8 @@
+{
+  "text": "is_regular",
+  "ask":" is_note",
+  "chat": "is_chat",
+  "photo": "is_photo",
+  "video": "is_video",
+  "audio": "is_audio"
+}

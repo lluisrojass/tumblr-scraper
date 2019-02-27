@@ -1,0 +1,8 @@
+.app-wrapper {
+  composes: container from global;
+}
+.foreground-panel {
+  composes: draggable from global;
+  position: relative;
+  background-color: var(--color-background);
+}

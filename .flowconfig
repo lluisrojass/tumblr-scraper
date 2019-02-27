@@ -8,11 +8,11 @@
 [lints]
 
 [options]
-module.name_mapper='^@ts/config$' -> '<PROJECT_ROOT>/ui.config.json'
-module.name_mapper='^@ts/lib' -> '<PROJECT_ROOT>/client/library'
-module.name_mapper='^@ts/typemap' -> '<PROJECT_ROOT>/types.json'
-module.name_mapper='^@ts/utils' -> '<PROJECT_ROOT>/client/library/utils'
-module.name_mapper='^@ts/components' -> '<PROJECT_ROOT>/client/components'
-module.name_mapper='^@ts/containers' -> '<PROJECT_ROOT>/client/containers'
-module.name_mapper='^@ts/global-styles$' -> '<PROJECT_ROOT>/client/library/css/global.css'
+module.name_mapper='^@ts/config$' -> '<PROJECT_ROOT>/src/client/ui.json'
+module.name_mapper='^@ts/lib' -> '<PROJECT_ROOT>/src/client/library'
+module.name_mapper='^@ts/type-map$' -> '<PROJECT_ROOT>/src/types.json'
+module.name_mapper='^@ts/components' -> '<PROJECT_ROOT>/src/client/components'
+module.name_mapper='^@ts/base-components' -> '<PROJECT_ROOT>/src/client/library/components'
+module.name_mapper='^@ts/containers' -> '<PROJECT_ROOT>/src/client/containers'
+module.name_mapper='^@ts/global-styles$' -> '<PROJECT_ROOT>/src/client/library/css/global.css'
 [strict]

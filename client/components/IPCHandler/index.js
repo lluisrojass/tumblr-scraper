@@ -1,1 +1,0 @@
-export { IPCHandler as default } from './IPC.jsx';
