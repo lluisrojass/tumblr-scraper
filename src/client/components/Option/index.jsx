@@ -1,11 +1,13 @@
 /* @flow */
 import * as React from 'react';
+import classnames from 'classnames';
 import { noop } from '@ts/lib/utils/common';
 import styles from './index.css';
 
 type Props = {
     name: string,
     isChecked: boolean,
+    capitalize: ?boolean,
     value: string,
     onClick: (number) => Promise<void>
 }
@@ -22,7 +24,10 @@ const Option = (props: Props) => (
     <span 
       onClick={props.onClick}
       tabIndex={0} 
-      className={styles.label}>
+      className={classnames(
+        props.capitalize && styles.cap,
+        styles.label
+      )}>
       { props.name }
     </span>
   </div>

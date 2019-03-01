@@ -1,28 +1,43 @@
 /* @flow */
 import * as React from 'react';
+import classnames from 'classnames';
 import { Subscribe } from 'unstated'; 
 import BlognameContainer from '@ts/containers/Blogname';
+import BlogTypeContainer from '@ts/containers/Blog-Type-Options';
 import styles from './index.css';
 import { 
   type StateT, 
   type SetterT 
 } from '@ts/containers/Blogname/types.flow.js';
-
+import { 
+  type OptionT
+} from '@ts/containers/Blog-Type-Options/types.flow.js';
 type Props = {
-  blognameState: {
-    state: StateT,
-    set: SetterT
-  }
+  blognameState: StateT,
+  setBlogname: SetterT,
+  blogType: ?OptionT
 }
-
-class Textbox extends React.Component<Props> {
+class Textbox extends React.PureComponent<Props> {
     onChange = async (event) => {
       if (event.target instanceof window.HTMLInputElement) {
-        const { blognameState } = this.props;
+        const { setBlogname, blogType } = this.props;
+        if (blogType == null) {
+          return;
+        }
         const { value } = event.target;
-        await blognameState.set(value);
+        await setBlogname(value, blogType.type);
       }
     };
+    
+    componentDidUpdate(prevProps) {
+      if (this.props.blogType !== prevProps.blogType) {
+        const { blognameState, blogType } = this.props;
+        if (blogType == null) {
+          return;
+        }
+        this.props.setBlogname(blognameState.blogname, blogType.type);
+      }
+    }
 
     render() {
       const { blognameState } = this.props;
@@ -32,12 +47,19 @@ class Textbox extends React.Component<Props> {
           <input
             type="text"
             onChange={onChange}
-            className={styles.input}
+            className={classnames(
+              styles.input,
+              blognameState.status === 'CLEAR' && styles.clear,
+              blognameState.status === 'ERROR' && styles.error,
+              blognameState.status === 'GOOD' && styles.good,
+            )}
             name="blogname"
-            value={blognameState.state.blogname}
+            value={blognameState.blogname}
           />
           <span className={styles.addon}>
-            Scrape
+            {blognameState.status === 'CLEAR' && 'Scrape'}
+            {blognameState.status === 'ERROR' && 'x'}
+            {blognameState.status === 'GOOD' && 'Scrape'}
           </span>
         </div>
       );
@@ -45,10 +67,12 @@ class Textbox extends React.Component<Props> {
 }
 
 export default () => (
-  <Subscribe to={[BlognameContainer]}>
-    { (blognameState) => (
+  <Subscribe to={[BlognameContainer, BlogTypeContainer]}>
+    { (blognameContainer, blogtypeContainer) => (
       <Textbox 
-        blognameState={blognameState}
+        blognameState={blognameContainer.state}
+        setBlogname={blognameContainer.set}
+        blogType={blogtypeContainer.state.options.find(o => o.value)}
       />
     ) }
   </Subscribe>

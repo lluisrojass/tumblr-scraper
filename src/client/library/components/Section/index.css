@@ -1,0 +1,18 @@
+.section {
+  margin: 4.9vh 0;
+}
+.sectionTitle {
+  margin: 0;
+  font-size: .3rem;
+  text-align: left;
+  padding-left: 2px;
+  font-family: sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  line-height: 1.19;
+  display: inline-block;
+  font-weight: 100;
+  width: 100%;
+  opacity: 0.3;
+  color: black;
+}

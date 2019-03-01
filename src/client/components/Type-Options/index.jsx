@@ -34,6 +34,7 @@ const Options = (props: Props) => {
           name={option.label}
           isChecked={option.value}
           value={option.type}
+          capitalize={true}
           onClick={decorateWithIndex(
             props.optionsContainer.toggle,
             index

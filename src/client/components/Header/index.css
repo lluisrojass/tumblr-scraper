@@ -1,7 +1,6 @@
 .wrapper {
     text-align: left;
     width: 100%;
-    padding: 1.75rem 0 1.6rem;
 }
 .header {
     composes: skinny from global;

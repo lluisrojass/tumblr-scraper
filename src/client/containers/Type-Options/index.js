@@ -1,7 +1,6 @@
 /* @flow */
 import { 
-  Container, 
-  type ContainerType 
+  Container
 } from 'unstated';
 import { 
   type OptionT, 
@@ -9,21 +8,19 @@ import {
   type OptionsToggleT 
 } from './types.flow.js';
 import { labels } from '@ts/config';
-import typeMap from '@ts/type-map';
-
-const makeOption = (label: string, type: string, value: boolean): 
-    OptionT => ({ label, type, value });
+import { tumblrTypes } from '@ts/type-map';
+import { makeOption } from '@ts/lib/utils/options';
 
 const resetOptions = (): Array<OptionT> => ([
-  makeOption(labels.options.all, typeMap.all, true),
-  makeOption(labels.options.photo, typeMap.photo, false),
-  makeOption(labels.options.text, typeMap.text, false),
-  makeOption(labels.options.ask, typeMap.ask, false),
-  makeOption(labels.options.chat, typeMap.chat, false),
-  makeOption(labels.options.video, typeMap.video, false),
+  makeOption(labels.options.all, tumblrTypes.all, true),
+  makeOption(labels.options.photo, tumblrTypes.photo, false),
+  makeOption(labels.options.text, tumblrTypes.text, false),
+  makeOption(labels.options.ask, tumblrTypes.ask, false),
+  makeOption(labels.options.chat, tumblrTypes.chat, false),
+  makeOption(labels.options.video, tumblrTypes.video, false),
 ]);
 
-class TypeOptionsContainer<ContainerType> extends Container {
+class TypeOptionsContainer extends Container {
     state: StateT = {
       options: resetOptions()
     }
@@ -55,7 +52,7 @@ class TypeOptionsContainer<ContainerType> extends Container {
           await this.setState({
             options: [
               ...this.state.options.slice(0, allOptionIndex),
-              makeOption(labels.options.all, typeMap.all, false),
+              makeOption(labels.options.all, tumblrTypes.all, false),
               ...this.state.options.slice(allOptionIndex + 1)
             ]
           });

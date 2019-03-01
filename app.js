@@ -66,7 +66,7 @@ function createClientWindow(port) {
     height: 500,
     minWidth: 1000,
     minHeight: 500,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: '#f6f8f8',
     titleBarStyle: 'hiddenInset',
     title: 'Tumblr Scraper',
     scrollBounce: true,

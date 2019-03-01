@@ -4,44 +4,57 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    margin-bottom: 1.6rem;
+    padding-top: 0.5rem;
+}
+.good {
+    border: 1px solid rgb(38,133, 238);
+}
+.good + .addon {
+    background-color: rgb(38,133, 238);
+    cursor: pointer;
+}
+.good + .addon:hover {
+    box-shadow: 0 4px 14px 0 rgba(1, 120, 255, 0.4);
+}
+.error {
+    border: 1px solid rgb(219, 82, 74);
+}
+.error + .addon  {
+    background-color: rgb(219, 82, 74);
+}
+.clear {
+    border: 1px solid rgba(54,98,107, 0.3);
+}
+.clear + .addon {
+    background-color: rgba(54,98,107, 0.3);
 }
 .input {
-    border-radius: 5px;
+    border-radius: 5px 0 0 5px;
     padding-left: 0.75rem;
-    line-height: 2.5rem;
-    border: 1px solid rgba(54,98,107, 0.3);
-    border-radius: 5px;
-    border-top-right-radius: 0;
     border-right-width: 0;
-    border-bottom-right-radius: 0;
-    width: 60%;
+    width: 70%;
     font-size: 1rem;
     line-height: 2.75rem;
     font-family: 'Gothic A1';
     letter-spacing: 0.5px;
     background-color: white;
     color: #051e3e;
+    transition: border-color 500ms ease-in-out;
 }
 .input:focus {
     outline: none;
 }
 .addon {
     border-radius: 0 5px 5px 0;
-    border-width: 1px 1px 1px 1px;
-    border-color: #0076e0;
-    border-color: rgba(54,98,107, 0.3);
-    color: rgba(54,98,107, 0.3);
-    border-style: solid solid solid none;
-    border-top: 1px solid rgba(54,98,107, 0.3);
-    border-bottom: 1px solid rgba(54,98,107, 0.3);
-    border-right: 1px solid rgba(54,98,107, 0.3);
-    padding: 0 0.75rem 0 0.1rem;
+    border: 3px solid transparent;
+    transition: background-color 500ms ease-in-out,
+    box-shadow 500ms ease-in-out;
+    color: white;
     display: block;
-    width: 40%;
-    text-align: right;
+    width: 30%;
+    text-align: center;
     line-height: 2.75rem;
+    letter-spacing: 1.3px;
     font-size: 1rem;
     font-family: 'Gothic A1';
-    background-color: white;
 }

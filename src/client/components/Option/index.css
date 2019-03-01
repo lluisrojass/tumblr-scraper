@@ -8,7 +8,6 @@
     width: 100%;
     transition: box-shadow ease-in-out .10s;
     font-weight: 500;
-    text-transform: capitalize;
     font-family: sans-serif;
     color: rgba(54,98,107, 0.3);
     font-size: 1rem;
@@ -17,6 +16,9 @@
     transition: color ease-in 0.15s,
     background-color ease-in 0.15s,
     box-shadow ease-in 0.17s;
+}
+.cap {
+    text-transform: capitalize;
 }
 .container {
     width: 48%;
@@ -40,7 +42,7 @@
     outline: none;
 }
 .checkbox:checked + .label {
-    background-color: #0076e0;
+    background-color: rgb(38,133, 238);
     box-shadow: 0 4px 14px 0 rgba(1, 120, 255, 0.4);
     color: white;
 }

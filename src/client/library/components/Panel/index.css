@@ -1,7 +1,7 @@
 .base {
     height: 100%;
     float: left;
-    padding: 1rem 2%;
+    padding: 3.2vh 2%;
 }
 .base:before {
     content: "";
