@@ -4,57 +4,27 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding-top: 0.5rem;
 }
 .good {
-    border: 1px solid rgb(38,133, 238);
-}
-.good + .addon {
-    background-color: rgb(38,133, 238);
-    cursor: pointer;
-}
-.good + .addon:hover {
-    box-shadow: 0 4px 14px 0 rgba(1, 120, 255, 0.4);
+    border: 1px solid var(--primary-blue);
 }
 .error {
-    border: 1px solid rgb(219, 82, 74);
-}
-.error + .addon  {
-    background-color: rgb(219, 82, 74);
+    border: 1px solid var(--red);
 }
 .clear {
-    border: 1px solid rgba(54,98,107, 0.3);
-}
-.clear + .addon {
-    background-color: rgba(54,98,107, 0.3);
+    border: 1px solid var(--grey-dark);
 }
 .input {
-    border-radius: 5px 0 0 5px;
-    padding-left: 0.75rem;
-    border-right-width: 0;
-    width: 70%;
-    font-size: 1rem;
+    border-radius: var(--std-radius);
+    padding: 0 1rem;
+    width: 100%;
+    font-size: 1.1rem;
     line-height: 2.75rem;
-    font-family: 'Gothic A1';
-    letter-spacing: 0.5px;
+    font-weight: 400;
+    letter-spacing: 0.7px;
     background-color: white;
-    color: #051e3e;
-    transition: border-color 500ms ease-in-out;
+    color: var(--black);
 }
 .input:focus {
     outline: none;
-}
-.addon {
-    border-radius: 0 5px 5px 0;
-    border: 3px solid transparent;
-    transition: background-color 500ms ease-in-out,
-    box-shadow 500ms ease-in-out;
-    color: white;
-    display: block;
-    width: 30%;
-    text-align: center;
-    line-height: 2.75rem;
-    letter-spacing: 1.3px;
-    font-size: 1rem;
-    font-family: 'Gothic A1';
 }

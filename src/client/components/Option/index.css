@@ -1,24 +1,24 @@
 .label {
     cursor: pointer;
-    padding-left: 0.75rem;
-    padding-top: 0;
-    padding-bottom: 0;
-    display: inline-block;
-    border-radius: 5px;
     width: 100%;
-    transition: box-shadow ease-in-out .10s;
+    padding: 0 0 0 0.75rem;
+    display: inline-block;
+    border-radius: var(--std-radius);
     font-weight: 500;
     font-family: sans-serif;
-    color: rgba(54,98,107, 0.3);
+    color: var(--grey-dark);
     font-size: 1rem;
     line-height: 2.75rem;
     letter-spacing: 1px;
-    transition: color ease-in 0.15s,
-    background-color ease-in 0.15s,
-    box-shadow ease-in 0.17s;
+    transition: 
+        transform var(--t-ms-quickest) ease-in-out,
+        background-color var(--t-ms-std) ease-in-out;
 }
 .cap {
     text-transform: capitalize;
+}
+.pressed {
+    transform: scale(0.96);
 }
 .container {
     width: 48%;
@@ -33,7 +33,7 @@
     margin-right: 3.5px;
 }
 .label:hover {
-    box-shadow: 0 5px 15px 0 #a3a3a3;
+    background-color: var(--grey-light);
 }
 .checkbox {
     display: none;
@@ -42,7 +42,6 @@
     outline: none;
 }
 .checkbox:checked + .label {
-    background-color: rgb(38,133, 238);
-    box-shadow: 0 4px 14px 0 rgba(1, 120, 255, 0.4);
+    background: var(--blue-gradient-tbl);
     color: white;
 }

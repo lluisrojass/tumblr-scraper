@@ -21,9 +21,7 @@
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
-}
-:global(.appContainer) {
-  background-color: var(--color-background);
+  font-family: sans-serif, Helvetica, Arial;
 }
 :global(.full) {
   height: 100%;
@@ -46,9 +44,6 @@
 :global(.rows) {
   display: flex;
   flex-direction: row;
-}
-:global(.draggable) {
-  -webkit-app-region: drag;
 }
 :global(.scrollable) {
   overflow: auto;

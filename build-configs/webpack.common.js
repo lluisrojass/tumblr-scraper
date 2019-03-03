@@ -46,6 +46,28 @@ module.exports = {
         }
       },
       {
+        test: /\.svg$/i,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env', 
+                '@babel/preset-react',
+                '@babel/preset-flow'
+              ]
+            }
+          }, 
+          {
+            loader: 'react-svg-loader',
+            options: {
+              jsx: true
+            }
+          }
+        ]
+      },
+      {
         test: /\.css$/i,
         use: [
           { 

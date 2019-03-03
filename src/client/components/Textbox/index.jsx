@@ -17,6 +17,7 @@ type Props = {
   setBlogname: SetterT,
   blogType: ?OptionT
 }
+
 class Textbox extends React.PureComponent<Props> {
     onChange = async (event) => {
       if (event.target instanceof window.HTMLInputElement) {
@@ -56,11 +57,6 @@ class Textbox extends React.PureComponent<Props> {
             name="blogname"
             value={blognameState.blogname}
           />
-          <span className={styles.addon}>
-            {blognameState.status === 'CLEAR' && 'Scrape'}
-            {blognameState.status === 'ERROR' && 'x'}
-            {blognameState.status === 'GOOD' && 'Scrape'}
-          </span>
         </div>
       );
     }

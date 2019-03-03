@@ -1,9 +1,7 @@
 .slider-track {
   margin: 0;
-  border: 1px solid rgba(54,98,107, 0.3);
-  display: inline-block;
-  padding: .25rem .065rem;
-  border-radius: 5px;
+  border: 1px dotted var(--grey-dark);
+  border-radius: var(--std-radius);
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -13,9 +11,9 @@
 .highlighter {
   height: 100%;
   width: 100%;
-  background-color: rgb(38,133, 238);
-  box-shadow: 0 4px 14px 0 rgba(1, 120, 255, 0.4);
-  border-radius: 5px;
+  background: var(--blue-gradient-tbl);
+  box-shadow:  var(--shadow) var(--blue-glow);
+  border-radius: var(--std-radius);
 }
 .highlighter-container {
   height: 100%;
@@ -24,18 +22,17 @@
   z-index: 2;
   top: 0;
   left: 0;
-  padding: .25rem .225rem;
   width: 50%;
-  transition: transform 200ms ease-out;
-  transform: translateX(0%);
+  transition: transform var(--t-ms-quick) ease-out;
+  transform: translateX(0);
 }
 .slider-option {
   width: 48.5%;
   position: relative;
-  transition: color 250ms ease-in-out;
-  border-radius: 5px;
-  color: rgba(54,98,107, 0.3);
   display: inline-block;
+  transition: color var(--t-ms-std) ease-in-out;
+  border-radius: var(--std-radius);
+  color: var(--grey-dark);
   font-weight: 500;
   font-size: 1rem;
   letter-spacing: 1px;
@@ -43,13 +40,16 @@
   font-family: sans-serif;
   text-align: center;
 }
-.slider-option:not(.selected):hover {
+.slider-option:hover {
   cursor: pointer;
 }
 .slid {
   transform: translateX(100%);
 }
+.slid .highlighter {
+  background: var(--blue-gradient-tbr);
+}
 .slider-option.selected {
   color: white;
-  z-index: 4;
+  z-index: 3;
 }
