@@ -3,10 +3,11 @@
     width: 100%;
     padding: 0 0 0 0.75rem;
     display: inline-block;
-    border-radius: var(--std-radius);
-    font-weight: 500;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    font-weight: 100;
     font-family: sans-serif;
-    color: var(--grey-dark);
+    color: #8d949e;
     font-size: 1rem;
     line-height: 2.75rem;
     letter-spacing: 1px;
@@ -21,16 +22,11 @@
     transform: scale(0.96);
 }
 .container {
-    width: 48%;
-    margin-top: 3.5px;
-    margin-bottom: 3.5px;
+    width: 32%;
+    max-width: 32%;
+    margin: 3.87px 0;
     display: inline-block;
-}
-.container:nth-of-type(even) {
-    margin-left: 3.5px;
-}
-.container:nth-of-type(odd) {
-    margin-right: 3.5px;
+    flex-shrink: 1;
 }
 .label:hover {
     background-color: var(--grey-light);
@@ -42,6 +38,6 @@
     outline: none;
 }
 .checkbox:checked + .label {
-    background: var(--blue-gradient-tbl);
+    background: var(--primary-blue);
     color: white;
 }

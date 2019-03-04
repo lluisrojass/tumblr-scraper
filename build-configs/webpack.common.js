@@ -90,6 +90,13 @@ module.exports = {
             } 
           }
         ]
+      },
+      { 
+        test: /\.otf$/, 
+        loader: 'url-loader' ,
+        options: {
+          limit: 100000
+        }
       }
     ]
   },

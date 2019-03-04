@@ -1,19 +1,20 @@
 .slider-track {
   margin: 0;
-  border: 1px dotted var(--grey-dark);
-  border-radius: var(--std-radius);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 10px;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   position: relative;
+  max-width: 200px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 .highlighter {
   height: 100%;
   width: 100%;
-  background: var(--blue-gradient-tbl);
-  box-shadow:  var(--shadow) var(--blue-glow);
-  border-radius: var(--std-radius);
+  background-color: var(--primary-blue);
+  border-radius: 10px;
 }
 .highlighter-container {
   height: 100%;
@@ -34,9 +35,9 @@
   border-radius: var(--std-radius);
   color: var(--grey-dark);
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.8rem;
   letter-spacing: 1px;
-  line-height: 2.75rem;
+  line-height: 2.5rem;
   font-family: sans-serif;
   text-align: center;
 }
@@ -52,4 +53,14 @@
 .slider-option.selected {
   color: white;
   z-index: 3;
+}
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 550px;
+  margin-bottom: 15px;
 }

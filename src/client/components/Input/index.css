@@ -1,0 +1,40 @@
+.input-wrapper {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    align-items: baseline;
+}
+.input {
+    font-size: 2rem;
+    padding: 15px 45px 15px 30px;
+    font-family: 'SFMono', sans-serif;
+    caret-color: var(--primary-blue);
+    font-weight: 500;
+    color: #2b2e3b;
+    width: 100%;
+    letter-spacing: -1.3px;
+    line-height: 1;
+    border: none;
+    border-radius: 50px;
+}
+input::-webkit-input-placeholder {
+    color: var(--grey-dark);
+    text-shadow: none;
+}
+.input:focus {
+    outline: none;
+}
+.arrowIcon {
+    height: 2.5rem;
+    width: 2.5rem;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    fill: var(--grey-dark);
+}
+.arrowIcon:hover {
+    fill: var(--primary-blue);
+    stroke: 0;
+}

@@ -6,3 +6,19 @@
     justify-content: space-around;
     flex-wrap: wrap;
 }
+.section-title-spike {
+    width: 98%;
+    margin: 0;
+    font-family: 'SFMono';
+    margin: 0 0 5px;
+}
+.title {
+    font-family: sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 600;
+    font-variant: all-small-caps;
+    letter-spacing: 1px;
+    color: var(--grey-dark);
+    text-transform: uppercase;
+}

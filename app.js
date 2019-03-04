@@ -64,7 +64,7 @@ function createClientWindow(port) {
   const win = new BrowserWindow({
     width: 1000,
     height: 500,
-    minWidth: 1000,
+    minWidth: 800,
     minHeight: 500,
     backgroundColor: '#ffffff',
     titleBarStyle: 'hidden',

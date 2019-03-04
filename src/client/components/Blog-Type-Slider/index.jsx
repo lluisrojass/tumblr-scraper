@@ -27,26 +27,28 @@ class Slider extends React.PureComponent<Props> {
     const { options } = this.props;
     const shouldSlide: boolean = options.length > 0 && !options[0].value;
     return (
-      <div className={styles.sliderTrack}>
-        { 
-          options.map((option, i) => (
-            <div 
-              className={classnames(
-                styles.sliderOption,
-                option.value && styles.selected
-              )}
-              onClick={decorateWithIndex(this.props.set, i)}
-              key={i}
-            >
-              { option.label }
-            </div>)) 
-        }
-        <div className={
-          classnames(
-            styles.highlighterContainer,
-            shouldSlide && styles.slid
-          )}>
-          <div className={styles.highlighter}></div>
+      <div className={styles.wrapper}>
+        <div className={styles.sliderTrack}>
+          { 
+            options.map((option, i) => (
+              <div 
+                className={classnames(
+                  styles.sliderOption,
+                  option.value && styles.selected
+                )}
+                onClick={decorateWithIndex(this.props.set, i)}
+                key={i}
+              >
+                { option.label }
+              </div>)) 
+          }
+          <div className={
+            classnames(
+              styles.highlighterContainer,
+              shouldSlide && styles.slid
+            )}>
+            <div className={styles.highlighter}></div>
+          </div>
         </div>
       </div>
     );
