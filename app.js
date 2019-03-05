@@ -62,12 +62,12 @@ function createServerWindow(port) {
 
 function createClientWindow(port) {
   const win = new BrowserWindow({
-    width: 1000,
+    width: 800,
     height: 500,
     minWidth: 800,
     minHeight: 500,
     backgroundColor: '#ffffff',
-    titleBarStyle: 'hidden',
+    titleBarStyle: 'hiddenInset',
     title: 'Tumblr Scraper',
     scrollBounce: true,
     darkTheme: true,

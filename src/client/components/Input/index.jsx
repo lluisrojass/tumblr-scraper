@@ -5,7 +5,7 @@ import { Subscribe } from 'unstated';
 import BlognameContainer from '@ts/containers/Blogname';
 import BlogTypeContainer from '@ts/containers/Blog-Type-Options';
 import styles from './index.css';
-import ArrowIcon from '@ts/lib/icons/go.svg';
+import ArrowIcon from '@ts/lib/icons/next.svg';
 import { 
   type StateT, 
   type SetterT 
@@ -48,7 +48,7 @@ class Input extends React.PureComponent<Props> {
         <div className={styles.inputWrapper}>
           <input
             type="text"
-            placeholder="Scrape a Blog"
+            placeholder="enter blog"
             onChange={onChange}
             className={classnames(
               styles.input

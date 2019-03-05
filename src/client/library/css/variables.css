@@ -1,7 +1,7 @@
 :root {
     --blue-gradient-tbl: linear-gradient(to bottom left,#2685ee,#1771d8);
     --blue-gradient-tbr: linear-gradient(to bottom right,#2685ee,#1771d8);
-    --primary-blue: rgb(38,133, 238);
+    --primary-blue: rgba(43, 134, 222, 1);
     --blue-glow: rgba(1, 120, 255, 0.4);
     --grey-light: rgb(245,245,245);
     --grey-dark: rgb(156, 173, 178);

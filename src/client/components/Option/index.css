@@ -1,35 +1,39 @@
 .label {
     cursor: pointer;
     width: 100%;
-    padding: 0 0 0 0.75rem;
+    padding: 0 0.5rem;
     display: inline-block;
-    border-radius: 6px;
-    border: 1px solid transparent;
-    font-weight: 100;
-    font-family: sans-serif;
-    color: #8d949e;
+    border: 0;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+    font-weight: 500;
+    border-bottom: 1.5px solid transparent;
+    text-align: center;
+    color: var(--grey-dark);
     font-size: 1rem;
-    line-height: 2.75rem;
+    line-height: 3rem;
     letter-spacing: 1px;
     transition: 
-        transform var(--t-ms-quickest) ease-in-out,
-        background-color var(--t-ms-std) ease-in-out;
+        background-color 100ms ease-in-out,
+        border-bottom 100ms ease-in-out;
 }
+.container:nth-last-of-type(1) {
+    border-bottom-right-radius: 10px;
+}
+.container:nth-of-type(1) .label {
+    font-weight: 700;
+}
+
 .cap {
     text-transform: capitalize;
 }
-.pressed {
-    transform: scale(0.96);
-}
 .container {
-    width: 32%;
-    max-width: 32%;
-    margin: 3.87px 0;
-    display: inline-block;
-    flex-shrink: 1;
+    display: inline-flex;
+    flex-shrink: 0;
+    flex-grow: 1;
 }
 .label:hover {
-    background-color: var(--grey-light);
+    color: rgb(98,98,98);
+    border-bottom: 1.5px solid rgba(74, 168, 238, 1);
 }
 .checkbox {
     display: none;
@@ -38,6 +42,6 @@
     outline: none;
 }
 .checkbox:checked + .label {
-    background: var(--primary-blue);
-    color: white;
+    border-bottom: 1.5px solid rgba(74, 168, 238, 1);
+    color: rgb(98,98,98);
 }

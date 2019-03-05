@@ -13,7 +13,7 @@
           }
       },
       "options": {
-          "all": "all",
+          "all": "all posts",
           "photo": "photo",
           "chat": "chat",
           "ask": "ask",
