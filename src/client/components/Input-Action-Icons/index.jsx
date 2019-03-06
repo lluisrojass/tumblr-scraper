@@ -28,23 +28,21 @@ class WithIcons extends React.PureComponent<Props> {
 
     return (
       <div className={styles.invisible}>
-        <>
-          <div className={classnames(
-            styles.pulseWrapper,
-            shouldShowLoader && styles.visible
-          )}>
-            <RippleLoader />
-          </div>
-          <XIcon className={classnames(
-            styles.xIcon,
-            shouldShowError && styles.visible
-          )} />
-          <ArrowIcon className={classnames(
-            styles.arrowIcon,
-            shouldShowGo && styles.visible,
-            shouldBeAllowedToGo && styles.withColor
-          )} />
-        </>
+        <div className={classnames(
+          styles.pulseWrapper,
+          shouldShowLoader && styles.visible
+        )}>
+          <RippleLoader />
+        </div>
+        <XIcon className={classnames(
+          styles.xIcon,
+          shouldShowError && styles.visible
+        )} />
+        <ArrowIcon className={classnames(
+          styles.arrowIcon,
+          shouldShowGo && styles.visible,
+          shouldBeAllowedToGo && styles.withColor
+        )} />
         { this.props.children }
       </div>
     );
@@ -65,7 +63,7 @@ export default (props: SProps) => (
           hasSelectedTypes={btContainer.state.options.findIndex(
             (option) => option.value
           ) !== -1}
-          containsInput={!!bnContainer.state.blogname}
+          containsInput={!!bnContainer.state._blogname}
         >
           { props.children }
         </WithIcons>

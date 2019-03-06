@@ -3,11 +3,10 @@ import * as React from 'react';
 import classnames from 'classnames';
 import { Subscribe } from 'unstated'; 
 import BlognameContainer from '@ts/containers/Blogname';
-import WithActions from '@ts/components/Input-Actions';
+import WithActions from '@ts/components/Input-Action-Icons';
 import styles from './index.css';
-import { 
-  type StateT, 
-  type SetterT,
+import {
+  type ValidatorT,
   type TypingT,
   type StopTypingT
 } from '@ts/containers/Blogname/types.flow.js';
@@ -15,19 +14,27 @@ import { debounce } from 'debounce';
 import config from '@ts/config';
 
 type Props = {
-  blognameState: StateT,
-  setBlogname: SetterT,
+  validate: ValidatorT,
   startTyping: TypingT,
   stopTyping: StopTypingT,
+};
+
+type State = {
+  value: string
 }
 
-class Input extends React.PureComponent<Props> {
+class Input extends React.PureComponent<Props, State> {
+    state = {
+      value: ''
+    }; 
+
     onChange = async (event) => {
       if (event.target instanceof window.HTMLInputElement) {
-        const { setBlogname, startTyping } = this.props;
-        const { value } = event.target;
+        const { validate, startTyping } = this.props;
+        const value = event.target.value;
+        this.setState({ value });
         await startTyping();
-        await setBlogname(value);
+        await validate(value);
       }
     };
 
@@ -40,12 +47,10 @@ class Input extends React.PureComponent<Props> {
 
     render() {
       const { 
-        blognameState
-      } = this.props;
-      const { 
         onChange, 
         stopTypingDebounced 
       } = this;
+      const { value } = this.state;
       return (
         <WithActions>
           <div className={styles.inputWrapper}>
@@ -56,7 +61,7 @@ class Input extends React.PureComponent<Props> {
               onChange={onChange}
               className={classnames(styles.input)}
               name="blogname"
-              value={blognameState.blogname}
+              value={value}
             />
           </div>
         </WithActions>
@@ -67,9 +72,8 @@ class Input extends React.PureComponent<Props> {
 export default () => (
   <Subscribe to={[BlognameContainer]}>
     { (blognameContainer) => (
-      <Input 
-        blognameState={blognameContainer.state}
-        setBlogname={blognameContainer.set}
+      <Input
+        validate={blognameContainer.validate}
         startTyping={blognameContainer.typing}
         stopTyping={blognameContainer.stopTyping}
       />

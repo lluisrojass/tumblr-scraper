@@ -7,11 +7,11 @@
 }
 .hidden {
   opacity: 0;
-  transition: 170ms opacity;
+  transition: 80ms opacity linear;
 }
 .visible {
   opacity: 1;
-  transition-delay: 190ms; /* wait till other item hides */
+  transition-delay: 100ms; /* wait till other item hides */
 }
 .icon {
   composes: positioned hidden;

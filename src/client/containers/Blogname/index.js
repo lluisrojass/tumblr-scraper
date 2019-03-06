@@ -6,7 +6,7 @@ import { exactMatch } from '@ts/lib/utils/common';
 import * as statuses from './constants';
 import {
   type StateT,
-  type SetterT,
+  type ValidatorT,
   type ResetterT,
   type TypingT,
   type StopTypingT
@@ -14,16 +14,16 @@ import {
 
 class BlognameContainer extends Container {
     state: StateT = {
-      blogname: '',
+      _blogname: '',
       status: statuses.clear,
       errorMessage: null,
       isTyping: false
     };
 
-    set: SetterT = async (text) => {
+    validate: ValidatorT = async (text) => {
       if (text.length === 0) {
         await this.setState({
-          blogname: '',
+          _blogname: '',
           status: statuses.clear,
           errorMessage: null
         });
@@ -31,7 +31,7 @@ class BlognameContainer extends Container {
       }
       else if (text.length > 32) {
         await this.setState({
-          blogname: text,
+          _blogname: text,
           status: statuses.error,
           errorMessage: 'custom blog names must be 32 characters or less'
         });
@@ -39,7 +39,7 @@ class BlognameContainer extends Container {
       }
       else if (!exactMatch(/^[a-zA-Z0-9]+(?:-*[a-zA-Z0-9])*$/, text)) {
         await this.setState({
-          blogname: text,
+          _blogname: text,
           status: statuses.error,
           errorMessage: 'invalid blog name'
         });
@@ -47,7 +47,7 @@ class BlognameContainer extends Container {
       }
 
       await this.setState({ 
-        blogname: text,
+        _blogname: text,
         status: statuses.good,
         errorMessage: null
       });
@@ -55,7 +55,7 @@ class BlognameContainer extends Container {
 
     reset: ResetterT = async () => {
       await this.setState({ 
-        blogname: '',
+        _blogname: '',
         status: statuses.clear,
         errorMessage: null
       });
