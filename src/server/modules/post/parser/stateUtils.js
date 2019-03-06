@@ -1,43 +1,43 @@
 const { shallowMerge } = require('../../utils');
 
 const isPostFound = state => 
-    state.postFound;
+  state.postFound;
 
 const isPostIdentified = state => 
-    state.postIdentified;
+  state.postIdentified;
 
 const isVideoFound = state => 
-    state.videoFound;
+  state.videoFound;
 
 const setPostFound = state => 
-    shallowMerge(state, { postFound: true });
+  shallowMerge(state, { postFound: true });
 
 const setVideoFound = state => 
-    shallowMerge(state, { videoFound: true });
+  shallowMerge(state, { videoFound: true });
 
 const postIdentified = state =>
-    shallowMerge(state, { 
-        postIdentified: true
-    });
+  shallowMerge(state, { 
+    postIdentified: true
+  });
 
 const postUnidentified = state => 
-    shallowMerge(state, { 
-        postIdentified: false
-    });
+  shallowMerge(state, { 
+    postIdentified: false
+  });
 
 const reset = (state) => shallowMerge(state, {
-    postFound: false,
-    postIdentified: false,
-    videoFound: false
+  postFound: false,
+  postIdentified: false,
+  videoFound: false
 });
 
 module.exports = {
-    isPostFound,
-    isPostIdentified,
-    isVideoFound,
-    setPostFound,
-    setVideoFound,
-    postIdentified,
-    postUnidentified,
-    reset
+  isPostFound,
+  isPostIdentified,
+  isVideoFound,
+  setPostFound,
+  setVideoFound,
+  postIdentified,
+  postUnidentified,
+  reset
 };

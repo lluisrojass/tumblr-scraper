@@ -20,18 +20,16 @@
           "video": "video",
           "text": "text"
       },
-      "blogType": {
-          "custom": "domain",
-          "internal": "tumblr.com"
-      },
       "buttons": {
           "start": "start",
           "resume": "resume",
           "pause": "pause"
       },
+      "placeholders": {
+        "input": "enter blog"
+      },
       "openInBrowser": "view in browser"
   },
-  "title": "Settings",
   "system": {
       "imageDir": "public/img/",
       "imagePaths": {
@@ -47,7 +45,7 @@
       "postList": {
           "titleLow": 11,
           "titleHigh": 23,
-          "bodyLimit": 100
+          "body": 100
       }
   }
 }

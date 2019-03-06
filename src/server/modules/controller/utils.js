@@ -11,12 +11,12 @@ const pipeEmit = (events, from, to) => {
 const craftPost = rawPost => ({
   type: rawPost.type,
   datePublished: rawPost.datePublished || '',
-  articleBody: rawPost.articleBody ? removeMORE(post.articleBody) : '',
+  articleBody: rawPost.articleBody ? removeMORE(rawPost.articleBody) : '',
   headline: rawPost.headline || '',
   images: [].concat(!rawPost.image ? null : rawPost.image['@list'] || rawPost.image),
   url: rawPost.url || '',
   isVideo: rawPost.isVideo,
-  videoURL: post.videoURL || ''
+  videoURL: rawPost.videoURL || ''
 });
 
 module.exports = {

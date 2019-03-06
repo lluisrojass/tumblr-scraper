@@ -1,12 +1,15 @@
 /* @flow */
-import { 
-  type BlognameT 
-} from '@ts/lib/utils/types.flow.js';
-export type StatusT = "CLEAR" | "ERROR" | "GOOD";
+import {
+  good, error, clear
+} from './constants.js';
+export type StatusT = good | error | clear;
 export type StateT = {
   blogname: string,
   status: StatusT,
-  errorMessage: ?string
+  errorMessage: ?string,
+  isTyping: boolean
 };
-export type SetterT = (string, BlognameT) => Promise<void>;
+export type SetterT = (string) => Promise<void>;
 export type ResetterT = () => Promise<void>;
+export type TypingT = () => Promise<void>;
+export type StopTypingT = () => Promise<void>;

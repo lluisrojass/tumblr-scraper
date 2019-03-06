@@ -17,74 +17,74 @@ const { toFormattedDate } = require('./utils');
  * is found.
  */
 class ArchiveParser extends EventEmitter {
-    constructor(types, blog) {
-        super();
-        let postType;
+  constructor(types, blog) {
+    super();
+    let postType;
 
-        const onOpenTag = (name, attribs) => {
-            if (name === originalPost.containerTag && 
+    const onOpenTag = (name, attribs) => {
+      if (name === originalPost.containerTag && 
                 attribs.class && 
                 attribs.class.indexOf(originalPost.containerClass) >= 0) {
-                const type = types.find(t => attribs.class.indexOf(t) >= 0);
+        const type = types.find(t => attribs.class.indexOf(t) >= 0);
 
-                if (type) 
-                    postType = type;
+        if (type) 
+          postType = type;
 
-            }
-            else if (attribs.href) {
-                if (name === nextPage.tag && attribs.id === nextPage.id) {
-                    this.emit('page', { path: attribs.href });
+      }
+      else if (attribs.href) {
+        if (name === nextPage.tag && attribs.id === nextPage.id) {
+          this.emit('page', { path: attribs.href });
                     
-                    const [,stamp] = attribs.href.match(/\/archive\?before_time=(\d+)$/i) || [];
-                    if (!stamp)
-                        return;
+          const [,stamp] = attribs.href.match(/\/archive\?before_time=(\d+)$/i) || [];
+          if (!stamp)
+            return;
 
-                    const msStamp = (stamp >>> 0) * 1000;
-                    const safeStamp = (new Date(msStamp)).getTime();
+          const msStamp = (stamp >>> 0) * 1000;
+          const safeStamp = (new Date(msStamp)).getTime();
 
-                    if (Number.isNaN(safeStamp)) 
-                        return;
+          if (Number.isNaN(safeStamp)) 
+            return;
 
-                    this.emit('date', { date: toFormattedDate(safeStamp) });
-                }
-                else if (postType) {
-                    if (originalPost.isAdult(attribs.href)) {
-                         /* was banned for nudity */
-                         /* for some reason these are */
-                         /* all identified as original posts */
-                        postType = null;
-                        return;
-                    }
+          this.emit('date', { date: toFormattedDate(safeStamp) });
+        }
+        else if (postType) {
+          if (originalPost.isAdult(attribs.href)) {
+            /* was banned for nudity */
+            /* for some reason these are */
+            /* all identified as original posts */
+            postType = null;
+            return;
+          }
                     
-                    let { path } = parse(attribs.href);
-                    if (!path) 
-                        return;
+          let { path } = parse(attribs.href);
+          if (!path) 
+            return;
                     
-                    this.emit('post', {
-                        blog,
-                        path,
-                        type: postType
-                    });
-                }
-            }
-        };
+          this.emit('post', {
+            blog,
+            path,
+            type: postType
+          });
+        }
+      }
+    };
 
-        this.on('post', () => { postType = null; });
+    this.on('post', () => { postType = null; });
 
-        const parser = new HtmlParser.Parser(
-            { onopentag: onOpenTag },
-            { decodeEntities: true }
-        );
+    const parser = new HtmlParser.Parser(
+      { onopentag: onOpenTag },
+      { decodeEntities: true }
+    );
 
-        this.write = (chunk) => {
-            parser.write(chunk);
-        };
+    this.write = (chunk) => {
+      parser.write(chunk);
+    };
 
-        this.end = () => {
-            parser.parseComplete();
-        };
+    this.end = () => {
+      parser.parseComplete();
+    };
 
-    }
+  }
 	
 }
 

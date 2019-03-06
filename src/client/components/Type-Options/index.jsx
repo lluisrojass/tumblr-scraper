@@ -27,20 +27,22 @@ type Props = {
 const Options = (props: Props) => {
   const containerState = props.optionsContainer.state;
   return (
-    <div className={styles.wrapper}>
-      { containerState.options.map((option, index) => (
-        <Option 
-          key={index}
-          name={option.label}
-          isChecked={option.value}
-          value={option.type}
-          capitalize={true}
-          onClick={decorateWithIndex(
-            props.optionsContainer.toggle,
-            index
-          )}
-        />
-      )) }
+    <div className={styles.grey}>
+      <div className={styles.wrapper}>
+        { containerState.options.map((option, index) => (
+          <Option 
+            key={index}
+            name={option.label}
+            isChecked={option.value}
+            value={option.type}
+            capitalize={false}
+            onClick={decorateWithIndex(
+              props.optionsContainer.toggle,
+              index
+            )}
+          />
+        )) }
+      </div>
     </div>
   );
 };

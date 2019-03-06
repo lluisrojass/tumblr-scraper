@@ -1,3 +1,13 @@
+.grey {
+    padding: 0;
+    border-radius: 0 0 10px 10px;
+    background-color: rgb(243, 243, 243);
+    background: linear-gradient(
+        to right, 
+        rgb(243, 243, 243),
+        rgb(246, 246, 246)
+    );
+}
 .wrapper {
     position: relative;
     width: 100%;
@@ -6,20 +16,4 @@
     padding: 0 20px;
     justify-content: space-around;
     flex-wrap: wrap;
-}
-.section-title-spike {
-    width: 98%;
-    margin: 0;
-    font-family: 'SFMono';
-    margin: 0 0 5px;
-}
-.title {
-    font-family: sans-serif;
-    font-size: 20px;
-    line-height: 1.5;
-    font-weight: 600;
-    font-variant: all-small-caps;
-    letter-spacing: 1px;
-    color: var(--grey-dark);
-    text-transform: uppercase;
 }

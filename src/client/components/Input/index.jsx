@@ -3,72 +3,75 @@ import * as React from 'react';
 import classnames from 'classnames';
 import { Subscribe } from 'unstated'; 
 import BlognameContainer from '@ts/containers/Blogname';
-import BlogTypeContainer from '@ts/containers/Blog-Type-Options';
+import WithActions from '@ts/components/Input-Actions';
 import styles from './index.css';
-import ArrowIcon from '@ts/lib/icons/next.svg';
 import { 
   type StateT, 
-  type SetterT 
+  type SetterT,
+  type TypingT,
+  type StopTypingT
 } from '@ts/containers/Blogname/types.flow.js';
-import { 
-  type OptionT
-} from '@ts/containers/Blog-Type-Options/types.flow.js';
+import { debounce } from 'debounce';
+import config from '@ts/config';
+
 type Props = {
   blognameState: StateT,
   setBlogname: SetterT,
-  blogType: ?OptionT
+  startTyping: TypingT,
+  stopTyping: StopTypingT,
 }
 
 class Input extends React.PureComponent<Props> {
     onChange = async (event) => {
       if (event.target instanceof window.HTMLInputElement) {
-        const { setBlogname, blogType } = this.props;
-        if (blogType == null) {
-          return;
-        }
+        const { setBlogname, startTyping } = this.props;
         const { value } = event.target;
-        await setBlogname(value, blogType.type);
+        await startTyping();
+        await setBlogname(value);
       }
     };
-    
-    componentDidUpdate(prevProps) {
-      if (this.props.blogType !== prevProps.blogType) {
-        const { blognameState, blogType } = this.props;
-        if (blogType == null) {
-          return;
-        }
-        this.props.setBlogname(blognameState.blogname, blogType.type);
-      }
-    }
+
+    stopTypingMS = 300;
+
+    stopTypingDebounced = debounce(
+      this.props.stopTyping, 
+      this.stopTypingMS
+    );
 
     render() {
-      const { blognameState } = this.props;
-      const { onChange } = this;
+      const { 
+        blognameState
+      } = this.props;
+      const { 
+        onChange, 
+        stopTypingDebounced 
+      } = this;
       return (
-        <div className={styles.inputWrapper}>
-          <input
-            type="text"
-            placeholder="enter blog"
-            onChange={onChange}
-            className={classnames(
-              styles.input
-            )}
-            name="blogname"
-            value={blognameState.blogname}
-          />
-          <ArrowIcon className={styles.arrowIcon} />
-        </div>
+        <WithActions>
+          <div className={styles.inputWrapper}>
+            <input
+              type="text"
+              placeholder={config.labels.placeholders.input}
+              onKeyUp={stopTypingDebounced}
+              onChange={onChange}
+              className={classnames(styles.input)}
+              name="blogname"
+              value={blognameState.blogname}
+            />
+          </div>
+        </WithActions>
       );
     }
 }
 
 export default () => (
-  <Subscribe to={[BlognameContainer, BlogTypeContainer]}>
-    { (blognameContainer, blogtypeContainer) => (
+  <Subscribe to={[BlognameContainer]}>
+    { (blognameContainer) => (
       <Input 
         blognameState={blognameContainer.state}
         setBlogname={blognameContainer.set}
-        blogType={blogtypeContainer.state.options.find(o => o.value)}
+        startTyping={blognameContainer.typing}
+        stopTyping={blognameContainer.stopTyping}
       />
     ) }
   </Subscribe>

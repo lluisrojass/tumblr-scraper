@@ -1,34 +1,23 @@
 /* @flow */
 import * as React from 'react';
 import styles from './index.css';
-/*
-import Section from '@ts/base-components/Section';
-import Panel from '@ts/base-components/Panel';
-import Header from '@ts/components/Header/';
-import Textbox from '@ts/components/Textbox';
-import config from '@ts/config';
-*/
-import BlogSlider from '@ts/components/Blog-Type-Slider';
+import SettingsPane from '@ts/base-components/Settings-Pane';
+import SettingsBox from '@ts/base-components/Settings-Box';
 import TypeOptions from '@ts/components/Type-Options';
-import SettingsBox from '@ts/components/Settings-Box';
 import Input from '@ts/components/Input';
 import '@ts/global-styles';
-import GithubIcon from '@ts/lib/icons/github.svg';
+import ForkMe from '@ts/base-components/Fork-Me-Icon';
 
 const Application = () => {
   return (
     <div className={styles.appWrapper}>
-      <div className={styles.contentWrapper}>
-        <div className={styles.content}>
-          <SettingsBox>
-            <Input />
-            <div className={styles.contentBottomPanel}>
-              <TypeOptions />
-            </div>
-          </SettingsBox>
-          <GithubIcon className={styles.icon} />
-        </div>
-      </div>
+      <SettingsPane>
+        <SettingsBox>
+          <Input />
+          <TypeOptions />
+        </SettingsBox>
+      </SettingsPane>      
+      <ForkMe />
     </div>
   );
 };

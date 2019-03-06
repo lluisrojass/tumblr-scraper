@@ -40,13 +40,16 @@ class Option extends React.PureComponent<Props, State> {
       onMouseUp,
       state
     } = this;
+    const {
+      isChecked
+    } = this.props;
     return (
       <div className={styles.container}>
         <input
           type="checkbox"
           className={styles.checkbox}
           tabIndex={-1}
-          checked={props.isChecked}
+          checked={isChecked}
           onChange={noop}
         />
         <span 

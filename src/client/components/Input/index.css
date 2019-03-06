@@ -8,16 +8,16 @@
 }
 .input {
     font-size: 2rem;
-    padding: 15px 45px 15px 30px;
+    padding: 0.9375rem 3.75rem 0.9375rem 1.875rem;
     font-family: 'SFMono', sans-serif;
     caret-color: var(--primary-blue);
     font-weight: 500;
     color: #2b2e3b;
     width: 100%;
-    letter-spacing: -1.3px;
+    letter-spacing: -0.0813rem;
     line-height: 1;
     border: none;
-    border-radius: 50px;
+    border-radius: 3.125rem;
 }
 .input::selection{
     background: var(--primary-blue);
@@ -31,16 +31,4 @@ input::-webkit-input-placeholder {
 }
 .input:focus {
     outline: none;
-}
-.arrowIcon {
-    height: 2rem;
-    width: 2rem;
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    fill: var(--grey-dark);
-}
-.arrowIcon:hover {
-    fill: var(--primary-blue);
-    stroke: 0;
 }

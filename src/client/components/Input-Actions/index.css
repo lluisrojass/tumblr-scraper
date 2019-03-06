@@ -1,0 +1,49 @@
+.wrapper {
+  position: relative;
+}
+.positioned {
+  position: absolute;
+  z-index: 4;
+}
+.hidden {
+  opacity: 0;
+  transition: 170ms opacity;
+}
+.visible {
+  opacity: 1;
+  transition-delay: 190ms; /* wait till other item hides */
+}
+.icon {
+  composes: positioned hidden;
+  top: 1.125rem;
+  right: 1.125rem;
+  height: 2rem;
+  width: 2rem;
+  fill: var(--grey-dark);
+  color: var(--grey-dark);
+}
+.x-icon {
+  composes: icon;
+  color: var(--red);
+  fill: var(--red);
+  padding: 0.375rem;
+}
+.arrow-icon {
+  composes: icon;
+}
+.arrow-icon.with-color {
+  color: var(--primary-blue);
+  fill: var(--primary-blue);
+  stroke-width: 0.0625rem;
+  stroke: var(--primary-blue);
+}
+.arrow-icon.with-color:hover {
+  cursor: pointer;
+}
+.pulse-wrapper {
+  composes: positioned hidden;
+  height: 2.5rem;
+  width: 2.5rem;
+  top: 0.937rem;
+  right: 0.937rem;
+}

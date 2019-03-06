@@ -1,18 +1,9 @@
 :root {
-    --blue-gradient-tbl: linear-gradient(to bottom left,#2685ee,#1771d8);
-    --blue-gradient-tbr: linear-gradient(to bottom right,#2685ee,#1771d8);
-    --primary-blue: rgba(43, 134, 222, 1);
-    --blue-glow: rgba(1, 120, 255, 0.4);
+    --primary-blue: rgba(35, 109, 222, 1);
+    --purple: rgb(120, 125, 230);
     --grey-light: rgb(245,245,245);
     --grey-dark: rgb(156, 173, 178);
+    --grey-black: rgb(98,98,98);
     --black: #051e3e;
     --red: #E44625;
-
-    --t-ms-quickest: 60ms;
-    --t-ms-quick: 195ms;
-    --t-ms-std: 230ms;
-
-    --shadow: 0 4px 14px 0;
-    
-    --std-radius: 5px;
 }
