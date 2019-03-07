@@ -10,6 +10,10 @@
               "empty": "enter a blogname",
               "toolong": "blog names are 32 characters or less",
               "invalid": "the provided character sequence is not a valid blog name"
+          },
+          "fatal": {
+              "title": "Yikes.",
+              "message": "Unfortunately, i've encountered a fatal error."
           }
       },
       "options": {

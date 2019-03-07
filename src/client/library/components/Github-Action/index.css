@@ -1,0 +1,18 @@
+.action {
+  display: table;
+  cursor: pointer;
+}
+.action :global(span) {
+  line-height: 1.25rem;
+  font-family: 'SFMono';
+  font-weight: 300;
+  font-size: 0.8rem;
+  height: 100%;
+  display: table-cell;
+  vertical-align: middle;
+}
+.action :global(svg) {
+  margin-right: 0.5rem;
+  height: 1.25rem;
+  width: 1.25rem;
+}

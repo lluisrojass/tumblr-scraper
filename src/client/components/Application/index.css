@@ -4,3 +4,23 @@
   justify-content: flex-start;
   height: 100%;
 }
+.forkme {
+  text-decoration: none;
+  position: fixed;
+  left: 1.5rem;
+  bottom: 1.5rem;
+}
+.forkme :global(span) {
+  color: var(--grey-dark);
+}
+.forkme:hover :global(span) {
+  color: var(--black);
+}
+.forkme :global(svg) {
+  fill: var(--grey-dark);
+  color: var(--grey-dark);
+}
+.forkme:hover :global(svg) {
+  fill: var(--black);
+  color: var(--black);
+}
