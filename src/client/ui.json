@@ -8,8 +8,8 @@
           "videoPreview": "video preview unavailable.",
           "blogname": {
               "empty": "enter a blogname",
-              "length": "blog name must be 32 characters or less",
-              "invalid": "invalid blog name"
+              "toolong": "blog names are 32 characters or less",
+              "invalid": "the provided character sequence is not a valid blog name"
           }
       },
       "options": {

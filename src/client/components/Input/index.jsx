@@ -8,15 +8,20 @@ import styles from './index.css';
 import {
   type ValidatorT,
   type TypingT,
-  type StopTypingT
+  type StopTypingT,
+  type StatusT
 } from '@ts/containers/Blogname/types.flow.js';
 import { debounce } from 'debounce';
 import config from '@ts/config';
+import * as statuses from '@ts/containers/Blogname/constants';
 
 type Props = {
   validate: ValidatorT,
   startTyping: TypingT,
   stopTyping: StopTypingT,
+  errorMessage: string,
+  status: StatusT,
+  isTyping: boolean
 };
 
 type State = {
@@ -45,15 +50,34 @@ class Input extends React.PureComponent<Props, State> {
       this.stopTypingMS
     );
 
+    getErrorBallonOptions = () => {
+      const {
+        status,
+        isTyping,
+        errorMessage
+      } = this.props;
+      if (!isTyping && status === statuses.error) {
+        return {
+          'data-balloon-pos': 'up',
+          'data-balloon': `psst... ${errorMessage}`,
+          'data-balloon-visible': true
+        };
+      }
+
+      return {};
+    }
+
     render() {
       const { 
         onChange, 
-        stopTypingDebounced 
+        stopTypingDebounced,
+        getErrorBallonOptions
       } = this;
       const { value } = this.state;
+      const balloonOptions = getErrorBallonOptions();
       return (
         <WithActions>
-          <div className={styles.inputWrapper}>
+          <div {...balloonOptions} className={styles.inputWrapper}>
             <input
               type="text"
               placeholder={config.labels.placeholders.input}
@@ -76,6 +100,9 @@ export default () => (
         validate={blognameContainer.validate}
         startTyping={blognameContainer.typing}
         stopTyping={blognameContainer.stopTyping}
+        isTyping={blognameContainer.state.isTyping}
+        status={blognameContainer.state.status}
+        errorMessage={blognameContainer.state.errorMessage}
       />
     ) }
   </Subscribe>

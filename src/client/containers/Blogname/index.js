@@ -11,6 +11,7 @@ import {
   type TypingT,
   type StopTypingT
 } from './types.flow.js';
+import config from '@ts/config';
 
 class BlognameContainer extends Container {
     state: StateT = {
@@ -33,7 +34,7 @@ class BlognameContainer extends Container {
         await this.setState({
           _blogname: text,
           status: statuses.error,
-          errorMessage: 'custom blog names must be 32 characters or less'
+          errorMessage: config.labels.errors.blogname.toolong
         });
         return;
       }
@@ -41,7 +42,7 @@ class BlognameContainer extends Container {
         await this.setState({
           _blogname: text,
           status: statuses.error,
-          errorMessage: 'invalid blog name'
+          errorMessage: config.labels.errors.blogname.invalid
         });
         return;
       }
