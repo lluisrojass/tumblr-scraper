@@ -8,7 +8,7 @@ log.transports.file.file = __dirname + '/app.log';
 log.transports.file.level = 'info';
 
 if (process.env.NODE_ENV === 'development') {
-  require('electron-reload')(__dirname);
+  require('electron-reload')(resolve(__dirname, './src/client/'));
 }
 
 const serverOnlyMode = process.env.SERVER_ONLY === '1';
@@ -40,16 +40,19 @@ function destroyAllWindows() {
   }
 }
 
-function createServerWindow(port) {
+function createServerWindow(port, nonce) {
   const win = new BrowserWindow({
     show: false,
     webPreferences: {
-      additionalArguments: [`PORT:${port}`]
+      additionalArguments: [
+        `PORT:${port}`,
+        `NONCE:${nonce}`
+      ]
     }
   });
 
   win.loadURL(format({
-    pathname: resolve(__dirname, './server/_.html'),
+    pathname: resolve(__dirname, './src/server/_.html'),
     protocol: 'file:',
     slashes: true,
   }));
@@ -60,7 +63,7 @@ function createServerWindow(port) {
   return win;
 }
 
-function createClientWindow(port) {
+function createClientWindow(port, nonce) {
   const win = new BrowserWindow({
     width: 800,
     height: 500,
@@ -73,7 +76,11 @@ function createClientWindow(port) {
     darkTheme: true,
     movable: true,
     webPreferences: {
-      additionalArguments: [`PORT:${port}`]
+      additionalArguments: [
+        'HOST:localhost',
+        `PORT:${port}`, 
+        `NONCE:${nonce}`
+      ]
     }
   });
 
@@ -94,12 +101,13 @@ function createClientWindow(port) {
 
 app.on('ready', async () => {
   const port = await getPort({ port: 3000 });
+  const nonce = Math.random().toString(36);
   log.info(`application startup, on port ${port}`);
-  serverWindow = createServerWindow(port);
+  serverWindow = createServerWindow(port, nonce);
   serverWindow.once('ready-to-show', () => {
     /* server successfully started up */
     if (!serverOnlyMode) {
-      clientWindow = createClientWindow(port);
+      clientWindow = createClientWindow(port, nonce);
     }
   });
 });

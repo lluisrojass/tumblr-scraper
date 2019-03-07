@@ -1,13 +1,14 @@
 /* @flow */
-import io from 'socket.io-client';
+import * as io from 'socket.io-client';
 import pipe from 'pipe-event';
 import EventEmitter from 'events';
-import { extractPort, extractHost } from '@ts/lib/utils/extract-args';
+import qs from 'querystring';
 
 class Socket extends EventEmitter {
   isConnected: () => Boolean;
-  connect: () => void;
-  constructor(url: string, port: number) {
+  connect: (url: string, port: number, nonce: string) => void;
+  socket: ?io.Manager;
+  constructor() {
     super();
     const ioManagerOptions = {
       path: '/',
@@ -16,16 +17,27 @@ class Socket extends EventEmitter {
       autoConnect: false,
       timestampRequests: true
     };
-    const socket = io(url + ':' + port, ioManagerOptions);
-    pipe(['connect', 'disconnect', 
-      'reconnect','connect_error', 
-      'connect_timeout', 'reconnect_error'], 
-    socket, this);
-    this.isConnected = () => !!socket.connected;
-    this.connect = () => {
+    const createSocket = (url: string, port: number, nonce: string) => {
+      const query = qs.stringify({
+        nonce
+      });
+      const socket = io(`http://${url}:${port}?${query}` , ioManagerOptions);
       socket.open();
+      pipe(['connect', 'disconnect', 
+        'reconnect','connect_error', 
+        'connect_timeout', 'reconnect_error'], 
+      socket, this);
+      return socket;
+    };
+
+    this.connect = (url, port, nonce) => {
+      this.socket = createSocket(url, port, nonce);
     };
   }
+
+  isConnected = () => (
+    this.socket ? this.socket.connected : false
+  );
 }
 
-export default new Socket(extractHost(), extractPort());
+export default new Socket();

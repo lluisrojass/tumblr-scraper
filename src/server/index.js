@@ -9,6 +9,7 @@ process.on('uncaughtException', error => {
   process.exit(1);
 });
 
+
 let port = extractPort();
 let ioServer;
 let loop;
@@ -17,13 +18,15 @@ kickoff(port);
 
 function kickoff(port) {
   loop = new Loop();
-  ioServer = new Server();
-  ioServer.listen(port);
+  ioServer = Server(port, {
+    path: '/',
+    serveClient: false
+  });
   controller(ioServer, loop);
 }
 
 function extractPort() {
-  const possiblePortArg = process.argv[process.argv.length - 1] || '';
+  const possiblePortArg = process.argv[process.argv.length - 2] || '';
   let [,port] = possiblePortArg.match(/^PORT:(\d+)$/) || [];
   assert(!!port, 'server startup error, invalid argv port argument recieved');
   port = port >>> 0;
