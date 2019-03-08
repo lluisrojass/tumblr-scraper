@@ -9,20 +9,30 @@ process.on('uncaughtException', error => {
   process.exit(1);
 });
 
-
 let port = extractPort();
+let nonce = extractNonce();
 let ioServer;
 let loop;
 
-kickoff(port);
+kickoff(port, nonce);
 
-function kickoff(port) {
+function kickoff(port, nonce) {
   loop = new Loop();
   ioServer = Server(port, {
     path: '/',
     serveClient: false
   });
-  controller(ioServer, loop);
+  ioServer.use((socket, next) => {
+    const {query} = socket.handshake;
+    const { nonce:socketNonce } = query;
+    if (socketNonce !== nonce) {
+      next(new Error('Authentication Error'));
+    }
+    else {
+      next();
+    }
+  });
+  controller(ioServer, loop, nonce);
 }
 
 function extractPort() {
@@ -33,4 +43,11 @@ function extractPort() {
   assert(port >= 0x400 && port <= 0xFFFF, 'server startup error, '+
     'incorrectly formatted port recieved');
   return port;
+}
+
+function extractNonce() {
+  const possibleNonceArg = process.argv[process.argv.length - 1] || '';
+  let [,nonce] = possibleNonceArg.match(/^NONCE:(.+)$/) || [];
+  assert(!!nonce, 'server startup error, invalid nonce argument recieved');
+  return nonce;
 }

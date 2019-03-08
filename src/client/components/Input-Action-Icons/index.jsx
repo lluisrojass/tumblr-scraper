@@ -29,7 +29,7 @@ class WithIcons extends React.PureComponent<Props> {
     return (
       <div className={styles.invisible}>
         <div className={classnames(
-          styles.pulseWrapper,
+          styles.rippleWrapper,
           shouldShowLoader && styles.visible
         )}>
           <RippleLoader />

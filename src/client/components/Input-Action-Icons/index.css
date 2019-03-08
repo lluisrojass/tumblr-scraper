@@ -40,7 +40,7 @@
 .arrow-icon.with-color:hover {
   cursor: pointer;
 }
-.pulse-wrapper {
+.ripple-wrapper {
   composes: positioned hidden;
   height: 2.5rem;
   width: 2.5rem;
