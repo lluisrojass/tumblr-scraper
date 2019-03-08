@@ -2,7 +2,7 @@
 .*/node_modules/electron-packager/.*
 .*/node_modules/unstated/.*
 [include]
-
+.*/src/client/.*
 [libs]
 
 [lints]

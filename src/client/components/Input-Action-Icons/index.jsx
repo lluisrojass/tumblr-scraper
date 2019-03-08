@@ -25,7 +25,7 @@ class WithIcons extends React.PureComponent<Props> {
     const shouldShowGo = !shouldShowLoader && !shouldShowError;
     const shouldBeAllowedToGo = shouldShowGo && 
       !hasError && props.containsInput;
-
+      
     return (
       <div className={styles.invisible}>
         <div className={classnames(

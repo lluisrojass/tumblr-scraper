@@ -8,7 +8,7 @@ log.transports.file.file = __dirname + '/app.log';
 log.transports.file.level = 'info';
 
 if (process.env.NODE_ENV === 'development') {
-  require('electron-reload')(resolve(__dirname, './src/client/'));
+  require('electron-reload')(resolve(__dirname, './public/js/'));
 }
 
 const serverOnlyMode = process.env.SERVER_ONLY === '1';

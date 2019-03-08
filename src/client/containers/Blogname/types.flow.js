@@ -1,8 +1,5 @@
 /* @flow */
-import {
-  good, error, clear
-} from './constants.js';
-export type StatusT = good | error | clear;
+export type StatusT = 0 | 1 | 2 ;
 export type StateT = {
   _blogname: string,
   status: StatusT,
