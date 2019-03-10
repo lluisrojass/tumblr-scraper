@@ -6,7 +6,7 @@ const actionHandlers = loop => socket => {
   log.info(`socket connected with id ${socket.id}`);
   socket
     .on('start', (blog, types, ack) => {
-      loop.go(blog, types);
+      loop.start(blog, types);
       loop.once('started', ack);
     })
     .on('pause', ack => {

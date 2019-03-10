@@ -44,10 +44,6 @@ class Loop extends EventEmitter {
     };
 
     const callback = (res) => {
-      res.setEncoding();
-      state = stateUtils.setLastSuccessfulPath(state, requestOptions.path);
-      requestOptions.path = '';
-
       if (is30x(res.statusCode)) {
         const isProtoStable = !stateUtils.isUnstableProtocol(state);
         if (isProtoStable) {
@@ -55,7 +51,8 @@ class Loop extends EventEmitter {
           const newProtocol = stateUtils.getProtocol(state);
           requestOptions.agent.destroy();
           requestOptions.agent = new (newProtocol).Agent(agentOptions);
-          launchRequest();
+          currentRequest.abort();
+          launchRequest(); 
         }
         else if (stateUtils.isRunning(state)) {
           const error = makeError(
@@ -66,6 +63,8 @@ class Loop extends EventEmitter {
           currentRequest.abort();
           currentRequest.once('abort', stopAndEmitError(error));
         }
+
+        return;
       }
       else if (gotServerError(res.statusCode)) {
         const error = makeError(
@@ -75,7 +74,11 @@ class Loop extends EventEmitter {
         );
         currentRequest.abort();
         currentRequest.once('abort', stopAndEmitError(error));
+        return;
       }
+      res.setEncoding();
+      state = stateUtils.setLastSuccessfulPath(state, requestOptions.path);
+      requestOptions.path = '';
 
       if (stateUtils.isUnstableProtocol(state)) {
         state = stateUtils.safeProtocolState(state);
@@ -128,16 +131,16 @@ class Loop extends EventEmitter {
         });
     };
 
-    const beginLoop = (types, blog) => {
+    const beginLoop = (blog, types) => {
       requestOptions = shallowMerge(requestOptions, {
         host: `${blog}.tumblr.com`,
         path: '/archive'
       });
 
-      parser = new Parser(types)
+      parser = new Parser(blog, types)
         .on('page', page => { requestOptions.path = page.path; })
         .on('date', date => { this.emit('date', date); })
-        .on('post', post => { 
+        .on('post', post => {
           this.emit('post', shallowMerge(post, {
             isHttps: stateUtils.isHttps(state)
           }));
@@ -148,16 +151,16 @@ class Loop extends EventEmitter {
       this.emit('started');
     };
 
-    this.start = (types, blog) => {
+    this.start = (blog, types) => {
       if (stateUtils.isRunning(state)) {
         currentRequest.abort();
         currentRequest.once('abort', () => {
-          beginLoop(types, blog);
+          beginLoop(blog, types);
         });
       }
       else {
         process.nextTick(() => {
-          beginLoop(types, blog);
+          beginLoop(blog, types);
         });
       }
     };

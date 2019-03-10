@@ -17,7 +17,7 @@ const { toFormattedDate } = require('./utils');
  * is found.
  */
 class ArchiveParser extends EventEmitter {
-  constructor(types, blog) {
+  constructor(blog, types) {
     super();
     let postType;
 
