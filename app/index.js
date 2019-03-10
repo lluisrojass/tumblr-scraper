@@ -1,14 +1,18 @@
-const { BrowserWindow, app } = require('electron');
+const { 
+  BrowserWindow, 
+  app, 
+} = require('electron');
 const { resolve } = require('path');
 const { format } = require('url');
 const log = require('electron-log');
 const getPort = require('get-port');
+require('./utils/ipc');
 
 log.transports.file.file = __dirname + '/app.log';
 log.transports.file.level = 'info';
 
 if (process.env.NODE_ENV === 'development') {
-  require('electron-reload')(resolve(__dirname, './public/js/'));
+  require('electron-reload')(resolve(__dirname, '../public/js/'));
 }
 
 const serverOnlyMode = process.env.SERVER_ONLY === '1';
@@ -52,7 +56,7 @@ function createServerWindow(port, nonce) {
   });
 
   win.loadURL(format({
-    pathname: resolve(__dirname, './src/server/_.html'),
+    pathname: resolve(__dirname, '../src/server/_.html'),
     protocol: 'file:',
     slashes: true,
   }));
@@ -85,7 +89,7 @@ function createClientWindow(port, nonce) {
   });
 
   win.loadURL(format({
-    pathname: resolve(__dirname, './index.html'),
+    pathname: resolve(__dirname, '../index.html'),
     protocol: 'file',
     slashes: true
   }));
