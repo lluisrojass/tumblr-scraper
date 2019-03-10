@@ -16,6 +16,7 @@ import {
 } from '@ts/containers/Socket/index.types';
 import * as socketConnStates from '@ts/containers/Socket/conn-states';
 import { extractHost, extractPort, extractNonce } from '@ts/lib/utils/extract-args';
+import config from '@ts/config';
 
 type Props = {
   socketConnState: socketStates
@@ -36,19 +37,23 @@ class Application extends React.PureComponent<Props,{}> {
           renderLoader ? 
             <StartupLoader />
             :
-          <>
-            <Page>
-              <Box 
-                widthBounds={[600, 700]}
-                shadowColor="rgba(0, 0, 0, 0.05)"
-                borderColor="rgba(208, 208, 208)"
-              >
-                <Input />
-                <TypeOptions />
-              </Box>
-            </Page>  
-            <GithubAction className={styles.forkme} label="Fork Me!" />
-          </>
+            <>
+              <Page>
+                <Box 
+                  widthBounds={[600, 700]}
+                  shadowColor="rgba(0, 0, 0, 0.05)"
+                  borderColor="rgba(208, 208, 208)"
+                >
+                  <Input />
+                  <TypeOptions />
+                </Box>
+              </Page>  
+              <GithubAction 
+                className={styles.forkme}
+                label={config.labels.github.fork}
+                path={config.external.github.paths.fork}
+              />
+            </>
         }
       </div>
     );

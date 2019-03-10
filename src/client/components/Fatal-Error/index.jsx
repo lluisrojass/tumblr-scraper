@@ -28,7 +28,8 @@ const FatalError = (props: Props) => {
           <div className={styles.reportabugWrapper}>
             <GithubAction 
               className={styles.reportabug} 
-              label="Report an Issue" 
+              label={config.labels.github.issue}
+              path={config.external.github.paths.issue}
             />
           </div>
         </div>
