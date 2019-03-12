@@ -8,9 +8,6 @@ import RippleLoader from '@ts/base-components/Ripple-Loader';
 import BlogTypeContainer from '@ts/containers/Type-Options';
 import BlognameContainer from '@ts/containers/Blogname';
 import { 
-  type StatusT 
-} from '@ts/containers/Blogname/index.types';
-import { 
   error as blognameInputError
 } from '@ts/containers/Blogname/constants';
 
@@ -32,9 +29,6 @@ class WithIcons extends React.PureComponent<Props> {
     const shouldBeAllowedToGo = shouldShowGo && 
       !hasError && props.containsInput;
 
-
-    console.log({hasError});
-      
     return (
       <div className={styles.invisible}>
         <div className={classnames(
