@@ -56,7 +56,7 @@ function createServerWindow(port, nonce) {
   });
 
   win.loadURL(format({
-    pathname: resolve(__dirname, '../src/server/_.html'),
+    pathname: resolve(__dirname, '../server/_.html'),
     protocol: 'file:',
     slashes: true,
   }));

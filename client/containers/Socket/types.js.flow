@@ -1,0 +1,5 @@
+/* @flow */
+export type SocketStatusT = 'STARTUP' | 'CONNECTED' | 'DISCONNECTED' | 'FAILURE';
+export type StateT = {
+  status: SocketStatusT
+};

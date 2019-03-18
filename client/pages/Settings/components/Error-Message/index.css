@@ -1,0 +1,17 @@
+.error-message {
+  position: absolute;
+  left: 0;
+  bottom: -2.75rem;
+  line-height: 1rem;
+  color: var(--red);
+  width: 100%;
+  text-align: center;
+  font-family: 'SFMono';
+  font-size: 1rem;
+  letter-spacing: -1.1px;
+  opacity: 0;
+  transition: opacity 200ms linear;
+}
+.error-message.visible {
+  opacity: 1;
+}

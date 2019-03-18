@@ -1,0 +1,52 @@
+.focus {
+  opacity: 1;
+  transform: scale(1);
+  transition: 
+    opacity 200ms ease-in,
+    transform 330ms ease-in-out;
+}
+.focus.lost {
+  opacity: 0.3;
+  pointer-events: none;
+  transform: scale(0.90);
+}
+.box {
+  min-width: 600px;
+  max-width: 700px;
+  border: 1px solid rgba(208, 208, 208);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.icon {
+  height: 8rem;
+  width: 8rem;
+  position: absolute;
+  z-index: 2;
+  color: rgba(156, 173, 178, 0.25);
+  fill: rgba(156, 173, 178, 0.25);
+  left: calc(50% - 4rem);
+  top: calc(50% - 4rem);
+  animation-name: spin;
+  animation-duration: 2.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  transition:
+    opacity 400ms ease-in-out,
+    z-index 200ms ease-in-out,
+    left 240ms ease-in-out,
+    top 240ms ease-in-out;
+  opacity: 0;
+  z-index: -1;
+}
+.icon.visible {
+  opacity: 1;
+  z-index: 2;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,11 @@
+declare module 'tumblr-type-map' {
+  declare export default {
+    all: string,
+    text: string,
+    ask: string,
+    chat: string,
+    photo: string,
+    video: string,
+    audio: string
+  }
+}

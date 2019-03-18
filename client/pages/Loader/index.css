@@ -1,0 +1,17 @@
+.wrapper {
+  composes: center from global;
+  font-family: 'SFMono', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  color: var(--grey-dark);
+}
+.ripple-wrapper {
+  display: inline-block;
+  height: 2rem;
+  width: 2rem;
+  margin-bottom: 2.5px;
+}
+.ripple {
+  color: rgb(156, 173, 178);
+}

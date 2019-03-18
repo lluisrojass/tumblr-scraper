@@ -21,14 +21,32 @@
     },
     "plugins": [
         "react",
-        "babel"
+        "babel",
+        "import",
+        "flowtype"
     ],
     "rules": {
         "indent": [
             "error",
-            2, 
+            2,
             {"SwitchCase": 1}
         ],
+        "import/order": [
+            "error",
+            {
+                "groups": [ 
+                    "internal", 
+                    "builtin",
+                    "external",
+                    "index", 
+                    "sibling",
+                    "parent"
+                ]
+            }
+        ],
+        "flowtype/use-flow-type": 1,
+        "flowtype/valid-syntax": 1,
+        "flowtype/define-flow-type": 1,
         "react/display-name": "off",
         "linebreak-style": [
             "error",

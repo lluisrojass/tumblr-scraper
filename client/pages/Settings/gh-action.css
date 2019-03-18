@@ -1,0 +1,20 @@
+.action {
+  text-decoration: none;
+  position: absolute;
+  left: 1.5rem;
+  bottom: 1.5rem;
+}
+.action :global(span) {
+  color: var(--grey-dark);
+}
+.action:hover :global(span) {
+  color: var(--black);
+}
+.action :global(svg) {
+  fill: var(--grey-dark);
+  color: var(--grey-dark);
+}
+.action:hover :global(svg) {
+  fill: var(--black);
+  color: var(--black);
+}

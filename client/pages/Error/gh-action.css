@@ -1,0 +1,14 @@
+.wrapper {
+  composes: center from global;
+}
+.action {
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+}
+.action :global(span) {
+  color: white;
+}
+.action :global(svg) {
+  color: white;
+  fill: white;
+}

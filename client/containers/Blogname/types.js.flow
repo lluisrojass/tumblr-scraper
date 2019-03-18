@@ -1,0 +1,12 @@
+/* @flow */
+export type InputStatusT = 'ERROR' | 'EMPTY' | 'GOOD';
+export type StateT = {
+  _blogname: string,
+  status: InputStatusT,
+  errorMessage: ?string,
+  isTyping: boolean
+};
+export type ValidatorT = (string) => Promise<void>;
+export type ResetterT = () => Promise<void>;
+export type TypingT = () => Promise<void>;
+export type StopTypingT = () => Promise<void>;

@@ -6,7 +6,7 @@ module.exports = {
   target: 'electron-renderer',
   entry: [ 
     '@babel/polyfill', 
-    resolve(__dirname, '../src/client/loader.jsx')
+    resolve(__dirname, '../client/loader.jsx')
   ],
   output: {
     path: resolve(__dirname, '../public/js'),
@@ -14,17 +14,13 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@ts/config': resolve(__dirname, '../src/client/ui.json'),
-      '@ts/type-map': resolve(__dirname, '../src/types.json'),
-      '@ts/global-styles': resolve(__dirname, '../src/client/library/css/global.css'),
-      '@ts/lib': resolve(__dirname, '../src/client/library/'),
-      '@ts/components': resolve(__dirname, '../src/client/components'),
-      '@ts/base-components': resolve(__dirname, '../src/client/library/components'),
-      '@ts/containers': resolve(__dirname, '../src/client/containers/'),
+      '@client': resolve(__dirname, '../client'),
+      'tumblr-type-map': resolve(__dirname, '../types.json')
     },
     extensions: [
-      '.js', 
-      '.jsx', 
+      '.js',
+      '.jsx',
+      '.js.flow', 
       '.json'
     ]
   },

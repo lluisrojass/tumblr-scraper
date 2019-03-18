@@ -1,0 +1,55 @@
+{
+  "labels": {
+        "errors": {
+            "couldNotContinue": "unknown error: could not continue.",
+            "timeout": "fatal error: request timed out.",
+            "videoPreview": "video preview unavailable.",
+            "noTypesSelected": "no blog type selected",
+            "blogname": {
+                "empty": "enter a blogname",
+                "toolong": "blog names are 32 characters or less",
+                "invalid": "the provided character sequence is not a valid blog name"
+            },
+            "fatal": {
+                "title": "Whoops.",
+                "message": "Unfortunately, i've encountered a fatal error."
+            }
+        },
+        "options": {
+            "all": "all types",
+            "photo": "photo",
+            "chat": "chat",
+            "ask": "ask",
+            "video": "video",
+            "text": "text"
+        },
+        "buttons": {
+            "start": "start",
+            "resume": "resume",
+            "pause": "pause"
+        },
+        "placeholders": {
+            "input": "enter blog"
+        },
+        "openInBrowser": "view in browser",
+        "github": {
+            "fork": "Fork Me!",
+            "issue": "Report a bug"
+        }
+    },
+    "limits": {
+        "postList": {
+            "titleLow": 11,
+            "titleHigh": 23,
+            "body": 100
+        }
+    },
+    "external": {
+        "github": {
+            "paths": {
+                "issue": "/lluisrojass/tumblr-scraper/issues/new",
+                "fork": "/lluisrojass/tumblr-scraper"
+            }
+        }
+    }
+}

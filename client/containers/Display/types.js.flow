@@ -1,0 +1,6 @@
+/* @flow */
+export type PageT = 0 | 1;
+export type StateT = {
+  viewingPage: PageT
+};
+export type ToggleT = () => Promise<void>;

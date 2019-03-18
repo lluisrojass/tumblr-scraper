@@ -1,0 +1,61 @@
+declare module '@client/ui' {
+  declare export default {
+    labels: {
+      errors: {
+        couldNotContinue: string,
+        timeout: string,
+        videoPreview: string,
+        noTypesSelected: string,
+        blogname: {
+          empty: string,
+          toolong: string,
+          invalid: string
+        },
+        fatal: {
+          title: string,
+          message: string
+        }
+      },
+      options: {
+        all: string,
+        photo: string,
+        chat: string,
+        ask: string,
+        video: string,
+        text: string
+      },
+      buttons: {
+        start: string,
+        resume: string,
+        pause: string
+      },
+      placeholders: {
+        input: string
+      },
+      openInBrowser: string,
+      github: {
+        fork: string,
+        issue: string
+      }
+    },
+    limits: {
+      postList: {
+        titleLow: number,
+        titleHigh: number,
+        body: number
+      }
+    },
+    external: { 
+      github: {
+        paths: {
+          issue: string,
+          fork: string
+        }
+      }
+    }
+  };
+}
+
+declare module '@client/ui.json' {
+  declare export default $Exports<'@client/ui'>;
+}

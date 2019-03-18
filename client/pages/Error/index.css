@@ -1,0 +1,11 @@
+.title {
+  font-family: sans-serif;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+.message {
+  margin: 0rem 0rem 1.5rem 0rem;
+  font-weight: normal;
+  color: white;
+  font-family: 'SFMono', sans-serif, -apple-system, BlinkMacSystemFont;
+}

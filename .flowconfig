@@ -2,17 +2,13 @@
 .*/node_modules/electron-packager/.*
 .*/node_modules/unstated/.*
 [include]
-.*/src/client/.*
+./client/.*
 [libs]
 
 [lints]
 
 [options]
-module.name_mapper='^@ts/config$' -> '<PROJECT_ROOT>/src/client/ui.json'
-module.name_mapper='^@ts/lib' -> '<PROJECT_ROOT>/src/client/library'
-module.name_mapper='^@ts/type-map$' -> '<PROJECT_ROOT>/src/types.json'
-module.name_mapper='^@ts/components' -> '<PROJECT_ROOT>/src/client/components'
-module.name_mapper='^@ts/base-components' -> '<PROJECT_ROOT>/src/client/library/components'
-module.name_mapper='^@ts/containers' -> '<PROJECT_ROOT>/src/client/containers'
-module.name_mapper='^@ts/global-styles$' -> '<PROJECT_ROOT>/src/client/library/css/global.css'
+module.name_mapper='^@client' -> '<PROJECT_ROOT>/client'
+module.name_mapper='^tumblr-type-map$' -> '<PROJECT_ROOT>/types.json'
+module.name_mapper='^.*\.css$' -> 'css-module-flow'
 [strict]

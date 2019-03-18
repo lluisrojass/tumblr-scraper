@@ -1,0 +1,37 @@
+.input-wrapper {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  align-items: baseline;
+}
+.input {
+  font-size: 2rem;
+  padding: 0.9375rem 3.75rem 0.9375rem 1.875rem;
+  font-family: 'SFMono', sans-serif;
+  caret-color: var(--primary-blue);
+  font-weight: 500;
+  color: #2b2e3b;
+  width: 100%;
+  letter-spacing: -0.0813rem;
+  line-height: 1;
+  border: none;
+  border-radius: 3.125rem;
+}
+.input::selection{
+  background: var(--primary-blue);
+  color: var(--grey-light);
+  text-shadow: none;
+}
+.input::-webkit-input-placeholder {
+  color: var(--grey-dark);
+  text-shadow: none;
+  font-weight: 500;
+}
+.input:focus {
+  outline: none;
+}
+.ripple {
+  color: var(--primary-blue);
+}

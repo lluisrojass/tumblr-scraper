@@ -1,0 +1,16 @@
+.button {
+  padding: 0 0.5rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: all 150ms ease-in;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: -0.5px;
+  text-emphasis: uppercase;
+  display: inline-flex;
+  height: 2rem;
+  justify-content: center;
+  align-items: center;
+  font-variant: small-caps;
+  font-variant-caps: all-small-caps;
+}
