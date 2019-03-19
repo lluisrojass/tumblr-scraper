@@ -1,0 +1,6 @@
+/* @flow */
+export type StatusT = 'STOPPED' | 'PRE_RUN' | 'RUNNING';
+export type StateT = {
+  status: StatusT
+}
+export type SetStatusT = (StatusT) => Promise<void>
