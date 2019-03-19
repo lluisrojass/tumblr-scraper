@@ -2,9 +2,18 @@
 import * as React from 'react';
 import { Subscribe } from 'unstated';
 import BlognameContainer from '@client/containers/Blogname';
+import { extractSelectedTypes } from '@client/library/utils/common';
 import TypesContainer from '@client/containers/Types';
+import type { 
+  OptionT
+} from '@client/containers/Types/types';
 import DisplayContainer from '@client/containers/Display';
-import { type ToggleT } from '@client/containers/Display/types';
+import LoopContainer from '@client/containers/Loop';
+import type { 
+  SetStatusT
+} from '@client/containers/Loop/types';
+import * as loopStatuses from '@client/containers/Loop/status';
+import  type { ToggleT } from '@client/containers/Display/types';
 import type {
   ValidatorT,
   TypingT,
@@ -18,6 +27,7 @@ import { debounce } from 'debounce';
 import { error as blognameInputError } from '@client/containers/Blogname/input-status';
 import ui from '@client/ui';
 import classnames from 'classnames';
+import socket from '@client/library/Socket';
 import actionStyles from './actions.css';
 import styles from './index.css';
 
@@ -30,7 +40,9 @@ type Props = {
   hasSelectedTypes: boolean,
   hasTextError: boolean,
   errorMessage: string,
-  togglePage: ToggleT
+  togglePage: ToggleT,
+  setLoopStatus: SetStatusT,
+  typeOptions: Array<OptionT>
 };
 
 type State = {
@@ -49,7 +61,7 @@ class Input extends React.PureComponent<Props, State> {
     this.stopTypingMS
   );
 
-  onChange = async (event: SyntheticEvent<HTMLInputElement>) => {
+  onChange = async (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
     if (event.target instanceof HTMLInputElement) {
       const { validate, startTyping } = this.props;
       const value = event.target.value;
@@ -90,7 +102,15 @@ class Input extends React.PureComponent<Props, State> {
   };
 
   start = async () => {
+    await this.props.setLoopStatus(loopStatuses.prerun);
     await this.props.togglePage();
+    const { value } = this.state;
+    const { typeOptions } = this.props;
+    const selectedTypes = extractSelectedTypes(typeOptions);
+    const didWork = await socket.start(value, selectedTypes);
+    if (didWork) {
+      await this.props.setLoopStatus(loopStatuses.running);
+    }
   }
 
   onKeyDown = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
@@ -110,11 +130,19 @@ class Input extends React.PureComponent<Props, State> {
     }
   };
 
+  onKeyUp = (event: SyntheticKeyboardEvent<HTMLInputElement>) => {
+    if (event.target instanceof HTMLInputElement) {
+      if (event.key !== 'Enter') {
+        this.stopTypingDebounced();
+      }
+    }
+  }
+
   render() {
     const { 
       onChange,
       onKeyDown,
-      stopTypingDebounced
+      onKeyUp
     } = this;
     const { value } = this.state;
     return (
@@ -123,7 +151,7 @@ class Input extends React.PureComponent<Props, State> {
         <input
           type="text"
           placeholder={ui.labels.placeholders.input}
-          onKeyUp={stopTypingDebounced}
+          onKeyUp={onKeyUp}
           onKeyDown={onKeyDown}
           onChange={onChange}
           className={classnames(styles.input)}
@@ -136,8 +164,8 @@ class Input extends React.PureComponent<Props, State> {
 }
 
 export default () => (
-  <Subscribe to={[BlognameContainer, TypesContainer, DisplayContainer]}>
-    { (blognameContainer, typesContainer, displayContainer) => (
+  <Subscribe to={[BlognameContainer, TypesContainer, DisplayContainer, LoopContainer]}>
+    { (blognameContainer, typesContainer, displayContainer, loopContainer) => (
       <Input
         startTyping={blognameContainer.typing}
         stopTyping={blognameContainer.stopTyping}
@@ -148,8 +176,10 @@ export default () => (
         hasSelectedTypes={typesContainer.state.options.findIndex(
           (option) => option.value
         ) !== -1}
+        typeOptions={typesContainer.state.options}
         togglePage={displayContainer.toggle}
         errorMessage={blognameContainer.state.errorMessage}
+        setLoopStatus={loopContainer.setStatus}
       />
     ) }
   </Subscribe>

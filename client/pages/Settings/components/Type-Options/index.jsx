@@ -6,7 +6,7 @@ import TypesContainer from '@client/containers/Types';
 import {
   type StateT,
   type OptionsToggleT
-} from '@client/containers/Types/types.flow';
+} from '@client/containers/Types/types';
 import styles from './index.css';
 
 type IndexDecorator = (OptionsToggleT, number) => () => Promise<void>;
