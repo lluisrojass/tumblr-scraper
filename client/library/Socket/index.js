@@ -1,28 +1,28 @@
 /* @flow */
-import * as io from 'socket.io-client';
+import io from 'socket.io-client';
 import pipe from 'pipe-event';
 import EventEmitter from 'events';
 import qs from 'querystring';
-import { promisify } from 'util';
+import type {
+  SocketI
+} from './types';
 
-class Socket extends EventEmitter {
-  isConnected: () => boolean;
-  connect: (url: string, port: number, nonce: string) => void;
-  constructor() {
-    super();
-    let socket: ?io.Socket;
-    const ioManagerOptions = {
-      path: '/',
-      reconnection: true,
-      timeout: '5000',
-      autoConnect: false,
-      timestampRequests: true
-    };
+class Socket extends EventEmitter implements SocketI  {
+  __socket = null;
+  __opts = {
+    path: '/',
+    reconnection: true,
+    timeout: 5000,
+    autoConnect: false,
+  }
 
-    const createSocket = (url: string, port: number, nonce: string) => {
+  isConnected = () => !!this.__socket && this.__socket.connected;
+
+  connect = (url, port, nonce) => {
+    if (!this.isConnected()) {
       const query = qs.stringify({ nonce });
-      const socket = io(`http://${url}:${port}?${query}` , ioManagerOptions);
-      socket.open();
+      this.__socket = io(`http://${url}:${port}?${query}` , this.__opts);
+      this.__socket.open();
       pipe([
         'connect', 
         'disconnect', 
@@ -34,25 +34,42 @@ class Socket extends EventEmitter {
         'date',
         'end', 
         'error'
-      ], socket, this);
-      pipe(['start', 'pause', 'resume'], this, socket);
-      return socket;
-    };
+      ], this.__socket, this);
+       pipe([
+          'start', 
+          'pause', 
+          'resume'
+        ], this, this.__socket);
+    }
+  }
 
-    this.connect = (url, port, nonce) => {
-      socket = createSocket(url, port, nonce);
-    };
+  start = (blogName, types) => {
+    return new Promise((res, rej) => {
+      if (!this.__socket || !this.isConnected()) {
+        return rej(new Error('Cannot preform operation on closed socket'));
+      }
+      this.__socket.emit('start', blogName, types, res);
+    });
+  };
 
-    this.isConnected = () => (
-      socket ? socket.connected : false
-    );
-    
-    this.emit[promisify.custom] = (response) => {
-      return new Promise((resolve) => {
-        resolve(response);
-      });
-    };
+  pause = () => {
+    return new Promise((res, rej) => {
+      if (!this.__socket || !this.isConnected()) {
+        return rej(new Error('Cannot preform operation on closed socket'));
+      }
 
+      this.__socket.emit('paused', res);
+    });
+  };
+
+  resume = () => {
+    return new Promise((res, rej) => {
+      if (!this.__socket || !this.isConnected()) {
+        return rej(new Error('Cannot preform operation on closed socket'));
+      }
+
+      this.__socket.emit('resume', res);
+    });
   }
 }
 

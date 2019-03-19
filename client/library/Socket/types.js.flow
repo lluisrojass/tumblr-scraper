@@ -1,0 +1,15 @@
+/* @flow */
+import type {
+  Socket,
+  LookupOptions
+} from 'socket.io-client';
+
+export interface SocketI {
+  __socket: ?Socket,
+  __opts: LookupOptions,
+  connect: (string, number, string) => void,
+  isConnnected(): boolean,
+  start(string, Array<string>): Promise<boolean>,
+  pause(): Promise<boolean>,
+  resume(): Promise<boolean>,
+}

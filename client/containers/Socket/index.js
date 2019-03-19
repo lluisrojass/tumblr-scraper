@@ -9,10 +9,6 @@ import {
 } from './types';
 
 class SocketContainer extends Container<StateT> {
-  state = {
-    status: socketConnStates.startup
-  }
-
   constructor() {
     super();
     socket.on('connect', () => {
@@ -20,7 +16,11 @@ class SocketContainer extends Container<StateT> {
         status: socketConnStates.connected
       });
     });    
-  }  
+  }
+
+  state = {
+    status: socketConnStates.startup
+  };  
 }
 
 export default SocketContainer;
