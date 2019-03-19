@@ -8,7 +8,7 @@ import {
   type OptionT, 
   type StateT,
   type OptionsToggleT 
-} from './types.flow.js';
+} from './types';
 
 const { labels } = ui;
 
