@@ -7,11 +7,11 @@ const actionHandlers = loop => socket => {
   socket
     .on('start', (blog, types, ack) => {
       loop.start(blog, types);
-      loop.once('started', ack);
+      loop.once('started', () => ack(true));
     })
     .on('pause', ack => {
       loop.pause(ack);
-      loop.once('paused', ack);
+      loop.once('paused', () => ack(true));
     })
     .on('resume', ack => {
       loop.resume(ack);
