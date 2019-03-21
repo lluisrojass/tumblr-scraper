@@ -1,7 +1,7 @@
 const HtmlParser = require('htmlparser2');
 const { EventEmitter } = require('events');
 const { parse } = require('url');
-const { originalPost, nextPage } = require('./markup');
+const { originalPostContainer, originalPost, nextPage } = require('./markup');
 const { toFormattedDate } = require('./utils');
 /**
  * Parsers an archive for post information.
@@ -22,32 +22,32 @@ class ArchiveParser extends EventEmitter {
     let postType;
 
     const onOpenTag = (name, attribs) => {
-      if (name === originalPost.containerTag && 
+      if (name === originalPostContainer.tag && 
                 attribs.class && 
-                attribs.class.indexOf(originalPost.containerClass) >= 0) {
-        const type = types.find(t => attribs.class.indexOf(t) >= 0);
-
+                attribs.class.indexOf(originalPostContainer.className) >= 0) {
+        const type = types.find(
+          t => attribs.class.indexOf(t) >= 0
+        );
         if (type) 
           postType = type;
-
       }
       else if (attribs.href) {
         if (name === nextPage.tag && attribs.id === nextPage.id) {
           this.emit('page', { path: attribs.href });
-                    
-          const [,stamp] = attribs.href.match(/\/archive\?before_time=(\d+)$/i) || [];
+          const [,stamp] = attribs.href.match(
+            /\/archive\?before_time=(\d+)$/i
+          ) || [];
           if (!stamp)
             return;
 
           const msStamp = (stamp >>> 0) * 1000;
           const safeStamp = (new Date(msStamp)).getTime();
-
           if (Number.isNaN(safeStamp)) 
             return;
 
           this.emit('date', { date: toFormattedDate(safeStamp) });
         }
-        else if (postType) {
+        else if (postType && originalPost.isPostURL(attribs.href)) {
           if (originalPost.isAdult(attribs.href)) {
             /* was banned for nudity */
             /* for some reason these are */

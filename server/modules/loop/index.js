@@ -91,10 +91,12 @@ class Loop extends EventEmitter {
           if (isRunning) {
             if (canContinue()) {
               launchRequest();
+              return;
             }
             else {
               parser.end();
               this.emit('end');
+              return;
             }
           }
         });

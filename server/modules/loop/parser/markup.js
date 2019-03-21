@@ -1,8 +1,12 @@
 module.exports = {
+  originalPostContainer: {
+    tag: 'div',
+    className: 'is_original'
+  },
   originalPost: {
-    containerClass: 'is_original',
     linkTag: 'a',
-    containerTag: 'div',
+    isPostURL: (href) => 
+      /^https?:\/\/.*\.tumblr\.com\/post\/.*/.test(href), 
     isAdult: (href) => 
       href.indexOf('contain-adult-content') >= 0
   },

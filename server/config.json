@@ -1,5 +1,5 @@
 {
-    "loopTimeoutMs": 7000,
+    "loopTimeoutMs": 15000,
     "postTimeoutMs": 7000,
     "optimizePostRequest": true,
     "agents": {
