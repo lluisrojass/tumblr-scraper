@@ -8,7 +8,7 @@ import type {
 } from './types';
 
 class Socket extends EventEmitter implements SocketI  {
-  __socket = null;
+  __socket;
   __opts = {
     path: '/',
     reconnection: true,
@@ -32,7 +32,7 @@ class Socket extends EventEmitter implements SocketI  {
         'reconnect_error',
         'page', 
         'date',
-        'end', 
+        'end',
         'error'
       ], this.__socket, this);
        pipe([
