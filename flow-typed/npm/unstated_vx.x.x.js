@@ -8,7 +8,8 @@ declare module 'unstated' {
     ): Promise<void>;
   }
   declare export type ContainerType = Container<Object>
-  declare export type ContainersType = Array<ContainerType>
+  declare export type ContainersType = Array<ContainerType | Class<ContainerType>>
+  declare export type ContainerMapType = Map<Class<ContainerType>, ContainerType>
   declare export type ProviderProps = {
     inject?: Array<ContainerType>,
     children: Node

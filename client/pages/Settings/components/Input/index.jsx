@@ -1,8 +1,8 @@
 /* @flow */
 import * as React from 'react';
-import { Subscribe } from 'unstated';
 import BlognameContainer from '@client/containers/Blogname';
 import { extractSelectedTypes } from '@client/library/utils/common';
+import connect from '@client/library/utils/connect/';
 import TypesContainer from '@client/containers/Types';
 import type { 
   OptionT
@@ -39,7 +39,7 @@ type Props = {
   validate: ValidatorT,
   hasSelectedTypes: boolean,
   hasTextError: boolean,
-  errorMessage: string,
+  errorMessage: ?string,
   togglePage: ToggleT,
   setLoopStatus: SetStatusT,
   typeOptions: Array<OptionT>
@@ -163,24 +163,30 @@ class Input extends React.PureComponent<Props, State> {
   }
 }
 
-export default () => (
-  <Subscribe to={[BlognameContainer, TypesContainer, DisplayContainer, LoopContainer]}>
-    { (blognameContainer, typesContainer, displayContainer, loopContainer) => (
-      <Input
-        startTyping={blognameContainer.typing}
-        stopTyping={blognameContainer.stopTyping}
-        isTyping={blognameContainer.state.isTyping}
-        inputStatus={blognameContainer.state.status}
-        validate={blognameContainer.validate}
-        hasTextError={blognameContainer.state.status === blognameInputError}
-        hasSelectedTypes={typesContainer.state.options.findIndex(
-          (option) => option.value
-        ) !== -1}
-        typeOptions={typesContainer.state.options}
-        togglePage={displayContainer.toggle}
-        errorMessage={blognameContainer.state.errorMessage}
-        setLoopStatus={loopContainer.setStatus}
-      />
-    ) }
-  </Subscribe>
+
+const selector = (
+  blognameContainer,
+  typesContainer,
+  displayContainer,
+  loopContainer
+) => ({
+  startTyping: blognameContainer.typing,
+  stopTyping: blognameContainer.stopTyping,
+  isTyping: blognameContainer.state.isTyping,
+  inputStatus: blognameContainer.state.status,
+  validate: blognameContainer.validate,
+  hasTextError: blognameContainer.state.status === blognameInputError,
+  hasSelectedTypes: typesContainer.state.options.findIndex(
+    (option) => option.value
+  ) !== -1,
+  typeOptions:typesContainer.state.options,
+  togglePage: displayContainer.toggle,
+  errorMessage: blognameContainer.state.errorMessage,
+  setLoopStatus: loopContainer.setStatus,
+});
+
+export default connect<{}, Props, _>(
+  [BlognameContainer, TypesContainer, DisplayContainer, LoopContainer],
+  selector,
+  Input
 );

@@ -10,7 +10,7 @@ import styles from './index.css';
 type Props = {
   isTyping: boolean,
   noSelectedTypes: boolean,
-  textErrorMessage: string
+  textErrorMessage: ?string
 };
 
 const ErrorMessage = (props: Props) => {
@@ -32,7 +32,7 @@ const ErrorMessage = (props: Props) => {
 export default () => (
   <Subscribe to={[BlognameContainer, TypesContainer]}>
     {
-      (blognameContainer, typesContainer) => (
+      (blognameContainer: BlognameContainer, typesContainer: TypesContainer) => (
         <ErrorMessage
           isTyping={blognameContainer.state.isTyping}
           noSelectedTypes={typesContainer.state.options.findIndex(
