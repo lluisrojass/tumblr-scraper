@@ -48,7 +48,8 @@ module.exports = function(post, callback) {
       /* TODO: handle redirects here ? */
       if (!request.aborted){
         request.abort();
-        callback(new Error(`invalid response, recieved ${res.statusCode}`));
+        callback(new Error(`invalid response`+
+        `, recieved ${res.statusCode}`));
       }
     }
 

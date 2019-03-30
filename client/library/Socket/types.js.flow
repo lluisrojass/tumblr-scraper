@@ -5,7 +5,7 @@ import type {
 } from 'socket.io-client';
 
 export interface SocketI {
-  __socket: ?Socket,
+  __socket: Socket,
   __opts: LookupOptions,
   connect: (string, number, string) => void,
   isConnnected(): boolean,

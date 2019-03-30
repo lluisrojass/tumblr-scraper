@@ -12,7 +12,7 @@
     "bundle:prod": "webpack --config ./build-configs/webpack.prod.js",
     "bundle:dev": "webpack --config ./build-configs/webpack.dev.js",
     "dev": "webpack --watch --config ./build-configs/webpack.dev.js",
-    "simulate": "cross-env DEBUG=* NODE_ENV=development ELECTRON_ENABLE_STACK_DUMPING=1 electron ./app/index.js",
+    "simulate": "cross-env NODE_ENV=development ELECTRON_ENABLE_STACK_DUMPING=1 electron ./app/index.js",
     "simulate:server": "cross-env SERVER_ONLY=1 DEBUG=* NODE_ENV=development ELECTRON_ENABLE_STACK_DUMPING=1 electron ./app/index.js",
     "flow:init": "flow init",
     "flow": "flow",
